@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="Lobster avatar">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff7a59"/>
+      <stop offset="100%" stop-color="#e11d48"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+  <g fill="url(#shell)" stroke="#7f1d1d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="256" cy="290" rx="90" ry="110"/>
+    <ellipse cx="256" cy="180" rx="60" ry="70"/>
+    <circle cx="228" cy="165" r="10" fill="#111827" stroke="none"/>
+    <circle cx="284" cy="165" r="10" fill="#111827" stroke="none"/>
+    <path d="M188 220c-42 6-74 34-92 72" fill="none"/>
+    <path d="M324 220c42 6 74 34 92 72" fill="none"/>
+    <path d="M152 290c-28 8-46 30-54 56" fill="none"/>
+    <path d="M360 290c28 8 46 30 54 56" fill="none"/>
+    <path d="M172 134l-56-46c-8 20-2 48 18 62 16 12 34 16 50 14"/>
+    <path d="M340 134l56-46c8 20 2 48-18 62-16 12-34 16-50 14"/>
+    <path d="M230 390l-34 62"/>
+    <path d="M282 390l34 62"/>
+    <path d="M208 408l-20 56"/>
+    <path d="M304 408l20 56"/>
+  </g>
+</svg>
