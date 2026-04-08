@@ -193,6 +193,26 @@ def score_news(items: list[dict], ranking: list[tuple[str, float]]) -> tuple[str
     return bias, {"bull": bull_pct, "bear": bear_pct, "neutral": neutral_pct}
 
 
+def session_continuation(now: datetime, ranking: list[tuple[str, float]], probs: dict[str, int]) -> tuple[int, int, str]:
+    minutes_from_open = int((now.hour * 60 + now.minute) - (9 * 60 + 30))
+    avg = sum(value for _, value in ranking) / len(ranking) if ranking else 0
+    continuation = 50 + max(min(int(avg * 3), 18), -18)
+    continuation += int((probs["bull"] - probs["bear"]) * 0.2)
+    if minutes_from_open < 45:
+        continuation -= 10
+    elif minutes_from_open > 180:
+        continuation += 8
+    continuation = max(20, min(85, continuation))
+    reversal = max(10, min(70, 100 - continuation - 10))
+    if continuation >= 65:
+        note = "目前看起來方向有機會一路帶到尾盤"
+    elif continuation <= 40:
+        note = "這波比較像盤中反彈，反轉風險偏高"
+    else:
+        note = "目前偏向震盪中帶方向，還要看午盤後續"
+    return continuation, reversal, note
+
+
 def now_in_market_tz() -> datetime:
     override = os.environ.get("MARKET_MONITOR_NOW")
     if override:
@@ -267,6 +287,7 @@ def main() -> int:
     strongest = max(ranking, key=lambda item: item[1])[0] if ranking else "--"
     weakest = min(ranking, key=lambda item: item[1])[0] if ranking else "--"
     bias, probs = score_news(news_items, ranking)
+    continuation, reversal, continuation_note = session_continuation(now, ranking, probs)
 
     print(f"美股盤中 15 分鐘更新 {now.strftime('%H:%M')} ET")
     print(f"- {sentiment_label(ranking)}")
@@ -274,6 +295,8 @@ def main() -> int:
         print(f"- {line}")
     print(f"- 最強: {strongest}，最弱: {weakest}")
     print(f"- 多空判斷: {bias}，多 {probs['bull']}% / 空 {probs['bear']}% / 震盪 {probs['neutral']}%")
+    print(f"- 收盤延續率: {continuation}% ，午後反轉風險: {reversal}%")
+    print(f"- 日內解讀: {continuation_note}")
     if news_items:
         print("- 最新新聞:")
         for item in news_items[:3]:
