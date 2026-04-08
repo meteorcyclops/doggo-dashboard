@@ -1,7 +1,19 @@
 {
-  "title": "RF45mm f/1.2 STM Canon網路商店",
-  "inventory": 5,
-  "available": true,
-  "sold_out": true,
-  "in_stock": true
+  "sites": {
+    "canon": {
+      "inventory": 5,
+      "in_stock": false,
+      "note": "頁面顯示可登記貨到通知"
+    },
+    "momo": {
+      "inventory": null,
+      "in_stock": true,
+      "note": "預購中"
+    },
+    "pchome": {
+      "inventory": null,
+      "in_stock": true,
+      "note": "24h到貨"
+    }
+  }
 }

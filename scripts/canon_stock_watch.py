@@ -8,7 +8,23 @@ import sys
 from pathlib import Path
 
 PRODUCT_NAME = "Canon RF45mm f/1.2 STM"
-PRODUCT_URL = "https://store.canon.com.tw/products/rf45mm-f12-stm"
+SITES = [
+    {
+        "key": "canon",
+        "name": "Canon 官方商城",
+        "url": "https://store.canon.com.tw/products/rf45mm-f12-stm",
+    },
+    {
+        "key": "momo",
+        "name": "momo",
+        "url": "https://www.momoshop.com.tw/TP/TP0007614/goodsDetail/TP00076140001334",
+    },
+    {
+        "key": "pchome",
+        "name": "PChome 24h",
+        "url": "https://24h.pchome.com.tw/prod/DGBSE8-A900JNA85",
+    },
+]
 STATE_PATH = Path(__file__).resolve().parent.parent / "memory" / "canon-stock-watch.json"
 
 
@@ -33,47 +49,73 @@ def save_state(state: dict) -> None:
     STATE_PATH.write_text(json.dumps(state, ensure_ascii=False, indent=2))
 
 
-def parse_status(html: str) -> dict:
+def parse_canon(html: str) -> dict:
     inventory_matches = [int(x) for x in re.findall(r'"inventory_quantity"\s*:\s*(\d+)', html)]
-    available_match = re.search(r'"available"\s*:\s*(true|false)', html)
-    sold_out = any(token in html for token in ["已售完", "sold_out", "out_of_stock"])
-    title_match = re.search(r'<title>\s*(.*?)\s*</title>', html, re.S)
-
     max_inventory = max(inventory_matches) if inventory_matches else None
-    available = available_match.group(1) == "true" if available_match else None
-    in_stock = bool((max_inventory is not None and max_inventory > 0) or (available is True and not sold_out))
-
+    has_notify = "已售完，貨到通知我" in html or "notify_me_when_stock_arrives" in html
+    sold_out = any(token in html for token in ["sold_out", "out_of_stock", "已售完"])
+    in_stock = bool(max_inventory and max_inventory > 0 and not has_notify and not sold_out)
     return {
-        "title": title_match.group(1).strip() if title_match else PRODUCT_NAME,
         "inventory": max_inventory,
-        "available": available,
-        "sold_out": sold_out,
         "in_stock": in_stock,
+        "note": "頁面顯示可登記貨到通知" if has_notify else "",
     }
 
 
+def parse_momo(html: str) -> dict:
+    sold_out = any(token in html for token in ["已售完", "貨到通知我", "暫無供貨"])
+    can_cart = "加入購物車" in html
+    preorder = "預購" in html
+    in_stock = can_cart and not sold_out
+    note = "預購中" if preorder and in_stock else ("已售完或不可直接下單" if sold_out else "")
+    return {"inventory": None, "in_stock": in_stock, "note": note}
+
+
+def parse_pchome(html: str) -> dict:
+    availability = re.search(r'"availability":"([^"]+)"', html)
+    in_stock = bool(availability and availability.group(1).endswith("InStock"))
+    sold_out = "已售完" in html or "OutOfStock" in html
+    note = "24h到貨" if "24h到貨" in html and in_stock else ("已售完" if sold_out else "")
+    return {"inventory": None, "in_stock": in_stock and not sold_out, "note": note}
+
+
+def parse_site(site_key: str, html: str) -> dict:
+    if site_key == "canon":
+        return parse_canon(html)
+    if site_key == "momo":
+        return parse_momo(html)
+    if site_key == "pchome":
+        return parse_pchome(html)
+    raise ValueError(site_key)
+
+
 def main() -> int:
-    html = curl_text(PRODUCT_URL)
-    status = parse_status(html)
     state = load_state()
-    prev_in_stock = state.get("in_stock")
+    prev_sites = state.get("sites", {})
+    current_sites = {}
+    alerts = []
 
-    save_state(status)
+    for site in SITES:
+        html = curl_text(site["url"])
+        status = parse_site(site["key"], html)
+        current_sites[site["key"]] = status
+        prev_in_stock = prev_sites.get(site["key"], {}).get("in_stock")
+        if status["in_stock"] and prev_in_stock is not True:
+            alerts.append({**site, **status})
 
-    if not status["in_stock"]:
+    save_state({"sites": current_sites})
+
+    if not alerts:
         print("NO_REPLY")
         return 0
 
-    if prev_in_stock is True:
-        print("NO_REPLY")
-        return 0
-
-    inventory_text = str(status["inventory"]) if status["inventory"] is not None else "未知"
     print("Canon 補貨提醒")
     print(f"- 商品: {PRODUCT_NAME}")
-    print(f"- 狀態: 目前疑似可下單，庫存數: {inventory_text}")
-    print(f"- 連結: {PRODUCT_URL}")
-    print("- 建議: 盡快點進去確認，官方商城頁面可能會隨時變動")
+    for alert in alerts:
+        detail = f"，{alert['note']}" if alert.get('note') else ""
+        print(f"- {alert['name']}: 疑似可下單{detail}")
+        print(f"  {alert['url']}")
+    print("- 建議: 盡快點進去確認，商品頁可能隨時變動")
     return 0
 
 
