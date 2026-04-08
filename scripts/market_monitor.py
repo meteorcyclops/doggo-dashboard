@@ -25,6 +25,22 @@ ALERT_DAY_THRESHOLD = 8.0
 NEWS_KEYWORDS = ["Nasdaq", "semiconductor", "Nvidia", "TSMC", "Fed", "Iran", "oil market"]
 BULLISH_TERMS = ["ceasefire", "cooling", "rally", "gain", "surge", "drop in oil", "rate cut", "rebound", "beat"]
 BEARISH_TERMS = ["attack", "war", "selloff", "slump", "inflation", "tariff", "sanction", "spike in oil", "downgrade"]
+TITLE_REPLACEMENTS = [
+    ("Oil Futures Fall", "油價期貨下跌"),
+    ("Oil and Gas Prices Plunge", "油氣價格大跌"),
+    ("Stock Markets Soar", "股市大漲"),
+    ("ceasefire", "停火"),
+    ("deal", "協議"),
+    ("remain", "仍在持續"),
+    ("Doubts About", "市場仍懷疑"),
+    ("US-Iran", "美伊"),
+    ("Iran", "伊朗"),
+    ("oil", "油價"),
+    ("markets", "市場"),
+    ("stocks", "股市"),
+    ("surge", "大漲"),
+    ("fall", "下跌"),
+]
 
 
 def is_regular_market_open(now: datetime) -> bool:
@@ -141,6 +157,17 @@ def fetch_news(limit: int = 3) -> list[dict]:
     return items
 
 
+def zh_summary(title: str) -> str:
+    summary = title
+    for src, dst in TITLE_REPLACEMENTS:
+        summary = re.sub(src, dst, summary, flags=re.I)
+    summary = re.sub(r"\s+-\s+.*$", "", summary)
+    summary = summary.strip(" -")
+    if summary == title:
+        summary = f"重點是：{title}"
+    return summary
+
+
 def score_news(items: list[dict], ranking: list[tuple[str, float]]) -> tuple[str, dict[str, int]]:
     bull = 0
     bear = 0
@@ -251,6 +278,7 @@ def main() -> int:
         print("- 最新新聞:")
         for item in news_items[:3]:
             print(f"  • {item['title']}")
+            print(f"    中文摘要: {zh_summary(item['title'])}")
     if alerts:
         print(f"- 異常提醒: {'；'.join(alerts)}")
     else:
