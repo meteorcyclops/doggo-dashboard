@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 PRODUCT_NAME = "Canon RF45mm f/1.2 STM"
+TARGET_PRICE = 12900
 SITES = [
     {
         "key": "canon",
@@ -66,16 +67,27 @@ def parse_momo(html: str) -> dict:
     sold_out = any(token in html for token in ["已售完", "貨到通知我", "暫無供貨"])
     can_cart = "加入購物車" in html
     preorder = "預購" in html
-    in_stock = can_cart and not sold_out
-    note = "預購中" if preorder and in_stock else ("已售完或不可直接下單" if sold_out else "")
+    price_match = re.search(r'"price":"?([0-9,]+)"?', html)
+    price = int(price_match.group(1).replace(',', '')) if price_match else None
+    price_ok = price is not None and price <= TARGET_PRICE
+    in_stock = can_cart and not sold_out and price_ok
+    if price is not None and price > TARGET_PRICE:
+        note = f"價格偏高，目前 {price}"
+    elif preorder and in_stock:
+        note = "預購中"
+    elif sold_out:
+        note = "已售完或不可直接下單"
+    else:
+        note = ""
     return {"inventory": None, "in_stock": in_stock, "note": note}
 
 
 def parse_pchome(html: str) -> dict:
     availability = re.search(r'"availability":"([^"]+)"', html)
-    in_stock = bool(availability and availability.group(1).endswith("InStock"))
-    sold_out = "已售完" in html or "OutOfStock" in html
-    note = "24h到貨" if "24h到貨" in html and in_stock else ("已售完" if sold_out else "")
+    has_notify = "有貨通知我" in html
+    in_stock = bool(availability and availability.group(1).endswith("InStock") and not has_notify)
+    sold_out = "已售完" in html or "OutOfStock" in html or has_notify
+    note = "頁面顯示有貨通知我" if has_notify else ("24h到貨" if "24h到貨" in html and in_stock else ("已售完" if sold_out else ""))
     return {"inventory": None, "in_stock": in_stock and not sold_out, "note": note}
 
 
