@@ -6,6 +6,8 @@ import os
 import re
 import subprocess
 import sys
+import urllib.parse
+import xml.etree.ElementTree as ET
 from datetime import datetime, time
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -20,6 +22,9 @@ NY = ZoneInfo("America/New_York")
 STATE_PATH = Path(__file__).resolve().parent.parent / "memory" / "stock-monitor-state.json"
 ALERT_15M_THRESHOLD = 3.0
 ALERT_DAY_THRESHOLD = 8.0
+NEWS_KEYWORDS = ["Nasdaq", "semiconductor", "Nvidia", "TSMC", "Fed", "Iran", "oil market"]
+BULLISH_TERMS = ["ceasefire", "cooling", "rally", "gain", "surge", "drop in oil", "rate cut", "rebound", "beat"]
+BEARISH_TERMS = ["attack", "war", "selloff", "slump", "inflation", "tariff", "sanction", "spike in oil", "downgrade"]
 
 
 def is_regular_market_open(now: datetime) -> bool:
@@ -117,6 +122,50 @@ def sentiment_label(ranking: list[tuple[str, float]]) -> str:
     return "市場情緒：震盪整理"
 
 
+def news_query() -> str:
+    return " OR ".join(NEWS_KEYWORDS)
+
+
+def fetch_news(limit: int = 3) -> list[dict]:
+    query = urllib.parse.quote(news_query())
+    url = f"https://news.google.com/rss/search?q={query}&hl=en-US&gl=US&ceid=US:en"
+    rss = curl_text(url)
+    root = ET.fromstring(rss)
+    items = []
+    for item in root.findall("./channel/item")[:limit]:
+        title = (item.findtext("title") or "").strip()
+        link = (item.findtext("link") or "").strip()
+        pub_date = (item.findtext("pubDate") or "").strip()
+        if title and link:
+            items.append({"title": title, "link": link, "pubDate": pub_date})
+    return items
+
+
+def score_news(items: list[dict], ranking: list[tuple[str, float]]) -> tuple[str, dict[str, int]]:
+    bull = 0
+    bear = 0
+    for title in [item["title"].lower() for item in items]:
+        bull += sum(term in title for term in BULLISH_TERMS)
+        bear += sum(term in title for term in BEARISH_TERMS)
+    avg = sum(value for _, value in ranking) / len(ranking) if ranking else 0
+    if avg > 1:
+        bull += 2
+    elif avg < -1:
+        bear += 2
+    total = bull + bear + 3
+    neutral = 3
+    bull_pct = round((bull / total) * 100)
+    bear_pct = round((bear / total) * 100)
+    neutral_pct = max(0, 100 - bull_pct - bear_pct)
+    if bull_pct >= bear_pct + 15:
+        bias = "偏多"
+    elif bear_pct >= bull_pct + 15:
+        bias = "偏空"
+    else:
+        bias = "中性偏震盪"
+    return bias, {"bull": bull_pct, "bear": bear_pct, "neutral": neutral_pct}
+
+
 def now_in_market_tz() -> datetime:
     override = os.environ.get("MARKET_MONITOR_NOW")
     if override:
@@ -139,6 +188,7 @@ def main() -> int:
             symbol: fetch_previous_close(meta["stooq"])
             for symbol, meta in TICKERS.items()
         }
+        news_items = fetch_news(3)
     except Exception as exc:
         print(f"抓取報價失敗: {exc}")
         return 1
@@ -189,12 +239,18 @@ def main() -> int:
 
     strongest = max(ranking, key=lambda item: item[1])[0] if ranking else "--"
     weakest = min(ranking, key=lambda item: item[1])[0] if ranking else "--"
+    bias, probs = score_news(news_items, ranking)
 
     print(f"美股盤中 15 分鐘更新 {now.strftime('%H:%M')} ET")
     print(f"- {sentiment_label(ranking)}")
     for line in lines:
         print(f"- {line}")
     print(f"- 最強: {strongest}，最弱: {weakest}")
+    print(f"- 多空判斷: {bias}，多 {probs['bull']}% / 空 {probs['bear']}% / 震盪 {probs['neutral']}%")
+    if news_items:
+        print("- 最新新聞:")
+        for item in news_items[:3]:
+            print(f"  • {item['title']}")
     if alerts:
         print(f"- 異常提醒: {'；'.join(alerts)}")
     else:
