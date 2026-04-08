@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -10,13 +11,15 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 TICKERS = {
-    "NVDL": {"exchange": "NYSEARCA", "stooq": "nvdl.us"},
+    "NVDL": {"exchange": "NASDAQ", "stooq": "nvdl.us"},
     "SBET": {"exchange": "NASDAQ", "stooq": "sbet.us"},
     "SOXL": {"exchange": "NYSEARCA", "stooq": "soxl.us"},
     "TQQQ": {"exchange": "NASDAQ", "stooq": "tqqq.us"},
 }
 NY = ZoneInfo("America/New_York")
 STATE_PATH = Path(__file__).resolve().parent.parent / "memory" / "stock-monitor-state.json"
+ALERT_15M_THRESHOLD = 3.0
+ALERT_DAY_THRESHOLD = 8.0
 
 
 def is_regular_market_open(now: datetime) -> bool:
@@ -99,8 +102,30 @@ def fmt_price(value: float | None) -> str:
     return f"{value:.2f}"
 
 
+def sentiment_label(ranking: list[tuple[str, float]]) -> str:
+    if not ranking:
+        return "市場情緒：資料不足"
+    avg = sum(value for _, value in ranking) / len(ranking)
+    if avg >= 4:
+        return "市場情緒：明顯偏多"
+    if avg >= 1:
+        return "市場情緒：偏多"
+    if avg <= -4:
+        return "市場情緒：明顯偏弱"
+    if avg <= -1:
+        return "市場情緒：偏弱"
+    return "市場情緒：震盪整理"
+
+
+def now_in_market_tz() -> datetime:
+    override = os.environ.get("MARKET_MONITOR_NOW")
+    if override:
+        return datetime.fromisoformat(override).astimezone(NY)
+    return datetime.now(NY)
+
+
 def main() -> int:
-    now = datetime.now(NY)
+    now = now_in_market_tz()
     if not is_regular_market_open(now):
         print("NO_REPLY")
         return 0
@@ -128,6 +153,7 @@ def main() -> int:
     timestamp = now.isoformat()
 
     lines: list[str] = []
+    alerts: list[str] = []
     ranking: list[tuple[str, float]] = []
 
     for symbol in TICKERS:
@@ -146,6 +172,10 @@ def main() -> int:
         lines.append(f"{symbol} {arrow} {fmt_price(price)}，15分 {trend}，日內 {fmt_pct(day_pct)}")
         if isinstance(day_pct, (int, float)):
             ranking.append((symbol, day_pct))
+        if isinstance(intraday_move, (int, float)) and abs(intraday_move) >= ALERT_15M_THRESHOLD:
+            alerts.append(f"{symbol} 15 分鐘波動 {fmt_pct(intraday_move)}")
+        if isinstance(day_pct, (int, float)) and abs(day_pct) >= ALERT_DAY_THRESHOLD:
+            alerts.append(f"{symbol} 日內波動 {fmt_pct(day_pct)}")
 
     save_state(
         {
@@ -161,9 +191,14 @@ def main() -> int:
     weakest = min(ranking, key=lambda item: item[1])[0] if ranking else "--"
 
     print(f"美股盤中 15 分鐘更新 {now.strftime('%H:%M')} ET")
+    print(f"- {sentiment_label(ranking)}")
     for line in lines:
         print(f"- {line}")
     print(f"- 最強: {strongest}，最弱: {weakest}")
+    if alerts:
+        print(f"- 異常提醒: {'；'.join(alerts)}")
+    else:
+        print("- 異常提醒: 暫無明顯異常波動")
     print("- 這是盤中趨勢整理，不是買賣建議")
     return 0
 
