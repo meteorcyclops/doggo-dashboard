@@ -1,0 +1,135 @@
+:root {
+  --bg: #171527;
+  --panel: #211c38;
+  --panel-2: #2b2450;
+  --ink: #f7f0ff;
+  --muted: #9da4d7;
+  --accent: #53d7ff;
+  --accent-2: #ff8bc2;
+  --ok: #6dff8b;
+  --warn: #ffd166;
+  --border: #3d3469;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Courier New", monospace;
+  background: linear-gradient(180deg, #0e0c1a, var(--bg));
+  color: var(--ink);
+}
+.shell {
+  min-height: 100vh;
+  padding: 16px;
+}
+.pixel-panel {
+  background: var(--panel);
+  border: 4px solid #0f0c1c;
+  box-shadow: inset 0 0 0 2px var(--border), 0 8px 0 #0a0812;
+  border-radius: 8px;
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+.brand { font-size: 24px; font-weight: 700; }
+.sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.status-group { text-align: right; }
+.status-pill { font-size: 12px; margin-bottom: 8px; }
+.status-pill.online { color: var(--ok); }
+.clock { font-size: 28px; color: var(--ok); font-weight: 700; }
+.layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 16px;
+}
+.scene { padding: 16px; }
+.pixel-room {
+  position: relative;
+  height: 620px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #201a35 0%, #19142d 100%);
+  border-radius: 8px;
+}
+.pixel-room::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+.monitor, .desk, .server, .lobster, .task-bubble, .lobster-label {
+  position: absolute;
+}
+.monitor {
+  width: 180px; height: 120px; left: 92px; top: 170px;
+  background: #24324f; border: 6px solid #101726;
+}
+.monitor::after {
+  content: ""; position: absolute; inset: 14px; background: linear-gradient(180deg, #79f7ff, #376b9d);
+}
+.glow { box-shadow: 0 0 24px rgba(83, 215, 255, 0.4); }
+.desk {
+  width: 280px; height: 120px; left: 50px; bottom: 110px;
+  background: #7f4a32;
+  box-shadow: inset 0 -18px #5f3421;
+}
+.lobster {
+  width: 92px; height: 110px; left: 170px; bottom: 148px;
+  background: #ff987a;
+  clip-path: polygon(35% 0%, 65% 0%, 85% 25%, 85% 75%, 65% 100%, 35% 100%, 15% 75%, 15% 25%);
+  box-shadow: 0 0 0 4px #a74c3a;
+}
+.lobster::before, .lobster::after {
+  content: ""; position: absolute; top: 18px; width: 20px; height: 20px; background: #ff987a; box-shadow: 0 0 0 4px #a74c3a;
+}
+.lobster::before { left: -18px; }
+.lobster::after { right: -18px; }
+.lobster-label {
+  left: -30px; top: -46px; white-space: nowrap; font-size: 12px;
+  background: #13253a; color: #d5fbff; padding: 6px 8px; border: 3px solid #4aa3cc;
+}
+.server-stack { position: absolute; right: 80px; bottom: 92px; width: 140px; }
+.server {
+  height: 70px; margin-bottom: 8px; background: #20293e; border: 4px solid #0d1220; position: relative;
+}
+.server::after {
+  content: ""; position: absolute; inset: 14px auto 14px 14px; width: 60px; background: linear-gradient(90deg, #68ff84 16px, transparent 0) repeat-x;
+  background-size: 22px 6px;
+}
+.task-bubble {
+  right: 120px; top: 90px; font-size: 13px; padding: 8px 10px;
+  background: #102637; color: #b9f6ff; border: 3px solid #53d7ff;
+}
+.scene-footer {
+  margin-top: 16px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+}
+.inset { padding: 12px; background: var(--panel-2); box-shadow: inset 0 0 0 2px #4b4190, 0 4px 0 #0a0812; }
+.label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+.value { font-size: 15px; }
+.sidebar { display: grid; gap: 16px; }
+.side-block { padding: 14px; }
+.side-block h2 { margin: 0 0 12px; font-size: 18px; }
+.chat-log {
+  display: grid; gap: 10px; min-height: 260px; max-height: 260px; overflow: auto; margin-bottom: 12px;
+}
+.msg {
+  padding: 10px 12px; border: 3px solid var(--border); background: #1b1730; font-size: 13px;
+}
+.from-user { border-color: #7c67ff; }
+.from-lobster { border-color: #53d7ff; }
+.chat-input {
+  border: 3px solid #34406c; padding: 12px; color: #6c78ae; background: #151224;
+}
+.task-list, .feature-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.task-list li, .feature-list li {
+  display: flex; justify-content: space-between; gap: 8px; padding: 10px; background: #19162c; border: 3px solid #332d58; font-size: 13px;
+}
+.task-list b { color: var(--warn); }
+@media (max-width: 1100px) {
+  .layout { grid-template-columns: 1fr; }
+  .pixel-room { height: 480px; }
+}

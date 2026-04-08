@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>龍蝦指揮中心</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar pixel-panel">
+        <div>
+          <div class="brand">🦞 龍蝦指揮中心</div>
+          <div class="sub">OpenClaw Pixel Command Dashboard</div>
+        </div>
+        <div class="status-group">
+          <div class="status-pill online">● ONLINE</div>
+          <div class="clock" id="clock">--:--:--</div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="scene pixel-panel">
+          <div class="pixel-room">
+            <div class="monitor glow"></div>
+            <div class="desk"></div>
+            <div class="lobster">
+              <div class="lobster-label">龍蝦在線，待命中</div>
+            </div>
+            <div class="server-stack">
+              <div class="server"></div>
+              <div class="server"></div>
+              <div class="server"></div>
+              <div class="server"></div>
+            </div>
+            <div class="task-bubble">監控中：股票 / 川普 / 補貨</div>
+          </div>
+
+          <div class="scene-footer">
+            <div class="mini-card pixel-panel inset">
+              <div class="label">當前狀態</div>
+              <div class="value">待命，可接新任務</div>
+            </div>
+            <div class="mini-card pixel-panel inset">
+              <div class="label">自動化任務</div>
+              <div class="value">4 條運行中</div>
+            </div>
+            <div class="mini-card pixel-panel inset">
+              <div class="label">今日主題</div>
+              <div class="value">市場、追蹤、提醒</div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="pixel-panel side-block">
+            <h2>聊天室</h2>
+            <div class="chat-log">
+              <div class="msg from-user">龍蝦幫我看市場消息</div>
+              <div class="msg from-lobster">已追蹤川普社群、盤中推播與補貨提醒。</div>
+              <div class="msg from-user">下一步做什麼？</div>
+              <div class="msg from-lobster">可以新增控制台、瀏覽器操作或更多監控。</div>
+            </div>
+            <div class="chat-input">輸入命令或直接聊天...</div>
+          </section>
+
+          <section class="pixel-panel side-block">
+            <h2>任務面板</h2>
+            <ul class="task-list">
+              <li><span>美股 15 分鐘推播</span><b>RUNNING</b></li>
+              <li><span>川普重大發言提醒</span><b>RUNNING</b></li>
+              <li><span>Canon 補貨監測</span><b>RUNNING</b></li>
+              <li><span>像素控制台原型</span><b>BUILDING</b></li>
+            </ul>
+          </section>
+
+          <section class="pixel-panel side-block">
+            <h2>未來可接</h2>
+            <ul class="feature-list">
+              <li>接 OpenClaw sessions / cron 即時資料</li>
+              <li>顯示工具呼叫時間線</li>
+              <li>像素人物狀態切換，待命 / 查資料 / 修 bug</li>
+              <li>一鍵開啟 Dashboard / Logs / Browser</li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./ui.js"></script>
+  </body>
+</html>
