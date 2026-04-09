@@ -9,6 +9,7 @@ const messageEl = document.getElementById('guestbook-message');
 
 let supabase = null;
 let pendingDeleteId = null;
+let lastRenderedIds = [];
 
 function setStatus(text) {
   if (statusEl) statusEl.textContent = text;
@@ -63,8 +64,25 @@ function ensureModal() {
   return modal;
 }
 
+function burstSticker(target, symbol = '❤') {
+  if (!target) return;
+  const sticker = document.createElement('div');
+  sticker.textContent = symbol;
+  sticker.style.position = 'absolute';
+  sticker.style.right = '10px';
+  sticker.style.top = '-4px';
+  sticker.style.fontSize = '16px';
+  sticker.style.pointerEvents = 'none';
+  sticker.style.zIndex = '3';
+  sticker.style.animation = 'sticker-burst 0.8s ease-out forwards';
+  target.appendChild(sticker);
+  window.setTimeout(() => sticker.remove(), 820);
+}
+
 function renderNotes(notes) {
   if (!listEl) return;
+  const prevIds = lastRenderedIds;
+  lastRenderedIds = notes.map((note) => note.id);
   if (!notes.length) {
     listEl.innerHTML = '<div class="guestbook-empty">還沒有便條紙，來貼第一張吧。</div>';
     return;
@@ -81,6 +99,14 @@ function renderNotes(notes) {
       <div class="guestbook-note-text">${escHtml(note.message || '')}</div>
     </article>
   `).join('');
+
+  listEl.querySelectorAll('.guestbook-note').forEach((noteEl) => {
+    const isNew = !prevIds.includes(noteEl.dataset.id);
+    if (isNew) {
+      noteEl.style.animation = 'note-pop-in 0.35s ease-out';
+      burstSticker(noteEl, ['❤', '★', '✦'][Math.floor(Math.random() * 3)]);
+    }
+  });
 
   listEl.querySelectorAll('[data-delete-id]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -132,6 +158,7 @@ async function submitNote(e) {
     return;
   }
   if (messageEl) messageEl.value = '';
+  if (nameEl && !nameEl.value.trim()) nameEl.value = '';
   setStatus('便條紙貼上成功 ✦');
   await loadNotes();
 }
