@@ -5,7 +5,6 @@
   --pink2: #ff82b8;
   --pink3: #d85d93;
   --cream: #fffaf3;
-  --lav: #b7b7ff;
   --lav2: #7d83d8;
   --mint: #93f2bb;
   --mint2: #48bb7b;
@@ -49,11 +48,15 @@ body[data-theme="night"] {
 .dream-shell {
   min-height: 100vh;
   padding: 14px;
+  max-width: min(100%, 46rem);
+  margin-inline: auto;
 }
 .dream-top {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 12px;
   padding: 12px 16px;
   margin-bottom: 14px;
 }
@@ -61,10 +64,12 @@ body[data-theme="night"] {
   font-size: 28px;
   color: #fffef8;
   text-shadow: 3px 3px 0 #b95b87;
+  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .game-sub {
   font-size: 12px;
   color: #fff;
+  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .top-stats {
   display: flex;
@@ -92,10 +97,11 @@ body[data-theme="night"] {
   margin-top: 3px;
   font-size: 17px;
   color: var(--ink);
+  transition: opacity 0.12s ease;
 }
 .dream-layout {
   display: grid;
-  grid-template-columns: 1.45fr 0.8fr;
+  grid-template-columns: 1fr;
   gap: 14px;
 }
 .battle-card {
@@ -234,6 +240,7 @@ body[data-theme="night"] .grass {
 .side-title {
   color: var(--ink);
   font-size: 16px;
+  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .hp-wrap {
   display: flex;
@@ -254,6 +261,15 @@ body[data-theme="night"] .grass {
 .hp-bar i {
   display: block;
   height: 100%;
+  position: relative;
+}
+.hp-bar i::after {
+  content: "";
+  position: absolute;
+  left: 0; top: 2px;
+  width: 100%; height: 2px;
+  background: rgba(255,255,255,.35);
+  pointer-events: none;
 }
 .hp-bar.pink i {
   width: 74%;
@@ -267,12 +283,23 @@ body[data-theme="night"] .grass {
   margin-top: 10px;
   font-size: 14px;
 }
+#current-status, #task-bubble {
+  transition: opacity 0.12s ease;
+}
 .doggo {
   left: 92px;
   bottom: 110px;
   width: 188px;
   height: 180px;
-  animation: bob 1.2s steps(2) infinite;
+  cursor: pointer;
+  animation: bob 1.35s ease-in-out infinite;
+}
+.doggo:focus {
+  outline: none;
+}
+.doggo:focus-visible {
+  outline: 3px solid var(--lav2);
+  outline-offset: 4px;
 }
 .doggo .ear,
 .doggo .body,
@@ -281,6 +308,7 @@ body[data-theme="night"] .grass {
 .doggo .nose,
 .doggo .cheek,
 .doggo .paw,
+.doggo .tail-mount,
 .doggo .tail {
   position: absolute;
 }
@@ -314,6 +342,7 @@ body[data-theme="night"] .grass {
   width: 10px;
   height: 14px;
   background: #2b1c1c;
+  transform-origin: 50% 60%;
 }
 .doggo .eye.left { left: 68px; }
 .doggo .eye.right { right: 68px; }
@@ -341,14 +370,26 @@ body[data-theme="night"] .grass {
 }
 .doggo .p1 { left: 56px; }
 .doggo .p2 { right: 56px; }
-.doggo .tail {
+.doggo .tail-mount {
   right: 24px;
   top: 98px;
   width: 20px;
   height: 38px;
+  pointer-events: none;
+  perspective: 72px;
+  perspective-origin: 2px 55%;
+  transform-style: preserve-3d;
+}
+.doggo .tail {
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
   background: var(--dog3);
   border: 4px solid #5c321d;
-  transform-origin: 50% 0;
+  transform-origin: 2px 6px;
+  animation: tail-wag-mellow 2.7s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  backface-visibility: hidden;
 }
 .doggo .bone {
   position: absolute;
@@ -393,6 +434,9 @@ body[data-theme="night"] .grass {
 .spark.s1 { left: 300px; top: 160px; }
 .spark.s2 { left: 260px; top: 110px; }
 .spark.s3 { left: 330px; top: 220px; }
+.spark { animation: spark-pulse 2.2s ease-in-out infinite; }
+.spark.s2 { animation-delay: -0.7s; }
+.spark.s3 { animation-delay: -1.4s; }
 body[data-theme="night"] .spark {
   background: #fff2a8;
   border-color: #d9ba52;
@@ -472,7 +516,7 @@ body[data-theme="night"] .frame {
 }
 .bottom-panels {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1fr;
   gap: 12px;
   margin-top: 12px;
   align-items: start;
@@ -523,6 +567,13 @@ body[data-theme="night"] .frame {
   box-shadow: inset 0 0 0 2px #fff, 0 4px 0 #c9a54d;
 }
 .cmd-btn:hover { filter: brightness(1.05); }
+.side-card, .player-box, .main-feed-panel, .command-box {
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.side-card:hover, .player-box:hover, .main-feed-panel:hover, .command-box:hover {
+  transform: translateY(-2px);
+  box-shadow: inset 0 0 0 2px #fff, 0 8px 0 #b3afdf;
+}
 .side-stack {
   display: grid;
   gap: 14px;
@@ -585,9 +636,13 @@ body[data-theme="night"] .frame {
   font-size: 11px;
   color: var(--muted);
 }
+@keyframes spark-pulse {
+  0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
+  50%       { transform: rotate(45deg) scale(0.6); opacity: 0.45; }
+}
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  50% { transform: translateY(-8px); }
 }
 @keyframes bob-big {
   0%, 100% { transform: translateY(0); }
@@ -601,27 +656,50 @@ body[data-theme="night"] .frame {
   0%, 100% { transform: translate(0, 0); }
   50% { transform: translate(5px, -7px); }
 }
-@keyframes tail-wag-fast {
-  from { transform: rotate(-20deg); }
-  to { transform: rotate(22deg); }
-}
 @keyframes tail-wag-mellow {
-  from { transform: rotate(-7deg); }
-  to { transform: rotate(9deg); }
+  0%, 100% { transform: rotateX(-8deg); }
+  25%, 75% { transform: rotateX(0deg); }
+  50% { transform: rotateX(10deg); }
+}
+@keyframes tail-wag-worried {
+  0%, 100% { transform: rotateX(-11deg); }
+  25%, 75% { transform: rotateX(0deg); }
+  50% { transform: rotateX(13deg); }
+}
+@keyframes tail-wag-bone {
+  0%, 100% { transform: rotateX(-14deg); }
+  22%, 78% { transform: rotateX(0deg); }
+  50% { transform: rotateX(15deg); }
+}
+@keyframes dog-blink {
+  0%, 40%, 44%, 100% { transform: scaleY(1); }
+  42% { transform: scaleY(0.12); }
+}
+@keyframes dog-pet-pop {
+  0% { transform: translateY(0) scale(1); }
+  45% { transform: translateY(-7px) scale(1.07); }
+  100% { transform: translateY(0) scale(1); }
+}
+#dog-sprite:not([data-dog-state="sleepy"]) .eye {
+  animation: dog-blink 5.8s ease-in-out infinite;
 }
 #dog-sprite[data-dog-state="excited"] {
-  animation: bob-big 0.72s steps(2) infinite;
+  animation: bob-big 0.85s ease-in-out infinite;
 }
 #dog-sprite[data-dog-state="sleepy"] {
-  animation: bob-slow 2.7s steps(2) infinite;
+  animation: bob-slow 2.7s ease-in-out infinite;
 }
 #dog-sprite[data-dog-state="sleepy"] .eye {
+  animation: none;
   height: 5px;
   top: 69px;
   border-radius: 2px;
 }
+#dog-sprite[data-dog-state="sleepy"] .tail {
+  animation: none;
+}
 #dog-sprite[data-dog-state="worried"] {
-  animation: bob-slow 2s steps(2) infinite;
+  animation: bob-slow 2s ease-in-out infinite;
 }
 #dog-sprite[data-dog-state="worried"] .ear {
   transform-origin: 50% 6px;
@@ -633,20 +711,19 @@ body[data-theme="night"] .frame {
   transform: rotate(-24deg);
 }
 #dog-sprite[data-dog-state="worried"] .tail {
-  animation: tail-wag-mellow 1.25s ease-in-out infinite alternate;
+  animation: tail-wag-worried 2s cubic-bezier(0.45, 0, 0.55, 1) infinite;
 }
 #dog-sprite[data-dog-state="bone"] .bone {
   opacity: 1;
 }
 #dog-sprite[data-dog-state="bone"] {
-  animation: bob-shift 0.56s steps(2) infinite;
+  animation: bob-shift 0.56s ease-in-out infinite;
 }
 #dog-sprite[data-dog-state="bone"] .tail {
-  animation: tail-wag-fast 0.34s ease-in-out infinite alternate;
+  animation: tail-wag-bone 1.12s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
-@media (max-width: 1100px) {
-  .dream-layout,
-  .bottom-panels { grid-template-columns: 1fr; }
+#dog-sprite.dog-pet {
+  animation: dog-pet-pop 0.32s ease-out !important;
 }
 @media (max-width: 720px) {
   .top-stats,

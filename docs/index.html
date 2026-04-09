@@ -6,19 +6,20 @@
     <title>狗狗夢幻戰鬥儀表板</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   </head>
   <body>
     <div class="dream-shell">
       <header class="dream-top frame candy">
         <div>
-          <div class="game-title">狗狗夢幻戰鬥板</div>
-          <div class="game-sub">cute pixel dashboard demo</div>
+          <div class="game-title">狗狗夢幻戰鬥儀表板</div>
+          <div class="game-sub">台股快照、RSS 新聞與摘要帖，建置時一併更新</div>
         </div>
         <div class="top-stats">
-          <div class="stat-pill"><span>連線</span><b id="line-link">OK</b></div>
-          <div class="stat-pill"><span>核心</span><b id="gateway-pill">ONLINE</b></div>
+          <div class="stat-pill"><span>狀態</span><b id="line-link">—</b></div>
+          <div class="stat-pill"><span>同步</span><b id="gateway-pill">—</b></div>
           <div class="stat-pill"><span>時間</span><b id="clock">--:--:--</b></div>
           <button class="stat-pill theme-toggle" id="theme-toggle" type="button"><span>主題</span><b id="theme-label">DAY</b></button>
         </div>
@@ -40,7 +41,7 @@
             <div class="grass"></div>
 
             <div class="enemy-bubble frame white-panel">
-              <div class="enemy-name">系統狀態</div>
+              <div class="enemy-name">今日戰況</div>
               <div class="hp-wrap">
                 <span>HP</span>
                 <div class="hp-bar pink"><i id="enemy-hp"></i></div>
@@ -48,7 +49,14 @@
               <div class="enemy-text" id="current-status">讀取中...</div>
             </div>
 
-            <div class="doggo" id="dog-sprite" data-dog-state="idle">
+            <div
+              class="doggo"
+              id="dog-sprite"
+              data-dog-state="idle"
+              role="button"
+              tabindex="0"
+              aria-label="點一下跟狗狗打招呼"
+            >
               <div class="ear left"></div>
               <div class="ear right"></div>
               <div class="body"></div>
@@ -61,20 +69,22 @@
               <div class="cheek right"></div>
               <div class="paw p1"></div>
               <div class="paw p2"></div>
-              <div class="tail"></div>
+              <div class="tail-mount" aria-hidden="true">
+                <div class="tail"></div>
+              </div>
             </div>
 
             <div class="spark s1"></div>
             <div class="spark s2"></div>
             <div class="spark s3"></div>
 
-            <div class="dialog frame white-panel" id="task-bubble">狗狗正在整理今天的展示任務...</div>
+            <div class="dialog frame white-panel" id="task-bubble">狗狗正在讀今天的資料…</div>
           </div>
 
           <div class="bottom-panels">
             <div class="player-stack">
               <div class="player-box frame white-panel">
-                <div class="player-name">DOGGO UNIT DEMO-01</div>
+                <div class="player-name">狗狗小隊</div>
                 <div class="hp-wrap">
                   <span>HP</span>
                   <div class="hp-bar green"><i id="player-hp"></i></div>
@@ -111,30 +121,30 @@
             </div>
 
             <div class="command-box frame white-panel">
-              <div class="command-title">展示操作</div>
+              <div class="command-title">快捷操作</div>
               <div class="command-grid">
                 <button class="cmd-btn" id="refresh-btn">刷新</button>
                 <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
                 <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard" target="_blank" rel="noreferrer">GitHub</a>
                 <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard/tree/master/docs" target="_blank" rel="noreferrer">原始碼</a>
               </div>
-              <div class="hint" id="action-hint">這是公開展示版，使用假資料，不連本機。</div>
+              <div class="hint" id="action-hint">靜態儀表板；內容由建置流程寫入，報價與摘要非即時。</div>
             </div>
           </div>
         </section>
 
         <aside class="side-stack">
           <section class="frame candy side-card">
-            <div class="side-title">任務小書</div>
+            <div class="side-title">追蹤小記</div>
             <ul class="task-list" id="task-list">
               <li><span>LOADING...</span><b>...</b></li>
             </ul>
           </section>
 
           <section class="frame candy side-card">
-            <div class="side-title">系統讀值</div>
+            <div class="side-title">資料狀態</div>
             <ul class="summary-list" id="summary-list">
-              <li><span>展示模式</span><b>CHECK</b></li>
+              <li><span>頁面類型</span><b>CHECK</b></li>
               <li><span>資料來源</span><b>CHECK</b></li>
               <li><span>同步</span><b>WAIT</b></li>
             </ul>
@@ -143,6 +153,6 @@
       </main>
     </div>
 
-    <script src="./ui.js"></script>
+    <script src="./ui.js" defer></script>
   </body>
 </html>

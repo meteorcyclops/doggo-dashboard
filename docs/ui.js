@@ -46,6 +46,94 @@ function provenanceClass(text) {
   return 'warn';
 }
 
+function escHtml(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function twSessionLabel(iso) {
+  const d = iso ? new Date(iso) : new Date();
+  if (Number.isNaN(d.getTime())) return '台股時段';
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Asia/Taipei',
+    weekday: 'short',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  }).formatToParts(d);
+  const m = {};
+  for (const p of parts) {
+    if (p.type !== 'literal') m[p.type] = p.value;
+  }
+  const wd = m.weekday;
+  if (wd === 'Sat' || wd === 'Sun') return '台股休市';
+  let hour = Number(m.hour);
+  let minute = Number(m.minute);
+  if (Number.isNaN(hour)) hour = 0;
+  if (Number.isNaN(minute)) minute = 0;
+  const mins = hour * 60 + minute;
+  if (mins < 9 * 60) return '台股盤前';
+  if (mins >= 13 * 60 + 30) return '台股盤後';
+  return '台股盤中';
+}
+
+function dogMoodCN(state) {
+  switch (state) {
+    case 'excited':
+      return '超嗨';
+    case 'worried':
+      return '緊張';
+    case 'sleepy':
+      return '休息中';
+    case 'bone':
+      return '很滿足';
+    default:
+      return '放鬆';
+  }
+}
+
+function taskBubbleText(data, jammed, alerts) {
+  const label = data.dog?.label || '今天';
+  const st = data.dog?.state || 'idle';
+  if (alerts) return `狗狗：${label}——小劇場有項目要留意，一起看一下好嗎？`;
+  if (jammed) return `狗狗：${label}，追蹤小記裡有項目卡住；那是種子進度條，不是真實服務狀態。`;
+  const byState = {
+    idle: `狗狗：${label}，陪你看台股快照、新聞與摘要。`,
+    excited: `狗狗：${label}，今天資訊量滿滿！`,
+    worried: `狗狗：${label}，市面消息多，慢慢看沒關係。`,
+    sleepy: `狗狗：${label}，盤後了，慢慢整理資訊吧。`,
+    bone: `狗狗：${label}，今天的資料都咬回來了。`,
+  };
+  return byState[st] || byState.idle;
+}
+
+function pillLineStatus(raw) {
+  const s = String(raw || '').trim().toUpperCase();
+  if (!s || s === 'DEMO') return '資料 OK';
+  return String(raw || '資料 OK');
+}
+
+function pillGateway(online) {
+  return online ? '儀表板' : '離線';
+}
+
+function feedSummaryRow(feed) {
+  if (feed?.error) return { text: `異常 · ${feed.error}`, cls: 'warn' };
+  const n = feed?.items?.length || 0;
+  if (n) return { text: `${n} 則`, cls: 'ok' };
+  return { text: '無資料', cls: 'warn' };
+}
+
+function trumpSummaryRow(tt) {
+  if (tt?.error) return { text: `異常 · ${tt.error}`, cls: 'warn' };
+  const n = tt?.items?.length || 0;
+  if (n) return { text: `${n} 則`, cls: 'ok' };
+  return { text: '無資料', cls: 'warn' };
+}
+
 function renderQuotes(quotes) {
   const list = document.getElementById('quote-list');
   const meta = document.getElementById('quote-meta');
@@ -167,7 +255,7 @@ function renderHeadlines(feed) {
   }
   if (!feed?.items?.length) {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${feed?.error ? '暫無新聞（請稍後重試）' : '暫無新聞'}</span><b class="warn">—</b>`;
+    li.innerHTML = `<span>${feed?.error ? `暫無新聞（請稍後重試）` : '暫無新聞'}</span><b class="warn">—</b>`;
     list.appendChild(li);
     return;
   }
@@ -211,7 +299,7 @@ function renderTasks(jobs) {
   jobs.forEach((job) => {
     const state = mapStatus(job);
     const li = document.createElement('li');
-    li.innerHTML = `<span>${job.name}<br><small>${timeAgo(job.state?.lastRunAtMs)} · ${state.desc}</small></span><b class="${state.cls}">${state.badge}</b>`;
+    li.innerHTML = `<span>${escHtml(job.name)}<br><small>${timeAgo(job.state?.lastRunAtMs)} · ${escHtml(state.desc)}</small></span><b class="${state.cls}">${state.badge}</b>`;
     list.appendChild(li);
   });
 }
@@ -225,24 +313,29 @@ function renderSummary(data) {
   document.getElementById('enemy-hp').style.width = `${Math.max(24, 100 - jammed * 16 - alerts * 24)}%`;
   document.getElementById('player-hp').style.width = `${Math.max(70, 96 - alerts * 10)}%`;
 
-  document.getElementById('current-status').textContent = alerts
-    ? '有一些展示任務需要關注'
-    : jammed
-      ? '部分任務卡住，但整體正常'
-      : '全部展示任務都很平穩';
+  const session = twSessionLabel(data.generatedAt);
+  const dogLabel = data.dog?.label || '今日';
+  const dogState = data.dog?.state || 'idle';
+  const mood = dogMoodCN(dogState);
 
-  document.getElementById('automation-count').textContent = `${jobs.length} 條展示中 / ${ready} 條穩定`;
-  document.getElementById('lobster-mood').textContent = alerts ? 'WORRIED' : jammed ? 'BRAVE' : 'HAPPY';
-  document.getElementById('task-bubble').textContent = alerts
-    ? '狗狗說：今天有幾個展示任務要再看一下！'
-    : jammed
-      ? '狗狗說：有些任務暫時卡住，但只是展示資料喔。'
-      : '狗狗說：今天一切安穩，歡迎參觀這個可愛儀表板。';
+  const statusEl = document.getElementById('current-status');
+  if (statusEl) {
+    const core = `${session} · ${dogLabel} · ${mood}`;
+    statusEl.textContent = jammed || alerts ? `追蹤小記有待留意 · ${core}` : core;
+  }
 
-  document.getElementById('gateway-pill').textContent = data.gatewayOnline ? 'DEMO' : 'OFFLINE';
-  document.getElementById('line-link').textContent = data.lineStatus;
+  const stuck = jobs.length - ready;
+  document.getElementById('automation-count').textContent = `${jobs.length} 項追蹤 · ${ready} 項順利${
+    stuck ? ` · ${stuck} 項待留意` : ''
+  }`;
 
-  const prov = data.provenance || 'DEMO';
+  document.getElementById('lobster-mood').textContent = mood;
+  document.getElementById('task-bubble').textContent = taskBubbleText(data, jammed, alerts);
+
+  document.getElementById('gateway-pill').textContent = pillGateway(!!data.gatewayOnline);
+  document.getElementById('line-link').textContent = pillLineStatus(data.lineStatus);
+
+  const prov = data.provenance || '—';
   const provCls = provenanceClass(prov);
   const genAt = data.generatedAt
     ? new Date(data.generatedAt).toLocaleString('zh-TW', { hour12: false })
@@ -251,19 +344,47 @@ function renderSummary(data) {
     ? new Date(data.quotes.asOf).toLocaleString('zh-TW', { hour12: false })
     : '—';
 
+  const feedRow = feedSummaryRow(data.feed);
+  const trumpRow = trumpSummaryRow(data.trumpTruth);
+
   const summary = document.getElementById('summary-list');
   summary.innerHTML = `
-    <li><span>展示模式</span><b class="ok">PUBLIC DEMO</b></li>
-    <li><span>資料來源</span><b class="${provCls}">${prov}</b></li>
-    <li><span>報價快照（UTC）</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${quoteAsOf}</b></li>
-    <li><span>最後建置</span><b class="ok">${genAt}</b></li>
+    <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
+    <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
+    <li><span>報價快照（UTC）</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
+    <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
+    <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
+    <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
   `;
 }
 
-async function loadData() {
+const POLL_MS = 60_000;
+
+const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#trump-list', '#task-list', '#summary-list'];
+
+function staggerFeedLists(silent) {
+  if (silent || typeof gsap === 'undefined') return;
+  for (const sel of STAGGER_LIST_SELECTORS) {
+    const root = document.querySelector(sel);
+    if (!root) continue;
+    const items = root.querySelectorAll(':scope > li');
+    if (!items.length) continue;
+    gsap.from(items, {
+      opacity: 0,
+      y: 4,
+      duration: 0.16,
+      stagger: 0.022,
+      ease: 'power2.out',
+      clearProps: 'opacity,transform',
+    });
+  }
+}
+
+async function loadData(opts = {}) {
+  const silent = !!opts.silent;
   const hint = document.getElementById('action-hint');
   try {
-    hint.textContent = '正在刷新展示資料...';
+    if (!silent && hint) hint.textContent = '正在更新資料…';
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
@@ -273,9 +394,13 @@ async function loadData() {
     renderTrumpTruth(data.trumpTruth);
     renderSummary(data);
     setDogSprite(data);
-    hint.textContent = `公開展示版，已更新於 ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
+    staggerFeedLists(silent);
+    if (hint && !silent) {
+      const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+      hint.textContent = `已載入資料 · 本地 ${localT} · 報價與摘要於建置時更新`;
+    }
   } catch (err) {
-    hint.textContent = `資料讀取失敗：${err.message}`;
+    if (hint) hint.textContent = `資料讀取失敗：${err.message}`;
   }
 }
 
@@ -301,9 +426,34 @@ function bindActions() {
     const hint = document.getElementById('action-hint');
     try {
       await navigator.clipboard.writeText(window.location.href);
-      hint.textContent = '已複製這個展示頁網址';
+      hint.textContent = '已複製頁面網址';
     } catch {
       hint.textContent = '複製失敗，請手動複製網址列';
+    }
+  });
+}
+
+function bindDogPet() {
+  const el = document.getElementById('dog-sprite');
+  if (!el) return;
+  let busy = false;
+  const trigger = () => {
+    if (busy) return;
+    busy = true;
+    el.classList.add('dog-pet');
+    window.setTimeout(() => {
+      el.classList.remove('dog-pet');
+      busy = false;
+    }, 320);
+  };
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    trigger();
+  });
+  el.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      trigger();
     }
   });
 }
@@ -312,5 +462,6 @@ setInterval(tickClock, 1000);
 tickClock();
 initTheme();
 bindActions();
+bindDogPet();
 loadData();
-setInterval(loadData, 30000);
+setInterval(() => loadData({ silent: true }), POLL_MS);
