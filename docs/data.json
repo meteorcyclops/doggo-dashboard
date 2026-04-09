@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-04-09T01:40:00.000Z",
+  "gatewayOnline": true,
+  "lineStatus": "DEMO",
+  "jobs": [
+    {
+      "name": "可愛任務提醒",
+      "enabled": true,
+      "desc": "示範用任務，展示穩定狀態卡片",
+      "state": {
+        "lastRunAtMs": 1775706600000,
+        "lastStatus": "ok"
+      }
+    },
+    {
+      "name": "夢幻市場觀察",
+      "enabled": true,
+      "desc": "示範用卡住狀態，但不連任何真實服務",
+      "state": {
+        "lastRunAtMs": 1775704800000,
+        "lastStatus": "error"
+      }
+    },
+    {
+      "name": "狗狗補貨巡邏",
+      "enabled": true,
+      "desc": "示範用正常任務，方便展示 UI 變化",
+      "state": {
+        "lastRunAtMs": 1775707200000,
+        "lastStatus": "ok"
+      }
+    },
+    {
+      "name": "夜晚模式守望",
+      "enabled": true,
+      "desc": "示範用待命巡邏，適合切換主題時觀察畫面",
+      "state": {
+        "lastRunAtMs": 1775703000000,
+        "lastStatus": "ok"
+      }
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>狗狗夢幻戰鬥儀表板</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="dream-shell">
+      <header class="dream-top frame candy">
+        <div>
+          <div class="game-title">狗狗夢幻戰鬥板</div>
+          <div class="game-sub">cute pixel dashboard demo</div>
+        </div>
+        <div class="top-stats">
+          <div class="stat-pill"><span>連線</span><b id="line-link">OK</b></div>
+          <div class="stat-pill"><span>核心</span><b id="gateway-pill">ONLINE</b></div>
+          <div class="stat-pill"><span>時間</span><b id="clock">--:--:--</b></div>
+          <button class="stat-pill theme-toggle" id="theme-toggle" type="button"><span>主題</span><b id="theme-label">DAY</b></button>
+        </div>
+      </header>
+
+      <main class="dream-layout">
+        <section class="battle-card frame candy">
+          <div class="battle-stage">
+            <div class="moon"></div>
+            <div class="star st1"></div>
+            <div class="star st2"></div>
+            <div class="star st3"></div>
+            <div class="star st4"></div>
+            <div class="cloud c1"></div>
+            <div class="cloud c2"></div>
+            <div class="cloud c3"></div>
+            <div class="hill back"></div>
+            <div class="hill front"></div>
+            <div class="grass"></div>
+
+            <div class="enemy-bubble frame white-panel">
+              <div class="enemy-name">系統狀態</div>
+              <div class="hp-wrap">
+                <span>HP</span>
+                <div class="hp-bar pink"><i id="enemy-hp"></i></div>
+              </div>
+              <div class="enemy-text" id="current-status">讀取中...</div>
+            </div>
+
+            <div class="doggo" id="dog-sprite">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="body"></div>
+              <div class="face"></div>
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="nose"></div>
+              <div class="cheek left"></div>
+              <div class="cheek right"></div>
+              <div class="paw p1"></div>
+              <div class="paw p2"></div>
+              <div class="tail"></div>
+            </div>
+
+            <div class="spark s1"></div>
+            <div class="spark s2"></div>
+            <div class="spark s3"></div>
+
+            <div class="dialog frame white-panel" id="task-bubble">狗狗正在整理今天的展示任務...</div>
+          </div>
+
+          <div class="bottom-panels">
+            <div class="player-box frame white-panel">
+              <div class="player-name">DOGGO UNIT DEMO-01</div>
+              <div class="hp-wrap">
+                <span>HP</span>
+                <div class="hp-bar green"><i id="player-hp"></i></div>
+              </div>
+              <div class="meta-grid">
+                <div><span>任務</span><b id="automation-count">讀取中...</b></div>
+                <div><span>心情</span><b id="lobster-mood">HAPPY</b></div>
+              </div>
+            </div>
+
+            <div class="command-box frame white-panel">
+              <div class="command-title">展示操作</div>
+              <div class="command-grid">
+                <button class="cmd-btn" id="refresh-btn">刷新</button>
+                <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
+                <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard" target="_blank" rel="noreferrer">GitHub</a>
+                <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard/tree/master/docs" target="_blank" rel="noreferrer">原始碼</a>
+              </div>
+              <div class="hint" id="action-hint">這是公開展示版，使用假資料，不連本機。</div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="side-stack">
+          <section class="frame candy side-card">
+            <div class="side-title">任務小書</div>
+            <ul class="task-list" id="task-list">
+              <li><span>LOADING...</span><b>...</b></li>
+            </ul>
+          </section>
+
+          <section class="frame candy side-card">
+            <div class="side-title">系統讀值</div>
+            <ul class="summary-list" id="summary-list">
+              <li><span>展示模式</span><b>CHECK</b></li>
+              <li><span>資料來源</span><b>CHECK</b></li>
+              <li><span>同步</span><b>WAIT</b></li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./ui.js"></script>
+  </body>
+</html>
