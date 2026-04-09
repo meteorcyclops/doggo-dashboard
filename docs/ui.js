@@ -230,6 +230,13 @@ function renderTrumpTruth(trump) {
     } else {
       span.appendChild(document.createTextNode(item.excerpt || '（無摘要）'));
     }
+    if (item.excerptZhTw) {
+      span.appendChild(document.createElement('br'));
+      const zh = document.createElement('small');
+      zh.className = 'trump-translation';
+      zh.textContent = `繁中：${item.excerptZhTw}`;
+      span.appendChild(zh);
+    }
     span.appendChild(document.createElement('br'));
     const small = document.createElement('small');
     small.className = 'trump-excerpt';
@@ -488,6 +495,13 @@ function applyTheme(theme) {
     setDogSprite(currentData);
     setDogBubble(theme === 'night' ? pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
   }
+  syncCommentsTheme(theme);
+}
+
+function syncCommentsTheme(theme) {
+  const frame = document.querySelector('iframe.utterances-frame');
+  if (!frame?.contentWindow) return;
+  frame.contentWindow.postMessage({ type: 'set-theme', theme: theme === 'night' ? 'github-dark' : 'github-light' }, 'https://utteranc.es');
 }
 
 function initTheme() {

@@ -39,22 +39,22 @@
       }
     }
   ],
-  "generatedAt": "2026-04-09T02:48:46Z",
+  "generatedAt": "2026-04-09T05:09:55Z",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-09T02:48:43Z",
+    "asOf": "2026-04-09T05:09:47Z",
     "items": [
       {
         "symbol": "2330",
         "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
-        "price": 1935.0,
-        "changePct": -0.77
+        "price": 1945.0,
+        "changePct": -0.26
       },
       {
         "symbol": "0050",
         "name": "YUANTA SECURITIES INV TRUST CO ",
-        "price": 79.0,
-        "changePct": 4.91
+        "price": 79.05,
+        "changePct": -0.19
       },
       {
         "symbol": "2317",
@@ -68,44 +68,44 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
-        "title": "焦點股》高力：3月與Q1營收登頂 強攻漲停",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397945",
-        "time": "Thu, 09 Apr 2026 10:34:05 +0800"
+        "title": "「移工零付費」浪潮來襲！立委憂中小企業難扛 勞長允年底前簡化直聘流程",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5398125",
+        "time": "Thu, 09 Apr 2026 13:01:49 +0800"
       },
       {
-        "title": "亞太區總裁張嗣漢化身黑衣人 揭密好市多會員護照優惠",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397942",
-        "time": "Thu, 09 Apr 2026 10:32:42 +0800"
+        "title": "美伊停火後以色列仍狂炸黎巴嫩 智庫：不滿停火談判被邊緣化",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5398159",
+        "time": "Thu, 09 Apr 2026 12:59:57 +0800"
       },
       {
-        "title": "焦點股》訊芯-KY：光通訊利多題材 創新天價",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397932",
-        "time": "Thu, 09 Apr 2026 10:30:11 +0800"
+        "title": "整天待命也不怕！41歲工程師靠「這副業」、每月穩收超過32萬元",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397791",
+        "time": "Thu, 09 Apr 2026 12:51:37 +0800"
       },
       {
-        "title": "史上第2大！全球500大富豪單日身家大增2650億美元",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397888",
-        "time": "Thu, 09 Apr 2026 10:27:00 +0800"
+        "title": "美軍持續駐紮伊朗 川普：協議若破局「槍聲就會響起」",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5397842",
+        "time": "Thu, 09 Apr 2026 12:49:26 +0800"
       },
       {
-        "title": "焦點股》鼎元：光電大展激勵士氣 帶量漲停",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397927",
-        "time": "Thu, 09 Apr 2026 10:24:33 +0800"
+        "title": "伊朗所開10條件 華爾街日報逐點分析談判空間",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5398134",
+        "time": "Thu, 09 Apr 2026 12:48:32 +0800"
       },
       {
-        "title": "台泥啟動信義區老廠資產活化 將斥資268億元打造為企業總部大樓",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397918",
-        "time": "Thu, 09 Apr 2026 10:20:27 +0800"
+        "title": "趕在「川習會」前 王毅睽違6年再訪北韓",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5398030",
+        "time": "Thu, 09 Apr 2026 12:34:18 +0800"
       },
       {
-        "title": "焦點股》富采：光電大展帶動題材 漲停鎖死",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397912",
-        "time": "Thu, 09 Apr 2026 10:19:08 +0800"
+        "title": "散戶當道！OpenAI預告IPO將保留一部份股份給散戶",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397778",
+        "time": "Thu, 09 Apr 2026 12:16:46 +0800"
       },
       {
-        "title": "雪上加霜！ 伊朗經濟戰前已疲弱 戰後進一步惡化",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5397863",
-        "time": "Thu, 09 Apr 2026 10:18:29 +0800"
+        "title": "「隨機裁員」時代來臨 ? 亞馬遜5月將砍1.4萬人 傳中國團隊或被「團滅」",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397773",
+        "time": "Thu, 09 Apr 2026 12:15:54 +0800"
       }
     ]
   },
@@ -115,57 +115,67 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-09T02:48:45Z",
+    "asOf": "2026-04-09T05:09:49Z",
     "items": [
+      {
+        "postedAtTw": "2026-04-09T11:46:00+08:00",
+        "excerpt": "All U.S. Ships, Aircraft, and Military Personnel, with additional Ammunition, Weaponry, and anything else that is appropriate and necessary for the lethal prosecution and destruction of an already substantially degraded…",
+        "url": "https://www.trumpstruth.org/statuses/37672",
+        "important": true,
+        "excerptZhTw": "所有美國船隻、飛機和軍事人員，以及額外的彈藥、武器和任何其他對於致命起訴和銷毀已經嚴重退化的適當和必要的東西…"
+      },
+      {
+        "postedAtTw": "2026-04-09T10:56:00+08:00",
+        "excerpt": "The Failing New York Times and Fake News CNN each reported a totally FAKE TEN POINT PLAN on the Iran negotiations which was meant to discredit the people involved in the peace process. All ten points were a made up HOAX…",
+        "url": "https://www.trumpstruth.org/statuses/37671",
+        "important": true,
+        "excerptZhTw": "失敗的《紐約時報》和假新聞 CNN 各自報導了關於伊朗談判的完全虛假的十點計劃，旨在抹黑參與和平進程的人們。所有十點都是捏造的騙局…"
+      },
       {
         "postedAtTw": "2026-04-09T07:31:00+08:00",
         "excerpt": "NATO WASN’T THERE WHEN WE NEEDED THEM, AND THEY WON’T BE THERE IF WE NEED THEM AGAIN. REMEMBER GREENLAND, THAT BIG, POORLY RUN, PIECE OF ICE!!! President DJT",
-        "url": "https://www.trumpstruth.org/statuses/37670"
+        "url": "https://www.trumpstruth.org/statuses/37670",
+        "excerptZhTw": "當我們需要他們時，北約並不在那裡，如果我們再次需要他們，他們就不會在那裡。記住格陵蘭島，那片大而糟糕的冰塊！總裁DJT"
       },
       {
         "postedAtTw": "2026-04-09T00:20:00+08:00",
         "excerpt": "Marjorie “Traitor” Brown’s (GREEN TURNS TO BROWN UNDER STRESS!) seat in Congress has been taken over by a wonderful and talented man, Clay Fuller, who won convincingly, and right from the beginning, despite many people…",
-        "url": "https://www.trumpstruth.org/statuses/37669"
+        "url": "https://www.trumpstruth.org/statuses/37669",
+        "excerptZhTw": "馬喬裡“叛徒”布朗（在壓力下由綠變棕！）在國會的席位已被一位出色而有才華的人克萊·富勒取代，他從一開始就以令人信服的方式獲勝，儘管很多人......"
       },
       {
         "postedAtTw": "2026-04-09T00:04:00+08:00",
         "excerpt": "Numerous Agreements, Lists, and Letters are being sent out by people that have absolutely nothing to do with the U.S.A. / Iran Negotiation, in many cases, they are total Fraudsters, Charlatans, and WORSE. They will be r…",
         "url": "https://www.trumpstruth.org/statuses/37668",
-        "important": true
+        "important": true,
+        "excerptZhTw": "許多協議、清單和信件都是由與美國/伊朗談判完全無關的人發出的，在許多情況下，他們完全是騙子、江湖騙子，而且更糟。他們將..."
       },
       {
         "postedAtTw": "2026-04-08T22:51:00+08:00",
         "excerpt": "Secretary Hegseth and Chairman Caine hold a press briefing on Operation Epic Fury: https://m.youtube.com/live/tG7-hLW0okE?si=42CeLOL2esIAvfQC",
-        "url": "https://www.trumpstruth.org/statuses/37667"
+        "url": "https://www.trumpstruth.org/statuses/37667",
+        "excerptZhTw": "赫格斯部長和凱恩主席就史詩憤怒行動舉行新聞發布會：https://m.youtube.com/live/tG7-hLW0okE?si=42CeLOL2esIAvfQC"
       },
       {
         "postedAtTw": "2026-04-08T19:30:00+08:00",
         "excerpt": "A Country supplying Military Weapons to Iran will be immediately tariffed, on any and all goods sold to the United States of America, 50%, effective immediately. There will be no exclusions or exemptions! President DJT",
         "url": "https://www.trumpstruth.org/statuses/37666",
-        "important": true
+        "important": true,
+        "excerptZhTw": "向伊朗供應軍事武器的國家將立即對出售給美利堅合眾國的任何及所有商品徵收 50% 的關稅，立即生效。不會有任何例外或豁免！總裁DJT"
       },
       {
         "postedAtTw": "2026-04-08T19:22:00+08:00",
         "excerpt": "The United States will work closely with Iran, which we have determined has gone through what will be a very productive Regime Change! There will be no enrichment of Uranium, and the United States will, working with Ira…",
         "url": "https://www.trumpstruth.org/statuses/37665",
-        "important": true
+        "important": true,
+        "excerptZhTw": "美國將與伊朗密切合作，我們確定伊朗已經經歷了非常有成效的政權更迭！不會進行鈾濃縮，美國將會與伊朗伊斯蘭共和國合作…"
       },
       {
         "postedAtTw": "2026-04-08T19:00:00+08:00",
         "excerpt": "A big day for World Peace! Iran wants it to happen, they’ve had enough! Likewise, so has everyone else! The United States of America will be helping with the traffic buildup in the Strait of Hormuz. There will be lots o…",
         "url": "https://www.trumpstruth.org/statuses/37664",
-        "important": true
-      },
-      {
-        "postedAtTw": "2026-04-08T11:41:00+08:00",
-        "excerpt": "https://truthsocial.com/@epaleezeldin/116293314492137728",
-        "url": "https://www.trumpstruth.org/statuses/37662"
-      },
-      {
-        "postedAtTw": "2026-04-08T11:39:00+08:00",
-        "excerpt": "No one can believe that Fake News CNN put out a knowingly false and dangerous statement pretending it came from the upper levels of the Iranian Government. It didn’t! It was totally made up and posted, as a headline, fo…",
-        "url": "https://www.trumpstruth.org/statuses/37661",
-        "important": true
+        "important": true,
+        "excerptZhTw": "世界和平的大日子！伊朗希望這一切發生，他們受夠了！同樣，其他人也是如此！美利堅合眾國將幫助霍爾木茲海峽的交通建設。會有很多…"
       }
     ]
   }

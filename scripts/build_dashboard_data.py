@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 import feedparser
 import requests
 import yfinance as yf
+from deep_translator import GoogleTranslator
 
 ROOT = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = Path(__file__).resolve().parent
@@ -36,6 +37,7 @@ TRUMP_POST_LIMIT = 12
 TRUMP_EXCERPT_MAX = 220
 REQUEST_TIMEOUT = 25
 USER_AGENT = "doggo-dashboard-build/1.0 (+https://github.com/meteorcyclops/doggo-dashboard)"
+TRUMP_TRANSLATE_MAX = 2800
 
 
 def _session() -> requests.Session:
@@ -238,6 +240,53 @@ def fetch_trump_truth() -> dict[str, Any]:
     return out
 
 
+def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
+    items = trump_truth.get("items") or []
+    if not items:
+        return trump_truth
+    try:
+        translator = GoogleTranslator(source="en", target="zh-TW")
+    except Exception as exc:  # noqa: BLE001
+        trump_truth["translationError"] = str(exc)
+        return trump_truth
+
+    for item in items:
+        text = str(item.get("excerpt") or "").strip()
+        if not text:
+            item["excerptZhTw"] = ""
+            continue
+        if text.startswith("http://") or text.startswith("https://"):
+            item["excerptZhTw"] = "連結貼文，請點進原文查看。"
+            continue
+        try:
+            raw = translator.translate(text[:TRUMP_TRANSLATE_MAX])
+            zh = " ".join(str(raw).split())
+            zh = (
+                zh.replace("視頻", "影片")
+                .replace("信息", "資訊")
+                .replace("导弹", "飛彈")
+                .replace("关税", "關稅")
+                .replace("协议", "協議")
+                .replace("达成", "達成")
+                .replace("美国", "美國")
+                .replace("伊朗", "伊朗")
+                .replace("報道", "報導")
+                .replace("報道了", "報導了")
+                .replace("總體規劃", "整體規劃")
+                .replace("視頻會議", "視訊會議")
+                .replace("假新聞", "假新聞")
+                .replace("民眾們", "大家")
+                .replace("進行中", "在進行")
+                .replace("之間的", "和")
+                .replace("談判 which", "談判，這")
+            )
+            item["excerptZhTw"] = zh
+        except Exception as exc:  # noqa: BLE001
+            item["excerptZhTw"] = ""
+            trump_truth["translationError"] = str(exc)
+    return trump_truth
+
+
 def build_provenance(quotes: dict[str, Any], feed: dict[str, Any]) -> str:
     q_ok = bool(quotes.get("items"))
     f_ok = bool(feed.get("items"))
@@ -265,7 +314,7 @@ def main() -> None:
     dog = compute_dog(quotes, now_tw)
     provenance = build_provenance(quotes, feed)
 
-    trump_truth = fetch_trump_truth()
+    trump_truth = translate_trump_truth(fetch_trump_truth())
 
     out: dict[str, Any] = {
         **seed,

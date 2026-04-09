@@ -707,6 +707,45 @@ body[data-theme="night"] .frame {
 .side-card {
   padding: 12px;
 }
+.guestbook-card {
+  overflow: hidden;
+}
+.guestbook-shell {
+  margin-top: 10px;
+  padding: 10px;
+  position: relative;
+  background: linear-gradient(180deg, #fffdf4 0%, #fff4c9 100%);
+}
+.guestbook-shell::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 3px dashed #8f8ac8;
+  pointer-events: none;
+}
+.guestbook-prompt {
+  margin-bottom: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ink);
+  background: #fff;
+  border: 3px solid #7c74bf;
+  padding: 8px 10px;
+  box-shadow: inset 0 0 0 2px #fff4cc;
+}
+#comments {
+  position: relative;
+  z-index: 1;
+  min-height: 180px;
+}
+#comments .utterances {
+  max-width: 100% !important;
+}
+#comments iframe.utterances-frame {
+  border: 4px solid #6c67b3 !important;
+  box-shadow: 0 6px 0 #aba6df !important;
+  background: #fffef7 !important;
+}
 .side-meta {
   font-size: 11px;
   color: var(--muted);
@@ -761,6 +800,16 @@ body[data-theme="night"] .frame {
   font-size: 11px;
   line-height: 1.45;
 }
+.task-list small.trump-translation {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #4e4a87;
+  background: rgba(255, 244, 204, 0.78);
+  border: 2px solid #d8c27a;
+  padding: 5px 6px;
+}
 .task-list b.ok,
 .summary-list b.ok { color: var(--mint2); }
 .task-list b.warn,
@@ -771,6 +820,14 @@ body[data-theme="night"] .frame {
   margin-top: 10px;
   font-size: 11px;
   color: var(--muted);
+}
+body[data-theme="night"] .guestbook-shell {
+  background: linear-gradient(180deg, #f6f2ff 0%, #dfd8ff 100%);
+}
+body[data-theme="night"] .guestbook-prompt {
+  color: #241f46;
+  border-color: #736bc1;
+  box-shadow: inset 0 0 0 2px #fff;
 }
 @keyframes spark-pulse {
   0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
