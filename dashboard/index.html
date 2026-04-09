@@ -3,84 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOBSTER OPS HUD</title>
+    <title>DOG OPS BATTLE HUD</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="hud-shell">
       <header class="hud-top frame">
         <div class="title-block">
-          <div class="game-title">LOBSTER OPS</div>
-          <div class="game-sub">PIXEL COMMAND HUD</div>
+          <div class="game-title">DOG OPS</div>
+          <div class="game-sub">BATTLE HUD v1</div>
         </div>
         <div class="top-stats">
           <div class="stat-chip"><span>LINK</span><b id="line-link">OK</b></div>
-          <div class="stat-chip"><span>GATE</span><b id="gateway-pill">ONLINE</b></div>
+          <div class="stat-chip"><span>CORE</span><b id="gateway-pill">ONLINE</b></div>
           <div class="stat-chip clock-chip"><span>TIME</span><b id="clock">--:--:--</b></div>
         </div>
       </header>
 
-      <main class="hud-grid">
-        <section class="main-screen frame">
+      <main class="battle-layout">
+        <section class="battle-screen frame">
           <div class="screen-header">
-            <span>ROOM FEED</span>
+            <span>BATTLE VIEW</span>
             <span id="refresh-state">SYNC READY</span>
           </div>
 
-          <div class="playfield">
-            <div class="sky-strip"></div>
-            <div class="cityline"></div>
-            <div class="terminal"></div>
-            <div class="terminal-glow"></div>
-            <div class="desk"></div>
-            <div class="crate left"></div>
-            <div class="crate right"></div>
-            <div class="pixel-lobster" id="lobster-sprite">
-              <div class="eye e1"></div>
-              <div class="eye e2"></div>
-              <div class="claw c1"></div>
-              <div class="claw c2"></div>
-              <div class="leg l1"></div>
-              <div class="leg l2"></div>
+          <div class="arena">
+            <div class="arena-bg"></div>
+            <div class="scanlines"></div>
+
+            <div class="enemy-panel frame hud-box">
+              <div class="enemy-name">SYSTEM ALERTS</div>
+              <div class="hp-row"><span>HP</span><div class="hp-bar"><i id="enemy-hp"></i></div></div>
+              <div class="enemy-state" id="current-status">LOADING...</div>
             </div>
-            <div class="dialog-box" id="task-bubble">SCANNING TASK SIGNAL...</div>
-            <div class="status-banner" id="lobster-label">UNIT LOB-01 READY</div>
+
+            <div class="dog-sprite" id="dog-sprite">
+              <div class="ear left"></div>
+              <div class="ear right"></div>
+              <div class="face"></div>
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="nose"></div>
+              <div class="body"></div>
+              <div class="paw p1"></div>
+              <div class="paw p2"></div>
+            </div>
+
+            <div class="terminal-mini"></div>
+
+            <div class="speech-box frame" id="task-bubble">CHECKING MISSION DATA...</div>
           </div>
 
-          <div class="meters">
-            <div class="meter-box frame inset">
-              <span>MISSION</span>
-              <b id="current-status">LOADING...</b>
+          <div class="battle-bottom">
+            <div class="player-panel frame hud-box">
+              <div class="player-name">DOG UNIT KX-01</div>
+              <div class="hp-row"><span>HP</span><div class="hp-bar player"><i id="player-hp"></i></div></div>
+              <div class="player-meta">
+                <div><span>QUEUE</span><b id="automation-count">LOADING...</b></div>
+                <div><span>MOOD</span><b id="lobster-mood">FOCUS</b></div>
+              </div>
             </div>
-            <div class="meter-box frame inset">
-              <span>QUEUE</span>
-              <b id="automation-count">LOADING...</b>
-            </div>
-            <div class="meter-box frame inset">
-              <span>MOOD</span>
-              <b id="lobster-mood">FOCUS</b>
+
+            <div class="command-menu frame">
+              <div class="menu-title">COMMAND</div>
+              <div class="menu-grid">
+                <button class="menu-btn" id="refresh-btn">SYNC</button>
+                <a class="menu-btn" href="http://127.0.0.1:18789/" target="_blank" rel="noreferrer">DASH</a>
+                <a class="menu-btn" href="http://127.0.0.1:18789/__openclaw__/canvas/" target="_blank" rel="noreferrer">CANVAS</a>
+                <button class="menu-btn" data-copy="openclaw status --deep">STATUS</button>
+              </div>
+              <div class="hint" id="action-hint">READY FOR NEXT MOVE.</div>
             </div>
           </div>
         </section>
 
         <aside class="side-panels">
           <section class="frame panel quest-panel">
-            <div class="panel-title">QUEST LOG</div>
+            <div class="panel-title">MISSION LOG</div>
             <ul class="task-list" id="task-list">
               <li><span>LOADING...</span><b>...</b></li>
             </ul>
-          </section>
-
-          <section class="frame panel control-panel">
-            <div class="panel-title">COMMAND PAD</div>
-            <div class="button-grid">
-              <a class="pixel-btn" href="http://127.0.0.1:18789/" target="_blank" rel="noreferrer">DASH</a>
-              <a class="pixel-btn" href="http://127.0.0.1:18789/__openclaw__/canvas/" target="_blank" rel="noreferrer">CANVAS</a>
-              <button class="pixel-btn" id="refresh-btn">SYNC</button>
-              <button class="pixel-btn" data-copy="openclaw status --deep">COPY STATUS</button>
-              <button class="pixel-btn wide" data-copy="openclaw logs --follow">COPY LOGS</button>
-            </div>
-            <div class="hint" id="action-hint">TERMINAL COMMAND READY.</div>
           </section>
 
           <section class="frame panel summary-panel">

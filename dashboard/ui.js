@@ -19,7 +19,7 @@ function timeAgo(ms) {
 function mapStatus(job) {
   if (!job.enabled) return { badge: 'OFF', cls: 'warn', desc: 'MISSION PAUSED' };
   if (job.state?.manualHealthy) {
-    return { badge: 'READY', cls: 'ok', desc: 'MANUAL TEST PASS, NO NEW SIGNAL' };
+    return { badge: 'READY', cls: 'ok', desc: 'MANUAL TEST PASS / NO NEW SIGNAL' };
   }
   const status = job.state?.lastStatus || 'unknown';
   if (status === 'ok') return { badge: 'OK', cls: 'ok', desc: 'LAST RUN CLEAR' };
@@ -47,31 +47,30 @@ function renderSummary(data) {
   const jobs = data.jobs.filter((j) => j.enabled);
   const ready = jobs.filter((j) => mapStatus(j).cls === 'ok').length;
   const jammed = jobs.filter((j) => mapStatus(j).badge === 'JAM').length;
-  const hardAlerts = jobs.filter((j) => mapStatus(j).cls === 'danger').length;
+  const alerts = jobs.filter((j) => mapStatus(j).cls === 'danger').length;
 
-  document.getElementById('current-status').textContent = hardAlerts
-    ? `${hardAlerts} ALERT / CHECK NOW`
+  const enemyHp = document.getElementById('enemy-hp');
+  const playerHp = document.getElementById('player-hp');
+  enemyHp.style.width = `${Math.max(12, 100 - jammed * 18 - alerts * 28)}%`;
+  playerHp.style.width = `${Math.max(55, 96 - alerts * 12)}%`;
+
+  document.getElementById('current-status').textContent = alerts
+    ? `${alerts} ALERT / CHECK NOW`
     : jammed
-      ? `${jammed} JAMMED / STILL SCHEDULED`
+      ? `${jammed} JAMMED / STILL RUNNING`
       : 'ALL MISSIONS STABLE';
   document.getElementById('automation-count').textContent = `${jobs.length} LIVE / ${ready} READY`;
-  document.getElementById('lobster-mood').textContent = hardAlerts ? 'BATTLE MODE' : jammed ? 'LOCKED IN' : 'CHILL FOCUS';
+  document.getElementById('lobster-mood').textContent = alerts ? 'GUARD MODE' : jammed ? 'BRAVE' : 'HAPPY';
 
-  document.getElementById('task-bubble').textContent = hardAlerts
-    ? 'ALERT PING! SOME MISSIONS NEED REPAIR.'
+  document.getElementById('task-bubble').textContent = alerts
+    ? 'Woof! Some missions need repair right now.'
     : jammed
-      ? 'NO PANIC. LAST RUN JAMMED, BUT THE QUESTS ARE STILL ACTIVE.'
-      : 'QUIET SHIFT. NO NEW SIGNALS RIGHT NOW.';
+      ? 'Woof. Last run got jammed, but the missions are still active.'
+      : 'Woof! Quiet shift, no new alerts for now.';
 
-  document.getElementById('lobster-label').textContent = hardAlerts
-    ? 'UNIT LOB-01 IN ALERT STATE'
-    : jammed
-      ? 'UNIT LOB-01 HOLDING THE LINE'
-      : 'UNIT LOB-01 READY';
-
+  document.getElementById('refresh-state').textContent = `SYNC ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
   document.getElementById('gateway-pill').textContent = data.gatewayOnline ? 'ONLINE' : 'OFFLINE';
   document.getElementById('line-link').textContent = data.lineStatus;
-  document.getElementById('refresh-state').textContent = `SYNC ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
 
   const summary = document.getElementById('summary-list');
   summary.innerHTML = `
