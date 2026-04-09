@@ -88,6 +88,24 @@ async function loadData() {
   }
 }
 
+function applyTheme(theme) {
+  document.body.dataset.theme = theme;
+  const label = document.getElementById('theme-label');
+  if (label) label.textContent = theme === 'night' ? 'NIGHT' : 'DAY';
+  try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
+}
+
+function initTheme() {
+  let theme = 'day';
+  try {
+    theme = localStorage.getItem('doggo-dream-theme') || theme;
+  } catch {}
+  applyTheme(theme);
+  document.getElementById('theme-toggle')?.addEventListener('click', () => {
+    applyTheme(document.body.dataset.theme === 'night' ? 'day' : 'night');
+  });
+}
+
 function bindActions() {
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
   document.querySelectorAll('[data-copy]').forEach((btn) => {
@@ -106,6 +124,7 @@ function bindActions() {
 
 setInterval(tickClock, 1000);
 tickClock();
+initTheme();
 bindActions();
 loadData();
 setInterval(loadData, 30000);
