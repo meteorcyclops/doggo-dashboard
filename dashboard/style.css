@@ -24,7 +24,7 @@
 * { box-sizing: border-box; image-rendering: pixelated; }
 body {
   margin: 0;
-  font-family: monospace;
+  font-family: ui-monospace, 'Cascadia Code', 'Menlo', 'Consolas', 'Source Code Pro', monospace;
   color: var(--ink);
   background: linear-gradient(180deg, #78cfff 0%, #d4f4ff 45%, #fef6ff 100%);
   transition: background .2s ease, color .2s ease;
@@ -508,6 +508,16 @@ body[data-theme="night"] .frame {
 .summary-list b.warn { color: #c78a10; }
 .task-list b.danger,
 .summary-list b.danger { color: #d85068; }
+.task-list a,
+.headline-list a {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.task-list li b,
+.summary-list li b {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .hint {
   margin-top: 10px;
   font-size: 11px;
@@ -522,7 +532,8 @@ body[data-theme="night"] .frame {
   .bottom-panels { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
-  .top-stats,
+  .top-stats { grid-template-columns: 1fr 1fr; display: grid; }
+  .stat-pill { min-width: 0; }
   .meta-grid,
   .command-grid { grid-template-columns: 1fr; display: grid; }
   .battle-stage { height: 620px; }

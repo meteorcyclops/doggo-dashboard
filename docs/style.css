@@ -23,7 +23,7 @@
 * { box-sizing: border-box; image-rendering: pixelated; }
 body {
   margin: 0;
-  font-family: monospace;
+  font-family: ui-monospace, 'Cascadia Code', 'Menlo', 'Consolas', 'Source Code Pro', monospace;
   color: var(--ink);
   background: linear-gradient(180deg, #78cfff 0%, #d4f4ff 45%, #fef6ff 100%);
   transition: background .2s ease, color .2s ease;
@@ -64,12 +64,10 @@ body[data-theme="night"] {
   font-size: 28px;
   color: #fffef8;
   text-shadow: 3px 3px 0 #b95b87;
-  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .game-sub {
   font-size: 12px;
   color: #fff;
-  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .top-stats {
   display: flex;
@@ -240,7 +238,6 @@ body[data-theme="night"] .grass {
 .side-title {
   color: var(--ink);
   font-size: 16px;
-  font-family: 'ZCOOL KuaiLe', monospace;
 }
 .hp-wrap {
   display: flex;
@@ -595,6 +592,16 @@ body[data-theme="night"] .frame {
 .headline-list a:hover {
   filter: brightness(1.06);
 }
+.task-list a,
+.headline-list a {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+.task-list li b,
+.summary-list li b {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
 .task-list,
 .summary-list {
   list-style: none;
@@ -726,7 +733,8 @@ body[data-theme="night"] .frame {
   animation: dog-pet-pop 0.32s ease-out !important;
 }
 @media (max-width: 720px) {
-  .top-stats,
+  .top-stats { grid-template-columns: 1fr 1fr; display: grid; }
+  .stat-pill { min-width: 0; }
   .meta-grid,
   .command-grid { grid-template-columns: 1fr; display: grid; }
   .battle-stage { height: 620px; }
