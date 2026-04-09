@@ -1,11 +1,11 @@
 {
   "gatewayOnline": true,
-  "lineStatus": "DEMO",
+  "lineStatus": "資料 OK",
   "jobs": [
     {
       "name": "可愛任務提醒",
       "enabled": true,
-      "desc": "示範用任務，展示穩定狀態卡片",
+      "desc": "種子小劇場：穩定進度條用",
       "state": {
         "lastRunAtMs": 1775706600000,
         "lastStatus": "ok"
@@ -14,7 +14,7 @@
     {
       "name": "夢幻市場觀察",
       "enabled": true,
-      "desc": "示範用卡住狀態，但不連任何真實服務",
+      "desc": "種子小劇場：模擬「待留意」進度條",
       "state": {
         "lastRunAtMs": 1775704800000,
         "lastStatus": "error"
@@ -23,7 +23,7 @@
     {
       "name": "狗狗補貨巡邏",
       "enabled": true,
-      "desc": "示範用正常任務，方便展示 UI 變化",
+      "desc": "種子小劇場：順利進度條用",
       "state": {
         "lastRunAtMs": 1775707200000,
         "lastStatus": "ok"
@@ -32,7 +32,7 @@
     {
       "name": "夜晚模式守望",
       "enabled": true,
-      "desc": "示範用待命巡邏，適合切換主題時觀察畫面",
+      "desc": "種子小劇場：待命狀態用（與主題切換無關）",
       "state": {
         "lastRunAtMs": 1775703000000,
         "lastStatus": "ok"

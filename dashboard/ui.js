@@ -73,18 +73,23 @@ function renderSummary(data) {
   `;
 }
 
-async function loadData() {
+const POLL_MS = 60_000;
+
+async function loadData(opts = {}) {
+  const silent = !!opts.silent;
   const hint = document.getElementById('action-hint');
   try {
-    hint.textContent = 'SYNCING CUTE DATA...';
+    if (!silent && hint) hint.textContent = 'SYNCING CUTE DATA...';
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     renderTasks(data.jobs);
     renderSummary(data);
-    hint.textContent = `SYNC OK @ ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
+    if (hint && !silent) {
+      hint.textContent = `SYNC OK @ ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
+    }
   } catch (err) {
-    hint.textContent = `SYNC FAIL: ${err.message}`;
+    if (hint) hint.textContent = `SYNC FAIL: ${err.message}`;
   }
 }
 
@@ -127,4 +132,4 @@ tickClock();
 initTheme();
 bindActions();
 loadData();
-setInterval(loadData, 30000);
+setInterval(() => loadData({ silent: true }), POLL_MS);
