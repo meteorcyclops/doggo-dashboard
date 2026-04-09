@@ -79,6 +79,15 @@ function burstSticker(target, symbol = '❤') {
   window.setTimeout(() => sticker.remove(), 820);
 }
 
+function noteLabel(note, index) {
+  const text = `${note.nickname || ''} ${note.message || ''}`.toLowerCase();
+  if (/愛|喜歡|可愛|抱抱|讚|❤️|❤|♥|love/.test(text)) return 'LOVE';
+  if (/急|救|壞|bug|錯|error|不行|有問題|help|求救|緊急/.test(text)) return 'ALERT';
+  if (/嗨|hello|hi|哈囉|你好|晚安|早安|安安|路過/.test(text)) return 'MAIL';
+  const fallback = ['QUEST', 'MAIL', 'LOVE'];
+  return fallback[index % fallback.length];
+}
+
 function renderNotes(notes) {
   if (!listEl) return;
   const prevIds = lastRenderedIds;
@@ -87,8 +96,8 @@ function renderNotes(notes) {
     listEl.innerHTML = '<div class="guestbook-empty">還沒有便條紙，來貼第一張吧。</div>';
     return;
   }
-  listEl.innerHTML = notes.map((note) => `
-    <article class="guestbook-note" data-id="${escHtml(note.id)}">
+  listEl.innerHTML = notes.map((note, index) => `
+    <article class="guestbook-note" data-id="${escHtml(note.id)}" data-label="${escHtml(noteLabel(note, index))}">
       <div class="guestbook-note-head">
         <div class="guestbook-note-name">
           ${escHtml(note.nickname || '匿名訪客')}

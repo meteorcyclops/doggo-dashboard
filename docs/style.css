@@ -797,7 +797,7 @@ body[data-theme="night"] .frame {
   transform-origin: center bottom;
 }
 .guestbook-note::after {
-  content: "QUEST";
+  content: attr(data-label);
   position: absolute;
   left: 10px;
   top: -11px;
@@ -821,14 +821,8 @@ body[data-theme="night"] .frame {
 .guestbook-note:nth-child(3n+2) {
   background: linear-gradient(180deg, #f8fbff 0%, #cce9ff 100%);
 }
-.guestbook-note:nth-child(3n+2)::after {
-  content: "MAIL";
-}
 .guestbook-note:nth-child(3n+3) {
   background: linear-gradient(180deg, #fff9fb 0%, #ffd0e5 100%);
-}
-.guestbook-note:nth-child(3n+3)::after {
-  content: "LOVE";
 }
 .guestbook-note-head {
   display: flex;
@@ -1009,7 +1003,38 @@ body[data-theme="night"] .guestbook-password-input::placeholder {
   color: #6d6796;
 }
 body[data-theme="night"] .guestbook-note,
-body[data-theme="night"] .guestbook-modal-card {
+body[data-theme="night"] .guestbook-modal-card,
+body[data-theme="night"] .guestbook-delete,
+body[data-theme="night"] .guestbook-note-name,
+body[data-theme="night"] .guestbook-modal-title {
+  color: #241f46;
+}
+body[data-theme="night"] .guestbook-delete {
+  background: linear-gradient(180deg, #fff3bf 0%, #ffd467 100%);
+  border-color: #736bc1;
+  box-shadow: inset 0 0 0 2px #fff9e8, 0 3px 0 #b38d3b;
+}
+body[data-theme="night"] .guestbook-delete:hover,
+body[data-theme="night"] .guestbook-delete:focus-visible {
+  filter: brightness(1.03);
+  outline: none;
+}
+body[data-theme="night"] .task-list li,
+body[data-theme="night"] .summary-list li {
+  background: rgba(255,255,255,.94);
+}
+body[data-theme="night"] .task-list span,
+body[data-theme="night"] .summary-list span,
+body[data-theme="night"] .task-list small,
+body[data-theme="night"] .summary-list small,
+body[data-theme="night"] .side-meta,
+body[data-theme="night"] .task-list a,
+body[data-theme="night"] .headline-list a,
+body[data-theme="night"] .hint {
+  color: #3c3768;
+}
+body[data-theme="night"] .task-list b,
+body[data-theme="night"] .summary-list b {
   color: #241f46;
 }
 @keyframes spark-pulse {
