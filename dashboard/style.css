@@ -343,6 +343,28 @@ body[data-theme="night"] .player-box,
 body[data-theme="night"] .command-box,
 body[data-theme="night"] .dialog {
   background: #f6f4ff;
+  color: #2f2952;
+}
+body[data-theme="night"] .enemy-name,
+body[data-theme="night"] .player-name,
+body[data-theme="night"] .command-title,
+body[data-theme="night"] .side-title,
+body[data-theme="night"] .enemy-text,
+body[data-theme="night"] .dialog,
+body[data-theme="night"] .meta-grid b,
+body[data-theme="night"] .stat-pill b,
+body[data-theme="night"] .summary-list b,
+body[data-theme="night"] .task-list b {
+  color: #2f2952;
+}
+body[data-theme="night"] .hp-wrap span,
+body[data-theme="night"] .meta-grid span,
+body[data-theme="night"] .task-list small,
+body[data-theme="night"] .hint,
+body[data-theme="night"] .stat-pill span,
+body[data-theme="night"] .summary-list span,
+body[data-theme="night"] .task-list span {
+  color: #595381;
 }
 body[data-theme="night"] .candy {
   background: linear-gradient(180deg, #6e5bb1 0%, #52448f 100%);
@@ -353,7 +375,11 @@ body[data-theme="night"] .game-sub {
   text-shadow: 3px 3px 0 #35285f;
 }
 body[data-theme="night"] .stat-pill {
-  background: rgba(240, 244, 255, .88);
+  background: rgba(240, 244, 255, .96);
+}
+body[data-theme="night"] .task-list li,
+body[data-theme="night"] .summary-list li {
+  background: rgba(245, 243, 255, .96);
 }
 .dialog {
   left: 22px;
