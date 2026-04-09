@@ -48,7 +48,7 @@
               <div class="enemy-text" id="current-status">讀取中...</div>
             </div>
 
-            <div class="doggo" id="dog-sprite">
+            <div class="doggo" id="dog-sprite" data-dog-state="idle">
               <div class="ear left"></div>
               <div class="ear right"></div>
               <div class="body"></div>
@@ -56,6 +56,7 @@
               <div class="eye left"></div>
               <div class="eye right"></div>
               <div class="nose"></div>
+              <div class="bone" aria-hidden="true"></div>
               <div class="cheek left"></div>
               <div class="cheek right"></div>
               <div class="paw p1"></div>
@@ -71,15 +72,41 @@
           </div>
 
           <div class="bottom-panels">
-            <div class="player-box frame white-panel">
-              <div class="player-name">DOGGO UNIT DEMO-01</div>
-              <div class="hp-wrap">
-                <span>HP</span>
-                <div class="hp-bar green"><i id="player-hp"></i></div>
+            <div class="player-stack">
+              <div class="player-box frame white-panel">
+                <div class="player-name">DOGGO UNIT DEMO-01</div>
+                <div class="hp-wrap">
+                  <span>HP</span>
+                  <div class="hp-bar green"><i id="player-hp"></i></div>
+                </div>
+                <div class="meta-grid">
+                  <div><span>任務</span><b id="automation-count">讀取中...</b></div>
+                  <div><span>心情</span><b id="lobster-mood">HAPPY</b></div>
+                </div>
               </div>
-              <div class="meta-grid">
-                <div><span>任務</span><b id="automation-count">讀取中...</b></div>
-                <div><span>心情</span><b id="lobster-mood">HAPPY</b></div>
+
+              <div class="main-feed-panel frame white-panel">
+                <div class="side-title">台股快報</div>
+                <div class="side-meta" id="quote-meta">報價快照讀取中…</div>
+                <ul class="task-list" id="quote-list">
+                  <li><span>LOADING...</span><b>...</b></li>
+                </ul>
+              </div>
+
+              <div class="main-feed-panel frame white-panel">
+                <div class="side-title">新聞雷達</div>
+                <div class="side-meta" id="feed-meta">RSS 讀取中…</div>
+                <ul class="task-list headline-list" id="headline-list">
+                  <li><span>LOADING...</span><b>...</b></li>
+                </ul>
+              </div>
+
+              <div class="main-feed-panel frame white-panel">
+                <div class="side-title">川普發言快訊</div>
+                <div class="side-meta" id="trump-meta">讀取中…</div>
+                <ul class="task-list headline-list" id="trump-list">
+                  <li><span>LOADING...</span><b>...</b></li>
+                </ul>
               </div>
             </div>
 

@@ -1,5 +1,4 @@
 {
-  "generatedAt": "2026-04-09T01:40:00.000Z",
   "gatewayOnline": true,
   "lineStatus": "DEMO",
   "jobs": [
@@ -39,5 +38,135 @@
         "lastStatus": "ok"
       }
     }
-  ]
+  ],
+  "generatedAt": "2026-04-09T02:48:46Z",
+  "provenance": "LIVE (build)",
+  "quotes": {
+    "asOf": "2026-04-09T02:48:43Z",
+    "items": [
+      {
+        "symbol": "2330",
+        "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
+        "price": 1935.0,
+        "changePct": -0.77
+      },
+      {
+        "symbol": "0050",
+        "name": "YUANTA SECURITIES INV TRUST CO ",
+        "price": 79.0,
+        "changePct": 4.91
+      },
+      {
+        "symbol": "2317",
+        "name": "HON HAI PRECISION INDUSTRY",
+        "price": 199.5,
+        "changePct": -0.99
+      }
+    ]
+  },
+  "feed": {
+    "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
+    "items": [
+      {
+        "title": "焦點股》高力：3月與Q1營收登頂 強攻漲停",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397945",
+        "time": "Thu, 09 Apr 2026 10:34:05 +0800"
+      },
+      {
+        "title": "亞太區總裁張嗣漢化身黑衣人 揭密好市多會員護照優惠",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397942",
+        "time": "Thu, 09 Apr 2026 10:32:42 +0800"
+      },
+      {
+        "title": "焦點股》訊芯-KY：光通訊利多題材 創新天價",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397932",
+        "time": "Thu, 09 Apr 2026 10:30:11 +0800"
+      },
+      {
+        "title": "史上第2大！全球500大富豪單日身家大增2650億美元",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397888",
+        "time": "Thu, 09 Apr 2026 10:27:00 +0800"
+      },
+      {
+        "title": "焦點股》鼎元：光電大展激勵士氣 帶量漲停",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397927",
+        "time": "Thu, 09 Apr 2026 10:24:33 +0800"
+      },
+      {
+        "title": "台泥啟動信義區老廠資產活化 將斥資268億元打造為企業總部大樓",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397918",
+        "time": "Thu, 09 Apr 2026 10:20:27 +0800"
+      },
+      {
+        "title": "焦點股》富采：光電大展帶動題材 漲停鎖死",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5397912",
+        "time": "Thu, 09 Apr 2026 10:19:08 +0800"
+      },
+      {
+        "title": "雪上加霜！ 伊朗經濟戰前已疲弱 戰後進一步惡化",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5397863",
+        "time": "Thu, 09 Apr 2026 10:18:29 +0800"
+      }
+    ]
+  },
+  "dog": {
+    "state": "idle",
+    "label": "平穩日常"
+  },
+  "trumpTruth": {
+    "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
+    "asOf": "2026-04-09T02:48:45Z",
+    "items": [
+      {
+        "postedAtTw": "2026-04-09T07:31:00+08:00",
+        "excerpt": "NATO WASN’T THERE WHEN WE NEEDED THEM, AND THEY WON’T BE THERE IF WE NEED THEM AGAIN. REMEMBER GREENLAND, THAT BIG, POORLY RUN, PIECE OF ICE!!! President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37670"
+      },
+      {
+        "postedAtTw": "2026-04-09T00:20:00+08:00",
+        "excerpt": "Marjorie “Traitor” Brown’s (GREEN TURNS TO BROWN UNDER STRESS!) seat in Congress has been taken over by a wonderful and talented man, Clay Fuller, who won convincingly, and right from the beginning, despite many people…",
+        "url": "https://www.trumpstruth.org/statuses/37669"
+      },
+      {
+        "postedAtTw": "2026-04-09T00:04:00+08:00",
+        "excerpt": "Numerous Agreements, Lists, and Letters are being sent out by people that have absolutely nothing to do with the U.S.A. / Iran Negotiation, in many cases, they are total Fraudsters, Charlatans, and WORSE. They will be r…",
+        "url": "https://www.trumpstruth.org/statuses/37668",
+        "important": true
+      },
+      {
+        "postedAtTw": "2026-04-08T22:51:00+08:00",
+        "excerpt": "Secretary Hegseth and Chairman Caine hold a press briefing on Operation Epic Fury: https://m.youtube.com/live/tG7-hLW0okE?si=42CeLOL2esIAvfQC",
+        "url": "https://www.trumpstruth.org/statuses/37667"
+      },
+      {
+        "postedAtTw": "2026-04-08T19:30:00+08:00",
+        "excerpt": "A Country supplying Military Weapons to Iran will be immediately tariffed, on any and all goods sold to the United States of America, 50%, effective immediately. There will be no exclusions or exemptions! President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37666",
+        "important": true
+      },
+      {
+        "postedAtTw": "2026-04-08T19:22:00+08:00",
+        "excerpt": "The United States will work closely with Iran, which we have determined has gone through what will be a very productive Regime Change! There will be no enrichment of Uranium, and the United States will, working with Ira…",
+        "url": "https://www.trumpstruth.org/statuses/37665",
+        "important": true
+      },
+      {
+        "postedAtTw": "2026-04-08T19:00:00+08:00",
+        "excerpt": "A big day for World Peace! Iran wants it to happen, they’ve had enough! Likewise, so has everyone else! The United States of America will be helping with the traffic buildup in the Strait of Hormuz. There will be lots o…",
+        "url": "https://www.trumpstruth.org/statuses/37664",
+        "important": true
+      },
+      {
+        "postedAtTw": "2026-04-08T11:41:00+08:00",
+        "excerpt": "https://truthsocial.com/@epaleezeldin/116293314492137728",
+        "url": "https://www.trumpstruth.org/statuses/37662"
+      },
+      {
+        "postedAtTw": "2026-04-08T11:39:00+08:00",
+        "excerpt": "No one can believe that Fake News CNN put out a knowingly false and dangerous statement pretending it came from the upper levels of the Iranian Government. It didn’t! It was totally made up and posted, as a headline, fo…",
+        "url": "https://www.trumpstruth.org/statuses/37661",
+        "important": true
+      }
+    ]
+  }
 }

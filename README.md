@@ -1,71 +1,97 @@
 # Doggo Dashboard
 
 一個可愛、像素風、偏星之卡比戰鬥框氣質的靜態展示儀表板。  
-這個 repo 目前提供的是 **公開展示版**，使用 **假資料**，不連你的本機服務。
+公開站以 **GitHub Pages** 部署；**台股與新聞在 CI 由 Python 拉取後寫入 `docs/data.json`**，瀏覽器只讀同源的 JSON（避開 CORS）。
 
 ## Live Demo
 
 - GitHub Pages: https://meteorcyclops.github.io/doggo-dashboard/
 
+## 資料來源與免責
+
+- **台股報價**：建置腳本使用 [yfinance](https://github.com/ranaroussi/yfinance) 查詢 Yahoo Finance 上的台股代號（預設 `2330`、`0050`、`2317`，格式為 `.TW`）。數字為**延遲／匯總後的行情展示**，僅供版面與互動示範。
+- **新聞**：預設合併 [自由時報 財經](https://news.ltn.com.tw/rss/business.xml) 與 [國際](https://news.ltn.com.tw/rss/world.xml) RSS 標題與連結（繁體中文）。
+- **川普發言快訊**：建置時由 `scripts/trump_truth_tracker.py` 的 `fetch_posts` 讀取第三方存檔站 [trumpstruth.org](https://www.trumpstruth.org/) 的公開 HTML，解析後寫入 `data.json` 的 `trumpTruth`（摘要 + 外連至該站存檔頁）。**這不是官方 Truth Social、也不是本 repo 對該站或內容的背書**；若該站 HTML 結構變更，需手動更新 `scripts/trump_truth_tracker.py` 內的 regex 解析邏輯。
+- **任務卡片**：仍由 `docs/data.seed.json` 的示範 `jobs` 合併進 `docs/data.json`，與真實 cron／LINE 無關。
+
+**法遵／免責**：本專案顯示之股價與新聞皆為**延遲或第三方公開資訊**，僅供 UI 展示與學習用途，**不構成投資建議**，亦不保證即時性或完整性。川普發言區塊之文字為**截短摘要**並連至第三方存檔站，**非官方平台、不代表本專案立場**，請自行判讀原文與來源可信度。
+
 ## 特色
 
-- 可愛狗狗像素角色
+- 可愛狗狗像素角色（依 `dog.state` 切換動畫：idle／bone／excited／worried／sleepy）
 - 白天 / 黑夜主題切換
-- 可愛戰鬥框風格 HUD
-- 純靜態網頁，可安全公開展示
-- 展示資料來自 `docs/data.json`
+- 台股快報、新聞雷達、任務小書與系統讀值
+- 純靜態前端 + 建置時抓資料，可安全公開展示
 
 ## 專案結構
 
 ```text
 .
 ├─ docs/
-│  ├─ index.html      # 公開展示頁
-│  ├─ style.css       # 樣式
-│  ├─ ui.js           # 前端互動
-│  ├─ data.json       # 假資料
+│  ├─ index.html       # 公開展示頁
+│  ├─ style.css
+│  ├─ ui.js
+│  ├─ data.json        # 建置產出（含 quotes / feed / trumpTruth / dog / provenance）
+│  ├─ data.seed.json   # 示範 jobs 等種子，供腳本 merge
 │  └─ .nojekyll
+├─ scripts/
+│  ├─ build_dashboard_data.py   # 合併種子 + yfinance + RSS + trumpTruth → data.json
+│  └─ trump_truth_tracker.py    # 川普帖文 HTML 抓取（亦供 CLI digest/alerts）
+├─ requirements.txt
 └─ .github/
    └─ workflows/
       └─ deploy-pages.yml
 ```
 
-## 開發方式
+## 本機只跑腳本預覽資料
 
-你可以先在本機改好，再 push 到 GitHub，自動部署到 GitHub Pages。
+在 repo 根目錄建立虛擬環境並執行建置（會覆寫 `docs/data.json`）：
 
-### 本機預覽
+```bash
+cd /path/to/doggo-dashboard
+python3 -m venv .venv
+source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+python scripts/build_dashboard_data.py
+```
+
+可選環境變數（逗號分隔）：
+
+- `DOGGO_STOCK_SYMBOLS`：例如 `2330,0050,2884`（多為上市 `.TW`；上櫃個股可能需改腳本為 `.TWO`）
+- `DOGGO_RSS_URLS`：自訂 RSS 列表
+
+完成後再啟動靜態伺服器預覽頁面：
 
 ```bash
 cd docs
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-然後開：
+瀏覽：http://127.0.0.1:4173
 
-- http://127.0.0.1:4173
+## 開發方式
+
+在本機修改 `docs/` 或 `scripts/` 後 push 到 GitHub；workflow 會在部署前執行 Python 產生最新的 `docs/data.json` 再上傳。
 
 ## 部署流程
 
-目前已設定 GitHub Actions：
-
-- 只要 push 到 `master`
-- 且變更包含 `docs/**`、`README.md` 或 workflow 本身
-- 就會自動部署到 GitHub Pages
+- Push 至 `master`，且變更包含 `docs/**`、`scripts/**`、`requirements.txt`、`README.md` 或 workflow 本身時觸發部署。
+- 另設 **UTC** 排程 `0 1,7,13,19 * * *`（每日四次）重新建置並部署，讓公開頁有機會更新報價與新聞（仍受來源與 Actions 排程影響）。
+- 也可在 Actions 分頁手動 **Run workflow**。
 
 ## 安全說明
 
-這個公開版：
+公開版：
 
-- **不會連到本機 OpenClaw**
-- **不會讀取真實 cron / LINE / gateway 狀態**
-- 僅展示 UI 與假資料
+- **不會連到本機 OpenClaw** 或你的私有服務
+- **不會讀取真實 cron／LINE／gateway 狀態**（頂多顯示種子裡的示範欄位）
+- 行情與 RSS 僅在 **GitHub Actions 建置時** 抓取，瀏覽器不向這些第三方直接請求
 
-如果你要做私有版 / 本機版，可以另外保留一套只在本機跑的資料來源。
+若需要私有／本機即時連線版，請另建資料來源與後端，勿把金鑰放進此靜態 repo。
 
 ## 後續可以再做
 
-- 自動切換白天 / 黑夜
+- 自動切換白天 / 黑夜（依時段）
 - 更完整的角色動畫
 - 更多像素風任務卡樣式
 - 多頁展示模式
