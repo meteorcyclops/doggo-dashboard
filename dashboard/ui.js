@@ -17,11 +17,23 @@ function timeAgo(ms) {
 }
 
 function mapStatus(job) {
-  if (!job.enabled) return { text: 'DISABLED', cls: 'warn' };
+  if (!job.enabled) {
+    return { badge: '已停用', cls: 'warn', human: '目前停用中' };
+  }
+  if (job.state?.manualHealthy) {
+    return { badge: '待命', cls: 'ok', human: '剛手動測過，現在可正常執行，暫時沒有新通知' };
+  }
   const status = job.state?.lastStatus || job.state?.lastRunStatus || 'unknown';
-  if (status === 'ok') return { text: 'OK', cls: 'ok' };
-  if (status === 'error') return { text: 'ERROR', cls: 'danger' };
-  return { text: 'RUNNING', cls: 'warn' };
+  if (status === 'ok') {
+    return { badge: '正常', cls: 'ok', human: '最近一次執行正常' };
+  }
+  if (status === 'error') {
+    const reason = job.state?.lastErrorReason === 'rate_limit'
+      ? '上次被模型額度限制擋住'
+      : '上次執行失敗，建議再檢查';
+    return { badge: '注意', cls: 'warn', human: reason };
+  }
+  return { badge: '執行中', cls: 'warn', human: '等待下一次排程執行' };
 }
 
 function renderTasks(jobs) {
@@ -31,24 +43,32 @@ function renderTasks(jobs) {
   jobs.forEach((job) => {
     const state = mapStatus(job);
     const li = document.createElement('li');
-    li.innerHTML = `<span>${job.name}<br><small>${timeAgo(job.state?.lastRunAtMs)}</small></span><b class="${state.cls}">${state.text}</b>`;
+    li.innerHTML = `<span>${job.name}<br><small>${timeAgo(job.state?.lastRunAtMs)}，${state.human}</small></span><b class="${state.cls}">${state.badge}</b>`;
     el.appendChild(li);
   });
 }
 
 function renderSummary(data) {
   const enabledJobs = data.jobs.filter((job) => job.enabled);
-  const errorJobs = enabledJobs.filter((job) => mapStatus(job).cls === 'danger');
-  const okJobs = enabledJobs.filter((job) => mapStatus(job).cls === 'ok');
+  const healthyJobs = enabledJobs.filter((job) => mapStatus(job).cls === 'ok');
+  const attentionJobs = enabledJobs.filter((job) => mapStatus(job).cls !== 'ok');
 
-  document.getElementById('current-status').textContent = errorJobs.length
-    ? `有 ${errorJobs.length} 條提醒需要注意`
-    : '待命中，可接新任務';
-  document.getElementById('automation-count').textContent = `${enabledJobs.length} 條已啟用，${okJobs.length} 條最近正常`;
-  document.getElementById('task-bubble').textContent = `監控中：${enabledJobs.map((job) => job.name.replace(/ monitor| alerts| digest| watch/gi, '')).join(' / ')}`;
-  document.getElementById('lobster-label').textContent = errorJobs.length
-    ? '龍蝦在線，發現部分提醒異常'
-    : '龍蝦在線，待命中';
+  document.getElementById('current-status').textContent = attentionJobs.length
+    ? `目前有 ${attentionJobs.length} 條提醒值得注意，但任務仍在排程中`
+    : '全部提醒目前都安穩運作中';
+  document.getElementById('automation-count').textContent = `${enabledJobs.length} 條已啟用，${healthyJobs.length} 條狀態穩定`;
+
+  const bubbleText = attentionJobs.length
+    ? '我有在工作喔，只是有些提醒上次被額度限制卡到，現在已經可以手動跑。'
+    : '今天的提醒們都很乖，我在工位上顧著它們。';
+  document.getElementById('task-bubble').textContent = bubbleText;
+
+  document.getElementById('lobster-label').textContent = attentionJobs.length
+    ? '小龍蝦正在盯著有風險的提醒'
+    : '小龍蝦已上工，一切順順的';
+  document.getElementById('lobster-mood').textContent = attentionJobs.length
+    ? '盯盤中，但心情還行'
+    : '專心工作中';
 
   const pill = document.getElementById('gateway-pill');
   pill.textContent = data.gatewayOnline ? '● ONLINE' : '● DEGRADED';
@@ -71,7 +91,7 @@ async function loadData() {
     const data = await res.json();
     renderTasks(data.jobs);
     renderSummary(data);
-    hint.textContent = `已更新，來源：本機 dashboard/data.json，${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
+    hint.textContent = `已更新，${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
   } catch (err) {
     hint.textContent = `資料讀取失敗：${err.message}`;
   }

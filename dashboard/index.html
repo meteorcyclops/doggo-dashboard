@@ -11,7 +11,7 @@
       <header class="topbar pixel-panel">
         <div>
           <div class="brand">🦞 龍蝦指揮中心</div>
-          <div class="sub">OpenClaw Pixel Command Dashboard</div>
+          <div class="sub">Cute Pixel Ops Room</div>
         </div>
         <div class="status-group">
           <div class="status-pill online" id="gateway-pill">● ONLINE</div>
@@ -22,32 +22,39 @@
       <main class="layout">
         <section class="scene pixel-panel">
           <div class="pixel-room">
-            <div class="monitor glow"></div>
+            <div class="window"></div>
+            <div class="lamp"></div>
+            <div class="monitor glow">
+              <div class="screen-ui"></div>
+            </div>
             <div class="desk"></div>
-            <div class="lobster">
-              <div class="lobster-label" id="lobster-label">龍蝦在線，待命中</div>
+            <div class="keyboard"></div>
+            <div class="coffee"></div>
+
+            <div class="lobster-worker" id="lobster-worker">
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="claw left"></div>
+              <div class="claw right"></div>
+              <div class="tail"></div>
             </div>
-            <div class="server-stack">
-              <div class="server"></div>
-              <div class="server"></div>
-              <div class="server"></div>
-              <div class="server"></div>
-            </div>
-            <div class="task-bubble" id="task-bubble">監控中：載入中...</div>
+
+            <div class="speech-bubble" id="task-bubble">載入今天的任務中...</div>
+            <div class="room-caption" id="lobster-label">小龍蝦已上工，待命中</div>
           </div>
 
           <div class="scene-footer">
             <div class="mini-card pixel-panel inset">
-              <div class="label">當前狀態</div>
+              <div class="label">現在在做什麼</div>
               <div class="value" id="current-status">讀取中...</div>
             </div>
             <div class="mini-card pixel-panel inset">
-              <div class="label">自動化任務</div>
+              <div class="label">提醒任務</div>
               <div class="value" id="automation-count">讀取中...</div>
             </div>
-            <div class="mini-card pixel-panel inset">
-              <div class="label">今日主題</div>
-              <div class="value" id="today-theme">市場、追蹤、提醒</div>
+            <div class="mini-card pixel-panel inset mood-card">
+              <div class="label">龍蝦心情</div>
+              <div class="value" id="lobster-mood">專心工作中</div>
             </div>
           </div>
         </section>

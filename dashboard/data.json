@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-09T00:45:00.000Z",
+  "generatedAt": "2026-04-09T00:53:00.000Z",
   "gatewayOnline": true,
   "lineStatus": "OK",
   "jobs": [
@@ -8,7 +8,9 @@
       "enabled": true,
       "state": {
         "lastRunAtMs": 1775663116328,
-        "lastStatus": "error"
+        "lastStatus": "error",
+        "lastErrorReason": "rate_limit",
+        "manualHealthy": true
       }
     },
     {
@@ -32,7 +34,9 @@
       "enabled": true,
       "state": {
         "lastRunAtMs": 1775663985497,
-        "lastStatus": "error"
+        "lastStatus": "error",
+        "lastErrorReason": "rate_limit",
+        "manualHealthy": true
       }
     }
   ]
