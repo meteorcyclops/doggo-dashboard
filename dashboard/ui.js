@@ -1,3 +1,16 @@
+function typeEffect(element, text, speed = 30) {
+  element.textContent = "";
+  let i = 0;
+  const timer = setInterval(() => {
+    if (i < text.length) {
+      element.textContent += text.charAt(i);
+      i++;
+    } else {
+      clearInterval(timer);
+    }
+  }, speed);
+}
+
 function tickClock() {
   const el = document.getElementById('clock');
   if (!el) return;
@@ -44,14 +57,17 @@ function renderSummary(data) {
   const jammed = jobs.filter((j) => mapStatus(j).badge === 'JAM').length;
   const alerts = jobs.filter((j) => mapStatus(j).cls === 'danger').length;
 
+  // HP 動畫更新
   document.getElementById('enemy-hp').style.width = `${Math.max(18, 100 - jammed * 18 - alerts * 26)}%`;
   document.getElementById('player-hp').style.width = `${Math.max(62, 96 - alerts * 12)}%`;
 
-  document.getElementById('current-status').textContent = alerts
+  const newStatus = alerts
     ? `${alerts} alert, need cuddle + fix`
     : jammed
       ? `${jammed} jammed, but still scheduled`
       : 'all missions calm and cute';
+      
+  typeEffect(document.getElementById('current-status'), newStatus);
 
   document.getElementById('automation-count').textContent = `${jobs.length} live / ${ready} ready`;
   document.getElementById('lobster-mood').textContent = alerts ? 'WORRIED' : jammed ? 'BRAVE' : 'HAPPY';

@@ -115,15 +115,28 @@ body[data-theme="night"] .moon,
 body[data-theme="night"] .star {
   display: block;
 }
-.battle-stage::before {
-  content: "";
+/* 添加 CRT 掃描線動畫 */
+.battle-stage::after {
+  content: " ";
+  display: block;
   position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px);
-  background-size: 8px 8px;
-  opacity: .32;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.9; }
+  50% { opacity: 1.1; }
+  100% { opacity: 0.9; }
+}
+
+/* HP Bar 動畫 */
+.hp-bar i {
+  transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .cloud,
 .hill,
