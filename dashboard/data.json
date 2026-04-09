@@ -1,0 +1,39 @@
+{
+  "generatedAt": "2026-04-09T00:45:00.000Z",
+  "gatewayOnline": true,
+  "lineStatus": "OK",
+  "jobs": [
+    {
+      "name": "US market 15m monitor",
+      "enabled": true,
+      "state": {
+        "lastRunAtMs": 1775663116328,
+        "lastStatus": "error"
+      }
+    },
+    {
+      "name": "Trump Truth important alerts",
+      "enabled": true,
+      "state": {
+        "lastRunAtMs": 1775694121775,
+        "lastStatus": "ok"
+      }
+    },
+    {
+      "name": "Trump Truth daily digest",
+      "enabled": true,
+      "state": {
+        "lastRunAtMs": 1775649320976,
+        "lastStatus": "ok"
+      }
+    },
+    {
+      "name": "Canon RF45 stock watch",
+      "enabled": true,
+      "state": {
+        "lastRunAtMs": 1775663985497,
+        "lastStatus": "error"
+      }
+    }
+  ]
+}

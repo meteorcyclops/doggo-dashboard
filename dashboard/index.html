@@ -14,7 +14,7 @@
           <div class="sub">OpenClaw Pixel Command Dashboard</div>
         </div>
         <div class="status-group">
-          <div class="status-pill online">● ONLINE</div>
+          <div class="status-pill online" id="gateway-pill">● ONLINE</div>
           <div class="clock" id="clock">--:--:--</div>
         </div>
       </header>
@@ -25,7 +25,7 @@
             <div class="monitor glow"></div>
             <div class="desk"></div>
             <div class="lobster">
-              <div class="lobster-label">龍蝦在線，待命中</div>
+              <div class="lobster-label" id="lobster-label">龍蝦在線，待命中</div>
             </div>
             <div class="server-stack">
               <div class="server"></div>
@@ -33,54 +33,53 @@
               <div class="server"></div>
               <div class="server"></div>
             </div>
-            <div class="task-bubble">監控中：股票 / 川普 / 補貨</div>
+            <div class="task-bubble" id="task-bubble">監控中：載入中...</div>
           </div>
 
           <div class="scene-footer">
             <div class="mini-card pixel-panel inset">
               <div class="label">當前狀態</div>
-              <div class="value">待命，可接新任務</div>
+              <div class="value" id="current-status">讀取中...</div>
             </div>
             <div class="mini-card pixel-panel inset">
               <div class="label">自動化任務</div>
-              <div class="value">4 條運行中</div>
+              <div class="value" id="automation-count">讀取中...</div>
             </div>
             <div class="mini-card pixel-panel inset">
               <div class="label">今日主題</div>
-              <div class="value">市場、追蹤、提醒</div>
+              <div class="value" id="today-theme">市場、追蹤、提醒</div>
             </div>
           </div>
         </section>
 
         <aside class="sidebar">
           <section class="pixel-panel side-block">
-            <h2>聊天室</h2>
-            <div class="chat-log">
-              <div class="msg from-user">龍蝦幫我看市場消息</div>
-              <div class="msg from-lobster">已追蹤川普社群、盤中推播與補貨提醒。</div>
-              <div class="msg from-user">下一步做什麼？</div>
-              <div class="msg from-lobster">可以新增控制台、瀏覽器操作或更多監控。</div>
+            <div class="section-head">
+              <h2>快速操作</h2>
+              <button class="pixel-btn" id="refresh-btn">刷新資料</button>
             </div>
-            <div class="chat-input">輸入命令或直接聊天...</div>
+            <div class="button-grid">
+              <a class="pixel-btn link-btn" href="http://127.0.0.1:18789/" target="_blank" rel="noreferrer">Open Dashboard</a>
+              <a class="pixel-btn link-btn" href="http://127.0.0.1:18789/__openclaw__/canvas/" target="_blank" rel="noreferrer">Open Canvas</a>
+              <button class="pixel-btn" data-copy="openclaw status --deep">複製 status 指令</button>
+              <button class="pixel-btn" data-copy="openclaw logs --follow">複製 logs 指令</button>
+            </div>
+            <div class="hint" id="action-hint">可直接開啟本機頁面，或複製指令到 terminal。</div>
           </section>
 
           <section class="pixel-panel side-block">
             <h2>任務面板</h2>
-            <ul class="task-list">
-              <li><span>美股 15 分鐘推播</span><b>RUNNING</b></li>
-              <li><span>川普重大發言提醒</span><b>RUNNING</b></li>
-              <li><span>Canon 補貨監測</span><b>RUNNING</b></li>
-              <li><span>像素控制台原型</span><b>BUILDING</b></li>
+            <ul class="task-list" id="task-list">
+              <li><span>載入中...</span><b>...</b></li>
             </ul>
           </section>
 
           <section class="pixel-panel side-block">
-            <h2>未來可接</h2>
-            <ul class="feature-list">
-              <li>接 OpenClaw sessions / cron 即時資料</li>
-              <li>顯示工具呼叫時間線</li>
-              <li>像素人物狀態切換，待命 / 查資料 / 修 bug</li>
-              <li>一鍵開啟 Dashboard / Logs / Browser</li>
+            <h2>系統摘要</h2>
+            <ul class="feature-list" id="summary-list">
+              <li><span>Gateway</span><b>檢查中</b></li>
+              <li><span>LINE</span><b>檢查中</b></li>
+              <li><span>資料更新</span><b>尚未更新</b></li>
             </ul>
           </section>
         </aside>

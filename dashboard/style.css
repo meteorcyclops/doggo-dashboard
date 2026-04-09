@@ -8,6 +8,7 @@
   --accent-2: #ff8bc2;
   --ok: #6dff8b;
   --warn: #ffd166;
+  --danger: #ff7b7b;
   --border: #3d3469;
 }
 
@@ -40,6 +41,8 @@ body {
 .status-group { text-align: right; }
 .status-pill { font-size: 12px; margin-bottom: 8px; }
 .status-pill.online { color: var(--ok); }
+.status-pill.warn { color: var(--warn); }
+.status-pill.danger { color: var(--danger); }
 .clock { font-size: 28px; color: var(--ok); font-weight: 700; }
 .layout {
   display: grid;
@@ -101,7 +104,7 @@ body {
   background-size: 22px 6px;
 }
 .task-bubble {
-  right: 120px; top: 90px; font-size: 13px; padding: 8px 10px;
+  right: 32px; top: 90px; max-width: 260px; font-size: 13px; padding: 8px 10px;
   background: #102637; color: #b9f6ff; border: 3px solid #53d7ff;
 }
 .scene-footer {
@@ -113,23 +116,54 @@ body {
 .sidebar { display: grid; gap: 16px; }
 .side-block { padding: 14px; }
 .side-block h2 { margin: 0 0 12px; font-size: 18px; }
-.chat-log {
-  display: grid; gap: 10px; min-height: 260px; max-height: 260px; overflow: auto; margin-bottom: 12px;
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
 }
-.msg {
-  padding: 10px 12px; border: 3px solid var(--border); background: #1b1730; font-size: 13px;
+.button-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
-.from-user { border-color: #7c67ff; }
-.from-lobster { border-color: #53d7ff; }
-.chat-input {
-  border: 3px solid #34406c; padding: 12px; color: #6c78ae; background: #151224;
+.pixel-btn {
+  appearance: none;
+  border: 3px solid #3c6b88;
+  background: #163247;
+  color: #dff8ff;
+  padding: 10px 12px;
+  font: inherit;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 2px #53d7ff, 0 4px 0 #091018;
+}
+.pixel-btn:hover { filter: brightness(1.08); }
+.link-btn { display: inline-block; }
+.hint {
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 12px;
 }
 .task-list, .feature-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
 .task-list li, .feature-list li {
   display: flex; justify-content: space-between; gap: 8px; padding: 10px; background: #19162c; border: 3px solid #332d58; font-size: 13px;
 }
-.task-list b { color: var(--warn); }
+.task-list li {
+  align-items: center;
+}
+.task-list span {
+  flex: 1;
+}
+.task-list b.ok { color: var(--ok); }
+.task-list b.warn { color: var(--warn); }
+.task-list b.danger { color: var(--danger); }
 @media (max-width: 1100px) {
   .layout { grid-template-columns: 1fr; }
   .pixel-room { height: 480px; }
+}
+@media (max-width: 700px) {
+  .scene-footer, .button-grid { grid-template-columns: 1fr; }
 }
