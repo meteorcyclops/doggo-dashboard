@@ -1,8 +1,7 @@
 function tickClock() {
   const el = document.getElementById('clock');
   if (!el) return;
-  const now = new Date();
-  el.textContent = now.toLocaleTimeString('zh-TW', { hour12: false });
+  el.textContent = new Date().toLocaleTimeString('zh-TW', { hour12: false });
 }
 
 function timeAgo(ms) {
@@ -18,28 +17,24 @@ function timeAgo(ms) {
 
 function mapStatus(job) {
   if (!job.enabled) return { badge: 'OFF', cls: 'warn', desc: 'MISSION PAUSED' };
-  if (job.state?.manualHealthy) {
-    return { badge: 'READY', cls: 'ok', desc: 'MANUAL TEST PASS / NO NEW SIGNAL' };
-  }
+  if (job.state?.manualHealthy) return { badge: 'READY', cls: 'ok', desc: 'TESTED OK / NO NEW SIGNAL' };
   const status = job.state?.lastStatus || 'unknown';
   if (status === 'ok') return { badge: 'OK', cls: 'ok', desc: 'LAST RUN CLEAR' };
   if (status === 'error') {
-    if (job.state?.lastErrorReason === 'rate_limit') {
-      return { badge: 'JAM', cls: 'warn', desc: 'LAST RUN HIT RATE LIMIT' };
-    }
+    if (job.state?.lastErrorReason === 'rate_limit') return { badge: 'JAM', cls: 'warn', desc: 'LAST RUN HIT RATE LIMIT' };
     return { badge: 'ALERT', cls: 'danger', desc: 'LAST RUN FAILED' };
   }
   return { badge: 'WAIT', cls: 'warn', desc: 'WAITING NEXT CYCLE' };
 }
 
 function renderTasks(jobs) {
-  const el = document.getElementById('task-list');
-  el.innerHTML = '';
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
   jobs.forEach((job) => {
     const state = mapStatus(job);
     const li = document.createElement('li');
     li.innerHTML = `<span>${job.name}<br><small>${timeAgo(job.state?.lastRunAtMs)} · ${state.desc}</small></span><b class="${state.cls}">${state.badge}</b>`;
-    el.appendChild(li);
+    list.appendChild(li);
   });
 }
 
@@ -49,26 +44,24 @@ function renderSummary(data) {
   const jammed = jobs.filter((j) => mapStatus(j).badge === 'JAM').length;
   const alerts = jobs.filter((j) => mapStatus(j).cls === 'danger').length;
 
-  const enemyHp = document.getElementById('enemy-hp');
-  const playerHp = document.getElementById('player-hp');
-  enemyHp.style.width = `${Math.max(12, 100 - jammed * 18 - alerts * 28)}%`;
-  playerHp.style.width = `${Math.max(55, 96 - alerts * 12)}%`;
+  document.getElementById('enemy-hp').style.width = `${Math.max(18, 100 - jammed * 18 - alerts * 26)}%`;
+  document.getElementById('player-hp').style.width = `${Math.max(62, 96 - alerts * 12)}%`;
 
   document.getElementById('current-status').textContent = alerts
-    ? `${alerts} ALERT / CHECK NOW`
+    ? `${alerts} alert, need cuddle + fix`
     : jammed
-      ? `${jammed} JAMMED / STILL RUNNING`
-      : 'ALL MISSIONS STABLE';
-  document.getElementById('automation-count').textContent = `${jobs.length} LIVE / ${ready} READY`;
-  document.getElementById('lobster-mood').textContent = alerts ? 'GUARD MODE' : jammed ? 'BRAVE' : 'HAPPY';
+      ? `${jammed} jammed, but still scheduled`
+      : 'all missions calm and cute';
+
+  document.getElementById('automation-count').textContent = `${jobs.length} live / ${ready} ready`;
+  document.getElementById('lobster-mood').textContent = alerts ? 'WORRIED' : jammed ? 'BRAVE' : 'HAPPY';
 
   document.getElementById('task-bubble').textContent = alerts
-    ? 'Woof! Some missions need repair right now.'
+    ? 'Doggo says: some missions need help right now!'
     : jammed
-      ? 'Woof. Last run got jammed, but the missions are still active.'
-      : 'Woof! Quiet shift, no new alerts for now.';
+      ? 'Doggo says: last run got jammed, but the missions are still alive.'
+      : 'Doggo says: everything is quiet, no new alerts for now.';
 
-  document.getElementById('refresh-state').textContent = `SYNC ${new Date(data.generatedAt).toLocaleTimeString('zh-TW', { hour12: false })}`;
   document.getElementById('gateway-pill').textContent = data.gatewayOnline ? 'ONLINE' : 'OFFLINE';
   document.getElementById('line-link').textContent = data.lineStatus;
 
@@ -83,7 +76,7 @@ function renderSummary(data) {
 async function loadData() {
   const hint = document.getElementById('action-hint');
   try {
-    hint.textContent = 'SYNCING LOCAL DATA...';
+    hint.textContent = 'SYNCING CUTE DATA...';
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
