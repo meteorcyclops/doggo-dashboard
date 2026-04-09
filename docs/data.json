@@ -39,10 +39,10 @@
       }
     }
   ],
-  "generatedAt": "2026-04-09T05:09:55Z",
+  "generatedAt": "2026-04-09T05:20:44Z",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-09T05:09:47Z",
+    "asOf": "2026-04-09T05:20:40Z",
     "items": [
       {
         "symbol": "2330",
@@ -59,14 +59,24 @@
       {
         "symbol": "2317",
         "name": "HON HAI PRECISION INDUSTRY",
-        "price": 199.5,
-        "changePct": -0.99
+        "price": 199.0,
+        "changePct": -1.24
       }
     ]
   },
   "feed": {
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
+      {
+        "title": "看似小錢卻超傷財！這10種開銷恐掏空你的退休金",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5398011",
+        "time": "Thu, 09 Apr 2026 13:17:51 +0800"
+      },
+      {
+        "title": "伊朗恐收不到「過路費」！彭博一語點破荷姆茲要害",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5398046",
+        "time": "Thu, 09 Apr 2026 13:13:42 +0800"
+      },
       {
         "title": "「移工零付費」浪潮來襲！立委憂中小企業難扛 勞長允年底前簡化直聘流程",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5398125",
@@ -96,16 +106,6 @@
         "title": "趕在「川習會」前 王毅睽違6年再訪北韓",
         "url": "https://news.ltn.com.tw/news/world/breakingnews/5398030",
         "time": "Thu, 09 Apr 2026 12:34:18 +0800"
-      },
-      {
-        "title": "散戶當道！OpenAI預告IPO將保留一部份股份給散戶",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397778",
-        "time": "Thu, 09 Apr 2026 12:16:46 +0800"
-      },
-      {
-        "title": "「隨機裁員」時代來臨 ? 亞馬遜5月將砍1.4萬人 傳中國團隊或被「團滅」",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5397773",
-        "time": "Thu, 09 Apr 2026 12:15:54 +0800"
       }
     ]
   },
@@ -115,27 +115,27 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-09T05:09:49Z",
+    "asOf": "2026-04-09T05:20:42Z",
     "items": [
       {
         "postedAtTw": "2026-04-09T11:46:00+08:00",
         "excerpt": "All U.S. Ships, Aircraft, and Military Personnel, with additional Ammunition, Weaponry, and anything else that is appropriate and necessary for the lethal prosecution and destruction of an already substantially degraded…",
         "url": "https://www.trumpstruth.org/statuses/37672",
         "important": true,
-        "excerptZhTw": "所有美國船隻、飛機和軍事人員，以及額外的彈藥、武器和任何其他對於致命起訴和銷毀已經嚴重退化的適當和必要的東西…"
+        "excerptZhTw": "所有美國船隻、飛機和軍事人員，以及額外的彈藥、武器，以及其他一切用來徹底打擊和摧毀早已被削弱許多的必要的資源…"
       },
       {
         "postedAtTw": "2026-04-09T10:56:00+08:00",
         "excerpt": "The Failing New York Times and Fake News CNN each reported a totally FAKE TEN POINT PLAN on the Iran negotiations which was meant to discredit the people involved in the peace process. All ten points were a made up HOAX…",
         "url": "https://www.trumpstruth.org/statuses/37671",
         "important": true,
-        "excerptZhTw": "失敗的《紐約時報》和假新聞 CNN 各自報導了關於伊朗談判的完全虛假的十點計劃，旨在抹黑參與和平進程的人們。所有十點都是捏造的騙局…"
+        "excerptZhTw": "《紐約時報》那篇失準報導和假新聞 CNN 各自報導了關於伊朗談判的完全捏造的十點計劃，擺明是在抹黑參與和平進程的相關人士。所有十點都是編出來的騙局…"
       },
       {
         "postedAtTw": "2026-04-09T07:31:00+08:00",
         "excerpt": "NATO WASN’T THERE WHEN WE NEEDED THEM, AND THEY WON’T BE THERE IF WE NEED THEM AGAIN. REMEMBER GREENLAND, THAT BIG, POORLY RUN, PIECE OF ICE!!! President DJT",
         "url": "https://www.trumpstruth.org/statuses/37670",
-        "excerptZhTw": "當我們需要他們時，北約並不在那裡，如果我們再次需要他們，他們就不會在那裡。記住格陵蘭島，那片大而糟糕的冰塊！總裁DJT"
+        "excerptZhTw": "當我們需要他們時，北約根本沒有出現，如果下次我們又需要他們，他們照樣不會出現。記住格陵蘭，那塊又大、治理又差的冰原！DJT"
       },
       {
         "postedAtTw": "2026-04-09T00:20:00+08:00",
@@ -161,7 +161,7 @@
         "excerpt": "A Country supplying Military Weapons to Iran will be immediately tariffed, on any and all goods sold to the United States of America, 50%, effective immediately. There will be no exclusions or exemptions! President DJT",
         "url": "https://www.trumpstruth.org/statuses/37666",
         "important": true,
-        "excerptZhTw": "向伊朗供應軍事武器的國家將立即對出售給美利堅合眾國的任何及所有商品徵收 50% 的關稅，立即生效。不會有任何例外或豁免！總裁DJT"
+        "excerptZhTw": "向伊朗供應軍事武器的國家將立即對出售給美利堅合眾國的任何及所有商品徵收 50% 的關稅，立即生效。不會有任何例外或豁免！DJT"
       },
       {
         "postedAtTw": "2026-04-08T19:22:00+08:00",

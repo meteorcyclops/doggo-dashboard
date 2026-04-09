@@ -240,6 +240,42 @@ def fetch_trump_truth() -> dict[str, Any]:
     return out
 
 
+def polish_tw_zh(text: str) -> str:
+    zh = " ".join(str(text).split())
+    replacements = {
+        "視頻": "影片",
+        "信息": "資訊",
+        "导弹": "飛彈",
+        "关税": "關稅",
+        "协议": "協議",
+        "达成": "達成",
+        "美国": "美國",
+        "報道": "報導",
+        "總體規劃": "整體規劃",
+        "視頻會議": "視訊會議",
+        "民眾們": "大家",
+        "進行中": "在進行",
+        "武器和任何其他": "武器，以及其他一切",
+        "適當和必要的東西": "必要的資源",
+        "失敗的《紐約時報》": "《紐約時報》那篇失準報導",
+        "完全虛假的": "完全捏造的",
+        "旨在抹黑": "擺明是在抹黑",
+        "和平進程的人們": "和平進程的相關人士",
+        "捏造的騙局": "編出來的騙局",
+        "已經嚴重退化": "早已被削弱許多",
+        "對於致命起訴和銷毀": "用來徹底打擊和摧毀",
+        "會立即被徵收關稅": "會立刻被課關稅",
+        "沒有人能相信": "根本沒人會信",
+        "並不在那裡": "根本沒有出現",
+        "如果我們再次需要他們，他們就不會在那裡": "如果下次我們又需要他們，他們照樣不會出現",
+        "記住格陵蘭島，那片大而糟糕的冰塊！": "記住格陵蘭，那塊又大、治理又差的冰原！",
+        "總裁DJT": "DJT",
+    }
+    for old, new in replacements.items():
+        zh = zh.replace(old, new)
+    return zh
+
+
 def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
     items = trump_truth.get("items") or []
     if not items:
@@ -256,31 +292,11 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
             item["excerptZhTw"] = ""
             continue
         if text.startswith("http://") or text.startswith("https://"):
-            item["excerptZhTw"] = "連結貼文，請點進原文查看。"
+            item["excerptZhTw"] = "這則主要是連結貼文，請直接點原文查看。"
             continue
         try:
             raw = translator.translate(text[:TRUMP_TRANSLATE_MAX])
-            zh = " ".join(str(raw).split())
-            zh = (
-                zh.replace("視頻", "影片")
-                .replace("信息", "資訊")
-                .replace("导弹", "飛彈")
-                .replace("关税", "關稅")
-                .replace("协议", "協議")
-                .replace("达成", "達成")
-                .replace("美国", "美國")
-                .replace("伊朗", "伊朗")
-                .replace("報道", "報導")
-                .replace("報道了", "報導了")
-                .replace("總體規劃", "整體規劃")
-                .replace("視頻會議", "視訊會議")
-                .replace("假新聞", "假新聞")
-                .replace("民眾們", "大家")
-                .replace("進行中", "在進行")
-                .replace("之間的", "和")
-                .replace("談判 which", "談判，這")
-            )
-            item["excerptZhTw"] = zh
+            item["excerptZhTw"] = polish_tw_zh(raw)
         except Exception as exc:  # noqa: BLE001
             item["excerptZhTw"] = ""
             trump_truth["translationError"] = str(exc)
