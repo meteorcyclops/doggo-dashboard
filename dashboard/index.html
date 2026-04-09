@@ -3,90 +3,92 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>龍蝦指揮中心</title>
+    <title>LOBSTER OPS HUD</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
-    <div class="shell">
-      <header class="topbar pixel-panel">
-        <div>
-          <div class="brand">🦞 龍蝦指揮中心</div>
-          <div class="sub">Cute Pixel Ops Room</div>
+    <div class="hud-shell">
+      <header class="hud-top frame">
+        <div class="title-block">
+          <div class="game-title">LOBSTER OPS</div>
+          <div class="game-sub">PIXEL COMMAND HUD</div>
         </div>
-        <div class="status-group">
-          <div class="status-pill online" id="gateway-pill">● ONLINE</div>
-          <div class="clock" id="clock">--:--:--</div>
+        <div class="top-stats">
+          <div class="stat-chip"><span>LINK</span><b id="line-link">OK</b></div>
+          <div class="stat-chip"><span>GATE</span><b id="gateway-pill">ONLINE</b></div>
+          <div class="stat-chip clock-chip"><span>TIME</span><b id="clock">--:--:--</b></div>
         </div>
       </header>
 
-      <main class="layout">
-        <section class="scene pixel-panel">
-          <div class="pixel-room">
-            <div class="window"></div>
-            <div class="lamp"></div>
-            <div class="monitor glow">
-              <div class="screen-ui"></div>
-            </div>
-            <div class="desk"></div>
-            <div class="keyboard"></div>
-            <div class="coffee"></div>
-
-            <div class="lobster-worker" id="lobster-worker">
-              <div class="eye left"></div>
-              <div class="eye right"></div>
-              <div class="claw left"></div>
-              <div class="claw right"></div>
-              <div class="tail"></div>
-            </div>
-
-            <div class="speech-bubble" id="task-bubble">載入今天的任務中...</div>
-            <div class="room-caption" id="lobster-label">小龍蝦已上工，待命中</div>
+      <main class="hud-grid">
+        <section class="main-screen frame">
+          <div class="screen-header">
+            <span>ROOM FEED</span>
+            <span id="refresh-state">SYNC READY</span>
           </div>
 
-          <div class="scene-footer">
-            <div class="mini-card pixel-panel inset">
-              <div class="label">現在在做什麼</div>
-              <div class="value" id="current-status">讀取中...</div>
+          <div class="playfield">
+            <div class="sky-strip"></div>
+            <div class="cityline"></div>
+            <div class="terminal"></div>
+            <div class="terminal-glow"></div>
+            <div class="desk"></div>
+            <div class="crate left"></div>
+            <div class="crate right"></div>
+            <div class="pixel-lobster" id="lobster-sprite">
+              <div class="eye e1"></div>
+              <div class="eye e2"></div>
+              <div class="claw c1"></div>
+              <div class="claw c2"></div>
+              <div class="leg l1"></div>
+              <div class="leg l2"></div>
             </div>
-            <div class="mini-card pixel-panel inset">
-              <div class="label">提醒任務</div>
-              <div class="value" id="automation-count">讀取中...</div>
+            <div class="dialog-box" id="task-bubble">SCANNING TASK SIGNAL...</div>
+            <div class="status-banner" id="lobster-label">UNIT LOB-01 READY</div>
+          </div>
+
+          <div class="meters">
+            <div class="meter-box frame inset">
+              <span>MISSION</span>
+              <b id="current-status">LOADING...</b>
             </div>
-            <div class="mini-card pixel-panel inset mood-card">
-              <div class="label">龍蝦心情</div>
-              <div class="value" id="lobster-mood">專心工作中</div>
+            <div class="meter-box frame inset">
+              <span>QUEUE</span>
+              <b id="automation-count">LOADING...</b>
+            </div>
+            <div class="meter-box frame inset">
+              <span>MOOD</span>
+              <b id="lobster-mood">FOCUS</b>
             </div>
           </div>
         </section>
 
-        <aside class="sidebar">
-          <section class="pixel-panel side-block">
-            <div class="section-head">
-              <h2>快速操作</h2>
-              <button class="pixel-btn" id="refresh-btn">刷新資料</button>
-            </div>
-            <div class="button-grid">
-              <a class="pixel-btn link-btn" href="http://127.0.0.1:18789/" target="_blank" rel="noreferrer">Open Dashboard</a>
-              <a class="pixel-btn link-btn" href="http://127.0.0.1:18789/__openclaw__/canvas/" target="_blank" rel="noreferrer">Open Canvas</a>
-              <button class="pixel-btn" data-copy="openclaw status --deep">複製 status 指令</button>
-              <button class="pixel-btn" data-copy="openclaw logs --follow">複製 logs 指令</button>
-            </div>
-            <div class="hint" id="action-hint">可直接開啟本機頁面，或複製指令到 terminal。</div>
-          </section>
-
-          <section class="pixel-panel side-block">
-            <h2>任務面板</h2>
+        <aside class="side-panels">
+          <section class="frame panel quest-panel">
+            <div class="panel-title">QUEST LOG</div>
             <ul class="task-list" id="task-list">
-              <li><span>載入中...</span><b>...</b></li>
+              <li><span>LOADING...</span><b>...</b></li>
             </ul>
           </section>
 
-          <section class="pixel-panel side-block">
-            <h2>系統摘要</h2>
-            <ul class="feature-list" id="summary-list">
-              <li><span>Gateway</span><b>檢查中</b></li>
-              <li><span>LINE</span><b>檢查中</b></li>
-              <li><span>資料更新</span><b>尚未更新</b></li>
+          <section class="frame panel control-panel">
+            <div class="panel-title">COMMAND PAD</div>
+            <div class="button-grid">
+              <a class="pixel-btn" href="http://127.0.0.1:18789/" target="_blank" rel="noreferrer">DASH</a>
+              <a class="pixel-btn" href="http://127.0.0.1:18789/__openclaw__/canvas/" target="_blank" rel="noreferrer">CANVAS</a>
+              <button class="pixel-btn" id="refresh-btn">SYNC</button>
+              <button class="pixel-btn" data-copy="openclaw status --deep">COPY STATUS</button>
+              <button class="pixel-btn wide" data-copy="openclaw logs --follow">COPY LOGS</button>
+            </div>
+            <div class="hint" id="action-hint">TERMINAL COMMAND READY.</div>
+          </section>
+
+          <section class="frame panel summary-panel">
+            <div class="panel-title">SYSTEM READOUT</div>
+            <ul class="summary-list" id="summary-list">
+              <li><span>GATEWAY</span><b>CHECK</b></li>
+              <li><span>LINE</span><b>CHECK</b></li>
+              <li><span>SYNC</span><b>WAIT</b></li>
             </ul>
           </section>
         </aside>
