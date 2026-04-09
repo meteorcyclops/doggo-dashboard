@@ -137,7 +137,8 @@ body[data-theme="night"] .star {
 .spark,
 .dialog,
 .moon,
-.star {
+.star,
+.dog-particles {
   position: absolute;
 }
 .moon {
@@ -290,6 +291,39 @@ body[data-theme="night"] .grass {
   height: 180px;
   cursor: pointer;
   animation: bob 1.35s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+.dog-particles {
+  inset: 0;
+  pointer-events: none;
+}
+.dog-particle {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  opacity: 0;
+}
+.dog-particle.heart {
+  background: #ff8db9;
+  border: 3px solid #c55788;
+  transform: rotate(45deg);
+}
+.dog-particle.heart::before,
+.dog-particle.heart::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #ff8db9;
+  border: 3px solid #c55788;
+  border-radius: 999px;
+}
+.dog-particle.heart::before { left: -10px; top: -1px; }
+.dog-particle.heart::after { left: -1px; top: -10px; }
+.dog-particle.star {
+  background: #ffe67a;
+  border: 3px solid #d6a842;
+  transform: rotate(45deg);
 }
 .doggo:focus {
   outline: none;
@@ -306,8 +340,103 @@ body[data-theme="night"] .grass {
 .doggo .cheek,
 .doggo .paw,
 .doggo .tail-mount,
-.doggo .tail {
+.doggo .tail,
+.doggo .sleep-cap,
+.doggo .glasses,
+.doggo .siren-hat,
+.doggo .scarf,
+.doggo .pillow {
   position: absolute;
+}
+.doggo .sleep-cap,
+.doggo .glasses,
+.doggo .siren-hat,
+.doggo .pillow {
+  opacity: 0;
+  transition: opacity .16s ease;
+}
+.doggo .sleep-cap {
+  left: 52px;
+  top: 12px;
+  width: 84px;
+  height: 24px;
+  background: #7d83d8;
+  border: 4px solid #555aa8;
+}
+.doggo .sleep-cap::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 10px;
+  width: 12px;
+  height: 12px;
+  background: #fff8c8;
+  border: 3px solid #d6c36d;
+  border-radius: 999px;
+}
+.doggo .glasses {
+  left: 50px;
+  top: 62px;
+  width: 84px;
+  height: 20px;
+  border-top: 4px solid #414b86;
+}
+.doggo .glasses::before,
+.doggo .glasses::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 18px;
+  border: 4px solid #414b86;
+  background: rgba(255,255,255,.2);
+}
+.doggo .glasses::before { left: 0; }
+.doggo .glasses::after { right: 0; }
+.doggo .siren-hat {
+  left: 74px;
+  top: 10px;
+  width: 38px;
+  height: 20px;
+  background: #ffd76d;
+  border: 4px solid #c49a2d;
+}
+.doggo .siren-hat::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: -12px;
+  width: 14px;
+  height: 12px;
+  background: #ff6c87;
+  border: 4px solid #bf3d5f;
+}
+.doggo .pillow {
+  left: 34px;
+  top: 106px;
+  width: 120px;
+  height: 46px;
+  background: #f7f1ff;
+  border: 4px solid #b4a4de;
+}
+.doggo .scarf {
+  left: 56px;
+  top: 104px;
+  width: 72px;
+  height: 16px;
+  background: #ff8eb4;
+  border: 4px solid #d85d93;
+  opacity: .92;
+}
+.doggo .scarf::after {
+  content: "";
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  width: 16px;
+  height: 24px;
+  background: #ff8eb4;
+  border: 4px solid #d85d93;
 }
 .doggo .ear {
   top: 18px;
@@ -693,8 +822,18 @@ body[data-theme="night"] .frame {
 #dog-sprite[data-dog-state="excited"] {
   animation: bob-big 0.85s ease-in-out infinite;
 }
+#dog-sprite[data-dog-state="excited"] .eye {
+  box-shadow: 0 0 0 2px #fff6a2;
+}
 #dog-sprite[data-dog-state="sleepy"] {
   animation: bob-slow 2.7s ease-in-out infinite;
+}
+#dog-sprite[data-dog-state="sleepy"] .sleep-cap,
+#dog-sprite[data-dog-state="sleepy"] .pillow {
+  opacity: 1;
+}
+#dog-sprite[data-dog-state="sleepy"] .scarf {
+  opacity: 0;
 }
 #dog-sprite[data-dog-state="sleepy"] .eye {
   animation: none;
@@ -707,6 +846,9 @@ body[data-theme="night"] .frame {
 }
 #dog-sprite[data-dog-state="worried"] {
   animation: bob-slow 2s ease-in-out infinite;
+}
+#dog-sprite[data-dog-state="worried"] .siren-hat {
+  opacity: 1;
 }
 #dog-sprite[data-dog-state="worried"] .ear {
   transform-origin: 50% 6px;
@@ -726,11 +868,26 @@ body[data-theme="night"] .frame {
 #dog-sprite[data-dog-state="bone"] {
   animation: bob-shift 0.56s ease-in-out infinite;
 }
+#dog-sprite[data-dog-state="bone"] .scarf {
+  opacity: 1;
+}
 #dog-sprite[data-dog-state="bone"] .tail {
   animation: tail-wag-bone 1.12s cubic-bezier(0.42, 0, 0.58, 1) infinite;
 }
+#dog-sprite[data-dog-state="work"] .glasses,
+#dog-sprite[data-dog-state="work"] .scarf,
+#dog-sprite[data-dog-state="idle"] .scarf,
+#dog-sprite[data-dog-state="ok"] .scarf {
+  opacity: 1;
+}
+#dog-sprite:hover .eye {
+  transform: translateX(2px);
+}
 #dog-sprite.dog-pet {
   animation: dog-pet-pop 0.32s ease-out !important;
+}
+#dog-sprite.dog-super {
+  animation: bob-big 0.48s ease-in-out 3;
 }
 @media (max-width: 720px) {
   .top-stats { grid-template-columns: 1fr 1fr; display: grid; }
