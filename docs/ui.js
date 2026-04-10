@@ -905,16 +905,21 @@ function initTheme() {
 
 function bindActions() {
   const layoutModal = document.getElementById('layout-modal');
-  const closeLayoutModal = () => layoutModal?.setAttribute('hidden', 'hidden');
-  document.getElementById('layout-toggle')?.addEventListener('click', () => {
+  const closeLayoutModal = () => {
+    layoutModal?.classList.remove('is-open');
+    layoutModal?.setAttribute('hidden', 'hidden');
+  };
+  const openLayoutModal = () => {
     layoutModal?.removeAttribute('hidden');
-  });
+    layoutModal?.classList.add('is-open');
+  };
+  document.getElementById('layout-toggle')?.addEventListener('click', openLayoutModal);
   document.getElementById('layout-close-btn')?.addEventListener('click', closeLayoutModal);
   layoutModal?.addEventListener('click', (e) => {
     if (e.target === layoutModal) closeLayoutModal();
   });
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && layoutModal && !layoutModal.hasAttribute('hidden')) {
+    if (e.key === 'Escape' && layoutModal?.classList.contains('is-open')) {
       closeLayoutModal();
     }
   });
