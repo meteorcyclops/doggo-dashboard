@@ -650,6 +650,19 @@ function renderLayoutOptions() {
   });
 }
 
+function normalizePreferenceList(list, fallback = defaultVisibleCards) {
+  const base = Array.isArray(list) ? list : fallback;
+  const known = new Set(defaultVisibleCards);
+  const deduped = [];
+  for (const id of base) {
+    if (known.has(id) && !deduped.includes(id)) deduped.push(id);
+  }
+  for (const id of defaultVisibleCards) {
+    if (!deduped.includes(id)) deduped.push(id);
+  }
+  return deduped;
+}
+
 function loadLocalPreferences() {
   try {
     const raw = localStorage.getItem(LOCAL_PREFS_KEY);
@@ -686,6 +699,8 @@ async function loadPreferences() {
   if (localPrefs) {
     dashboardPreferences = { ...dashboardPreferences, ...localPrefs };
   }
+  dashboardPreferences.visible_cards = normalizePreferenceList(dashboardPreferences.visible_cards);
+  dashboardPreferences.card_order = normalizePreferenceList(dashboardPreferences.card_order);
   applyCardVisibility();
   applyCollapsedCards();
   renderLayoutOptions();
