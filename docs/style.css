@@ -136,6 +136,17 @@ body[data-theme="night"] {
   color: var(--ink);
   transition: opacity 0.12s ease;
 }
+.stat-pill small {
+  display: block;
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--muted);
+  opacity: .92;
+}
+.theme-toggle:hover small,
+.theme-toggle:focus-visible small {
+  color: var(--ink);
+}
 .dream-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.85fr);
@@ -903,6 +914,27 @@ body[data-theme="night"] .frame {
 }
 .intel-list li {
   transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+.card-state {
+  align-items: center;
+}
+.card-state strong {
+  font-size: 12px;
+  color: var(--card-text);
+}
+.card-state small {
+  display: block;
+  margin-top: 4px;
+  color: var(--card-muted);
+}
+.card-state.card-state-ok {
+  background: var(--status-ok-bg);
+}
+.card-state.card-state-warn {
+  background: var(--status-warn-bg);
+}
+.card-state.card-state-danger {
+  background: var(--status-danger-bg);
 }
 .intel-panel:hover .intel-list li:first-child {
   transform: translateY(-1px);

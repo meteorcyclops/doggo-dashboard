@@ -171,6 +171,22 @@ function trumpSummaryRow(tt) {
   return { text: '無資料', cls: 'warn' };
 }
 
+function cardStateFromData({ items, error, asOf }) {
+  if (error) return { tone: 'danger', badge: 'ERROR', title: '資料暫時失敗', detail: error };
+  if (!items || !items.length) return { tone: 'warn', badge: 'EMPTY', title: '目前沒有資料', detail: '這張卡暫時是空的。' };
+  if (!asOf) return { tone: 'warn', badge: 'STALE', title: '缺少時間戳', detail: '資料存在，但更新時間不明。' };
+  return null;
+}
+
+function renderStateCard(list, meta, state, fallbackMeta) {
+  list.innerHTML = '';
+  const li = document.createElement('li');
+  li.className = `card-state card-state-${state.tone}`;
+  li.innerHTML = `<span><strong>${state.title}</strong><br><small>${state.detail}</small></span><b class="${state.tone}">${state.badge}</b>`;
+  list.appendChild(li);
+  if (meta) meta.textContent = fallbackMeta || state.detail;
+}
+
 function renderQuotes(quotes) {
   const list = document.getElementById('quote-list');
   const meta = document.getElementById('quote-meta');
@@ -182,11 +198,9 @@ function renderQuotes(quotes) {
       ? `報價快照（UTC）：${asOf}`
       : '尚無報價時間戳';
   }
-  if (!quotes?.items?.length) {
-    const li = document.createElement('li');
-    const hint = quotes?.error ? `暫無報價 · ${quotes.error}` : '暫無報價';
-    li.innerHTML = `<span>${hint}</span><b class="warn">NA</b>`;
-    list.appendChild(li);
+  const state = cardStateFromData({ items: quotes?.items, error: quotes?.error, asOf });
+  if (state) {
+    renderStateCard(list, meta, state, '台股快報暫時沒有完整資料');
     return;
   }
   quotes.items.forEach((q) => {
@@ -215,8 +229,8 @@ function renderTrumpTruth(trump) {
   if (!list) return;
   list.innerHTML = '';
   const src = trump?.source ? String(trump.source).slice(0, 140) : '';
+  const asOf = trump?.asOf ? formatTrumpTime(trump.asOf) : '';
   if (meta) {
-    const asOf = trump?.asOf ? formatTrumpTime(trump.asOf) : '';
     if (trump?.error) {
       meta.textContent = src ? `${src} · ${trump.error}` : trump.error;
     } else if (asOf) {
@@ -225,28 +239,9 @@ function renderTrumpTruth(trump) {
       meta.textContent = src ? `來源：${src}` : '第三方存檔摘要';
     }
   }
-  const hasItems = trump?.items?.length;
-  if (!hasItems) {
-    const li = document.createElement('li');
-    const span = document.createElement('span');
-    span.appendChild(
-      document.createTextNode(
-        trump?.error ? '暫無資料（建置時抓取失敗，請稍後重試）' : '暫無資料',
-      ),
-    );
-    if (trump?.error) {
-      span.appendChild(document.createElement('br'));
-      const small = document.createElement('small');
-      small.className = 'trump-excerpt';
-      small.textContent = trump.error;
-      span.appendChild(small);
-    }
-    const badge = document.createElement('b');
-    badge.className = 'warn';
-    badge.textContent = '—';
-    li.appendChild(span);
-    li.appendChild(badge);
-    list.appendChild(li);
+  const state = cardStateFromData({ items: trump?.items, error: trump?.error, asOf });
+  if (state) {
+    renderStateCard(list, meta, state, src || '川普快訊暫時沒有完整資料');
     return;
   }
   trump.items.forEach((item) => {
@@ -289,18 +284,17 @@ function renderHeadlines(feed) {
   const meta = document.getElementById('feed-meta');
   if (!list) return;
   list.innerHTML = '';
+  const src = feed?.source ? String(feed.source).slice(0, 120) : '';
   if (meta) {
-    const src = feed?.source ? String(feed.source).slice(0, 120) : '';
     meta.textContent = feed?.error
       ? `RSS：${src || '—'}（${feed.error}）`
       : src
         ? `來源：${src}`
         : 'RSS 未設定';
   }
-  if (!feed?.items?.length) {
-    const li = document.createElement('li');
-    li.innerHTML = `<span>${feed?.error ? `暫無新聞（請稍後重試）` : '暫無新聞'}</span><b class="warn">—</b>`;
-    list.appendChild(li);
+  const state = cardStateFromData({ items: feed?.items, error: feed?.error, asOf: src || 'rss-source' });
+  if (state) {
+    renderStateCard(list, meta, state, src || '新聞雷達暫時沒有完整資料');
     return;
   }
   feed.items.forEach((item) => {
