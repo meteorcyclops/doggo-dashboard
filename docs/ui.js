@@ -234,10 +234,10 @@ function renderStateCard(list, meta, state, fallbackMeta) {
 
 function patternLabel(pattern) {
   switch (pattern) {
-    case 'uptrend': return '↗ 像素爬坡';
-    case 'downtrend': return '↘ 回落中';
-    case 'volatile': return '⚡ 震盪';
-    default: return '~ 盤整';
+    case 'uptrend': return '走勢偏強';
+    case 'downtrend': return '走勢偏弱';
+    case 'volatile': return '波動明顯';
+    default: return '區間整理';
   }
 }
 
@@ -290,7 +290,7 @@ function renderQuotes(quotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>${q.price != null ? `現價 ${q.price} · ` : ''}漲跌 ${formatChangePct(q.changePct)} · ${patternLabel(q.pattern)}</small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="${cls}">${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-mini-stat">現價</span> ${q.price != null ? q.price : '—'} <span class="quote-mini-stat">漲跌</span> ${formatChangePct(q.changePct)} <span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
   });
 }
