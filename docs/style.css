@@ -624,6 +624,7 @@ body[data-theme="night"] .grass {
 .weather-summary,
 .weather-commute {
   margin-top: 8px;
+  margin-bottom: 10px;
   padding: 8px 10px;
   font-size: 12px;
   line-height: 1.55;
