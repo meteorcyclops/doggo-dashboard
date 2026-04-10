@@ -284,12 +284,16 @@ def main() -> int:
         }
     )
 
+    if not alerts:
+        print("NO_REPLY")
+        return 0
+
     strongest = max(ranking, key=lambda item: item[1])[0] if ranking else "--"
     weakest = min(ranking, key=lambda item: item[1])[0] if ranking else "--"
     bias, probs = score_news(news_items, ranking)
     continuation, reversal, continuation_note = session_continuation(now, ranking, probs)
 
-    print(f"美股盤中 15 分鐘更新 {now.strftime('%H:%M')} ET")
+    print(f"美股盤中 30 分鐘異常更新 {now.strftime('%H:%M')} ET")
     print(f"- {sentiment_label(ranking)}")
     for line in lines:
         print(f"- {line}")
@@ -299,13 +303,10 @@ def main() -> int:
     print(f"- 日內解讀: {continuation_note}")
     if news_items:
         print("- 最新新聞:")
-        for item in news_items[:3]:
+        for item in news_items[:2]:
             print(f"  • {item['title']}")
             print(f"    中文摘要: {zh_summary(item['title'])}")
-    if alerts:
-        print(f"- 異常提醒: {'；'.join(alerts)}")
-    else:
-        print("- 異常提醒: 暫無明顯異常波動")
+    print(f"- 異常提醒: {'；'.join(alerts)}")
     print("- 這是盤中趨勢整理，不是買賣建議")
     return 0
 

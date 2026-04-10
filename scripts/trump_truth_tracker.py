@@ -124,28 +124,44 @@ def is_important(post: dict) -> bool:
     return critical_hits >= 1 or economic_hits >= 2
 
 
-def render_post(post: dict) -> str:
-    preview = post["content"].strip()
-    if len(preview) > 500:
-        preview = preview[:500].rstrip() + "..."
-    return (
-        f"時間: {post['posted_at_tw']}\n"
-        f"內容:\n{preview}\n"
-        f"原文: {post['original_link']}\n"
-        f"存檔: {post['archive_link']}"
-    )
+def summarize_text(text: str, limit: int = 120) -> str:
+    clean = " ".join(text.split())
+    return clean if len(clean) <= limit else clean[:limit].rstrip() + "..."
+
+
+def infer_market_link(text: str) -> str:
+    lower = text.lower()
+    links = []
+    if any(k in lower for k in ["iran", "hormuz", "oil", "sanction", "tariff"]):
+        links.append("油價")
+    if any(k in lower for k in ["war", "attack", "bomb", "nuclear"]):
+        links.append("黃金")
+        links.append("軍工")
+    if any(k in lower for k in ["fed", "market", "stock", "powell", "tariff"]):
+        links.append("美股科技")
+    if not links:
+        links.append("市場情緒")
+    deduped = []
+    for item in links:
+        if item not in deduped:
+            deduped.append(item)
+    return " / ".join(deduped[:3])
 
 
 def cmd_digest(hours: int, limit: int) -> int:
     posts = fetch_posts(limit=max(limit, 12))
     cutoff = datetime.now(TW) - timedelta(hours=hours)
-    recent = [p for p in posts if datetime.fromisoformat(p["posted_at_tw"]) >= cutoff]
+    recent = [p for p in posts if datetime.fromisoformat(p["posted_at_tw"]) >= cutoff and is_important(p)]
     if not recent:
         print("NO_REPLY")
         return 0
-    print(f"過去 {hours} 小時內川普 Truth Social 重點原文，共 {len(recent)} 則")
-    for idx, post in enumerate(recent[:limit], start=1):
-        print(f"\n[{idx}]\n{render_post(post)}")
+    focus = recent[:limit]
+    lead = focus[0]
+    print("川普社群日摘要")
+    print(f"- 今天重點: {summarize_text(lead['content'], 140)}")
+    print(f"- 可能影響: 目前主軸偏向 {infer_market_link(' '.join(p['content'] for p in focus))}，短線仍受中東與政策消息牽動。")
+    print(f"- 市場連動: {infer_market_link(' '.join(p['content'] for p in focus))}")
+    print("- 要觀察: 後續是否出現新的停火、制裁、關稅或軍事升級貼文。")
     return 0
 
 
@@ -158,11 +174,40 @@ def cmd_alerts(limit: int) -> int:
         print("NO_REPLY")
         return 0
     new_important.sort(key=lambda p: p["posted_at_tw"])
-    print(f"偵測到 {len(new_important)} 則川普重大貼文")
-    for idx, post in enumerate(new_important[:limit], start=1):
-        print(f"\n[{idx}]\n{render_post(post)}")
+    lead = new_important[0]
+    same_topic_window_min = 180
+    last_alert = state.get("last_alert") or {}
+    lead_time = datetime.fromisoformat(lead["posted_at_tw"])
+    lead_summary = summarize_text(lead["content"], 80)
+    last_summary = last_alert.get("summary", "")
+    last_time_raw = last_alert.get("posted_at_tw")
+    if last_time_raw:
+        try:
+            last_time = datetime.fromisoformat(last_time_raw)
+            if lead_summary == last_summary and (lead_time - last_time).total_seconds() < same_topic_window_min * 60:
+                updated_ids = list({*seen_ids, *(p["truth_id"] for p in new_important)})
+                save_state({
+                    "alerted_truth_ids": updated_ids[-200:],
+                    "last_alert": last_alert,
+                })
+                print("NO_REPLY")
+                return 0
+        except ValueError:
+            pass
+    print("川普重大發言提醒")
+    print(f"- 新動向: {summarize_text(lead['content'], 140)}")
+    print(f"- 可能影響: 短線先看 {infer_market_link(lead['content'])}，若後續消息被市場確認，波動可能擴大。")
+    print(f"- 市場連動: {infer_market_link(lead['content'])}")
+    print(f"- 原文連結: {lead['original_link']}")
     updated_ids = list({*seen_ids, *(p["truth_id"] for p in new_important)})
-    save_state({"alerted_truth_ids": updated_ids[-200:]})
+    save_state({
+        "alerted_truth_ids": updated_ids[-200:],
+        "last_alert": {
+            "truth_id": lead["truth_id"],
+            "posted_at_tw": lead["posted_at_tw"],
+            "summary": lead_summary,
+        },
+    })
     return 0
 
 
