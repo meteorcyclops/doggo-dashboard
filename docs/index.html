@@ -23,6 +23,32 @@
         </div>
       </header>
 
+      <section class="hero-hud frame white-panel">
+        <div class="hero-copy">
+          <div class="hero-label">DOGGO COMMAND HUD</div>
+          <h1 class="hero-title">把可愛感、資訊密度、互動導覽，正式升級成一個完整產品。</h1>
+          <p class="hero-desc">狗狗不是裝飾，而是這個 dashboard 的導覽員。牠負責告訴你現在是什麼情境、哪裡值得看、哪些只是快照資料。</p>
+        </div>
+        <div class="hero-metrics">
+          <div class="hero-metric">
+            <span>目前模式</span>
+            <b id="hero-session">讀取中</b>
+          </div>
+          <div class="hero-metric">
+            <span>狗狗狀態</span>
+            <b id="hero-dog-state">讀取中</b>
+          </div>
+          <div class="hero-metric">
+            <span>資料可信度</span>
+            <b id="hero-provenance">讀取中</b>
+          </div>
+          <div class="hero-metric emphasis">
+            <span>現在建議先看</span>
+            <b id="hero-focus">讀取中</b>
+          </div>
+        </div>
+      </section>
+
       <main class="dream-layout">
         <section class="battle-card frame candy">
           <div class="battle-stage">
@@ -99,29 +125,47 @@
                 </div>
               </div>
 
-              <div class="main-feed-panel frame white-panel">
-                <div class="side-title">台股快報</div>
+              <article class="intel-panel frame white-panel" data-dog-target="quotes" data-focus-label="台股快報">
+                <div class="intel-head">
+                  <div>
+                    <div class="intel-kicker">MARKET SNAPSHOT</div>
+                    <div class="side-title">台股快報</div>
+                  </div>
+                  <b class="intel-badge" id="quote-badge">WATCH</b>
+                </div>
                 <div class="side-meta" id="quote-meta">報價快照讀取中…</div>
-                <ul class="task-list" id="quote-list">
+                <ul class="task-list intel-list" id="quote-list">
                   <li><span>LOADING...</span><b>...</b></li>
                 </ul>
-              </div>
+              </article>
 
-              <div class="main-feed-panel frame white-panel">
-                <div class="side-title">新聞雷達</div>
+              <article class="intel-panel frame white-panel" data-dog-target="feed" data-focus-label="新聞雷達">
+                <div class="intel-head">
+                  <div>
+                    <div class="intel-kicker">NEWS RADAR</div>
+                    <div class="side-title">新聞雷達</div>
+                  </div>
+                  <b class="intel-badge" id="feed-badge">SCAN</b>
+                </div>
                 <div class="side-meta" id="feed-meta">RSS 讀取中…</div>
-                <ul class="task-list headline-list" id="headline-list">
+                <ul class="task-list headline-list intel-list" id="headline-list">
                   <li><span>LOADING...</span><b>...</b></li>
                 </ul>
-              </div>
+              </article>
 
-              <div class="main-feed-panel frame white-panel">
-                <div class="side-title">川普發言快訊</div>
+              <article class="intel-panel frame white-panel" data-dog-target="trump" data-focus-label="川普發言快訊">
+                <div class="intel-head">
+                  <div>
+                    <div class="intel-kicker">TRUTH WATCH</div>
+                    <div class="side-title">川普發言快訊</div>
+                  </div>
+                  <b class="intel-badge" id="trump-badge">ALERT</b>
+                </div>
                 <div class="side-meta" id="trump-meta">讀取中…</div>
-                <ul class="task-list headline-list" id="trump-list">
+                <ul class="task-list headline-list intel-list" id="trump-list">
                   <li><span>LOADING...</span><b>...</b></li>
                 </ul>
-              </div>
+              </article>
             </div>
 
             <div class="command-box frame white-panel">
