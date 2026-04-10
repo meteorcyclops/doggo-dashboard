@@ -511,6 +511,17 @@ body[data-theme="night"] .grass {
 .quote-shell-animating {
   animation: quote-shell-pop .22s steps(5);
 }
+.flash-update {
+  animation: flash-update .42s steps(4);
+}
+.mini-trend-refresh {
+  animation: mini-trend-refresh .42s steps(4);
+}
+.battle-stage-refresh .enemy-bubble,
+.battle-stage-refresh .battle-focus-card,
+.battle-stage-refresh .battle-chip {
+  animation: hud-step-refresh .24s steps(4);
+}
 .quote-expand-btn {
   margin-top: 8px;
   width: 100%;
@@ -1692,6 +1703,24 @@ body[data-theme="night"] .summary-list b {
   0% { transform: translateY(0); }
   50% { transform: translateY(2px); }
   100% { transform: translateY(0); }
+}
+
+@keyframes flash-update {
+  0% { filter: brightness(1); transform: translateY(0); }
+  50% { filter: brightness(1.18); transform: translateY(-1px); }
+  100% { filter: brightness(1); transform: translateY(0); }
+}
+
+@keyframes mini-trend-refresh {
+  0% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-1px); filter: brightness(1.12); }
+  100% { transform: translateY(0); filter: brightness(1); }
+}
+
+@keyframes hud-step-refresh {
+  0% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(2px); filter: brightness(1.08); }
+  100% { transform: translateY(0); filter: brightness(1); }
 }
 
 @keyframes spark-pulse {

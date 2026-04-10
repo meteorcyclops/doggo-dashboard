@@ -248,13 +248,13 @@ function patternLabel(pattern) {
   }
 }
 
-function renderSparkline(series = []) {
+function renderSparkline(series = [], changed = false) {
   const vals = series.filter((v) => Number.isFinite(Number(v))).map(Number);
   if (vals.length < 2) return '<span class="mini-trend-empty">···</span>';
   const min = Math.min(...vals);
   const max = Math.max(...vals);
   const range = Math.max(max - min, 0.0001);
-  return `<span class="mini-trend">${vals.map((v) => {
+  return `<span class="mini-trend ${changed ? 'mini-trend-refresh' : ''}">${vals.map((v) => {
     const h = Math.max(2, Math.round(((v - min) / range) * 18) + 4);
     return `<i style="height:${h}px"></i>`;
   }).join('')}</span>`;
@@ -276,6 +276,7 @@ function summarizeQuotes(items) {
 }
 
 let quotesExpanded = false;
+const previousQuoteMap = new Map();
 
 function renderQuotes(quotes) {
   const list = document.getElementById('quote-list');
@@ -309,8 +310,11 @@ function renderQuotes(quotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    const prev = previousQuoteMap.get(q.symbol);
+    const changed = !!prev && (prev.price !== q.price || prev.changePct !== q.changePct || JSON.stringify(prev.series || []) !== JSON.stringify(q.series || []));
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value ${changed ? 'flash-update' : ''}">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series, changed)}<b class="quote-change-badge ${cls} ${changed ? 'flash-update' : ''}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
+    previousQuoteMap.set(q.symbol, { price: q.price, changePct: q.changePct, series: q.series || [] });
   });
 }
 
@@ -429,6 +433,8 @@ let broadcastTimer = null;
 let broadcastPausedUntil = 0;
 
 function animateBattleHud() {
+  document.querySelector('.battle-stage')?.classList.add('battle-stage-refresh');
+  window.setTimeout(() => document.querySelector('.battle-stage')?.classList.remove('battle-stage-refresh'), 220);
   if (typeof gsap === 'undefined') return;
   gsap.fromTo(['#battle-chip', '#battle-focus-title', '#battle-focus-subtitle', '#battle-broadcast-detail', '#task-bubble'],
     { opacity: 0.35, y: 4 },
