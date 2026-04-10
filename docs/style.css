@@ -244,6 +244,9 @@ body[data-theme="night"] {
   background: rgba(255,255,255,.86);
   border: 3px solid #8d86cb;
   box-shadow: inset 0 0 0 2px #fff8dd;
+  cursor: pointer;
+  appearance: none;
+  font: inherit;
 }
 .focus-pill b {
   font-size: 10px;
@@ -252,6 +255,11 @@ body[data-theme="night"] {
 .focus-pill.is-top {
   background: linear-gradient(180deg, #ffe7b0 0%, #ffd36f 100%);
   border-color: #c99122;
+}
+.focus-pill:hover,
+.focus-pill:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
 }
 .battle-card {
   padding: 12px;

@@ -947,16 +947,47 @@ function renderTasks(jobs) {
   });
 }
 
+function focusKeyToCardTarget(key) {
+  if (key === 'trump') return 'trump';
+  if (key === 'quotes') return 'quotes';
+  if (key === 'us-quotes') return 'us-quotes';
+  if (key === 'feed') return 'feed';
+  return null;
+}
+
+function activateFocusTarget(target) {
+  if (!target) return;
+  const panel = document.querySelector(`[data-dog-target="${target}"]`);
+  if (!panel) return;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  document.querySelectorAll('.intel-panel').forEach((node) => node.classList.remove('is-focus'));
+  panel.classList.add('is-focus');
+  const guide = dogGuideLine(target);
+  currentFocus = guide.focus || target;
+  broadcastPausedUntil = Date.now() + 8000;
+  dogController.setDogState(guide.state, guide.text);
+  if (currentData) renderSummary(currentData);
+  window.setTimeout(() => {
+    panel.classList.remove('is-focus');
+    if (currentData) dogController.restoreDogScene();
+  }, 2600);
+}
+
 function renderFocusPills(data) {
   const root = document.getElementById('focus-pill-list');
   if (!root) return;
   const ranking = computeFocusRanking(data).slice(0, 3);
   root.innerHTML = ranking.map((item, index) => `
-    <span class="focus-pill ${index === 0 ? 'is-top' : ''}">
+    <button class="focus-pill ${index === 0 ? 'is-top' : ''}" type="button" data-focus-target="${escHtml(item.key)}">
       <b>#${index + 1}</b>
       <span>${escHtml(item.label)}</span>
-    </span>
+    </button>
   `).join('');
+  root.querySelectorAll('[data-focus-target]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      activateFocusTarget(focusKeyToCardTarget(btn.dataset.focusTarget));
+    });
+  });
 }
 
 function renderSummary(data) {
