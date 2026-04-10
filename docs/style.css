@@ -493,6 +493,30 @@ body[data-theme="night"] .grass {
 .quote-list-shell.is-expanded {
   max-height: 460px;
 }
+.quote-trend-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.mini-trend {
+  display: inline-flex;
+  align-items: end;
+  gap: 2px;
+  height: 24px;
+  padding: 2px 4px;
+  background: rgba(255,255,255,.55);
+  border: 2px solid #8d86cb;
+}
+.mini-trend i {
+  display: block;
+  width: 4px;
+  background: linear-gradient(180deg, #8ef0b8 0%, #4abf7b 100%);
+  border: 1px solid #2f7f54;
+}
+.mini-trend-empty {
+  color: var(--card-muted);
+  font-size: 12px;
+}
 .hp-wrap {
   display: flex;
   align-items: center;

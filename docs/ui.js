@@ -214,6 +214,27 @@ function renderStateCard(list, meta, state, fallbackMeta) {
   if (meta) meta.textContent = fallbackMeta || state.detail;
 }
 
+function patternLabel(pattern) {
+  switch (pattern) {
+    case 'uptrend': return '↗ 像素爬坡';
+    case 'downtrend': return '↘ 回落中';
+    case 'volatile': return '⚡ 震盪';
+    default: return '~ 盤整';
+  }
+}
+
+function renderSparkline(series = []) {
+  const vals = series.filter((v) => Number.isFinite(Number(v))).map(Number);
+  if (vals.length < 2) return '<span class="mini-trend-empty">···</span>';
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const range = Math.max(max - min, 0.0001);
+  return `<span class="mini-trend">${vals.map((v) => {
+    const h = Math.max(2, Math.round(((v - min) / range) * 18) + 4);
+    return `<i style="height:${h}px"></i>`;
+  }).join('')}</span>`;
+}
+
 function summarizeQuotes(items) {
   if (!items?.length) return '今天盤面還沒有足夠資料，狗狗先守著觀察。';
   const valid = items.filter((item) => Number.isFinite(Number(item.changePct)));
@@ -251,7 +272,7 @@ function renderQuotes(quotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>${q.price != null ? `現價 ${q.price} · ` : ''}漲跌 ${formatChangePct(q.changePct)}</small></span><b class="${cls}">${formatChangePct(q.changePct)}</b>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>${q.price != null ? `現價 ${q.price} · ` : ''}漲跌 ${formatChangePct(q.changePct)} · ${patternLabel(q.pattern)}</small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="${cls}">${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
   });
 }

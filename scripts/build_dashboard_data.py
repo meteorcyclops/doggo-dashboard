@@ -81,8 +81,12 @@ def fetch_quotes(symbols: list[str]) -> tuple[dict[str, Any], str | None]:
             if hist is None or hist.empty:
                 err = err or "empty history"
                 continue
+            close_series = [float(v) for v in hist["Close"].tail(8).tolist() if v == v and v not in (float('inf'), float('-inf'))]
             last = float(hist["Close"].iloc[-1])
             prev = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else last
+            day_high = float(hist["High"].tail(1).iloc[0]) if "High" in hist else last
+            day_low = float(hist["Low"].tail(1).iloc[0]) if "Low" in hist else last
+            change = last - prev
             change_pct = ((last - prev) / prev * 100.0) if prev else 0.0
             info = {}
             try:
@@ -97,12 +101,34 @@ def fetch_quotes(symbols: list[str]) -> tuple[dict[str, Any], str | None]:
             )
             safe_price = round(last, 2) if last == last and last not in (float('inf'), float('-inf')) else None
             safe_change_pct = round(change_pct, 2) if change_pct == change_pct and change_pct not in (float('inf'), float('-inf')) else None
+            pattern = "range"
+            if len(close_series) >= 2:
+                amplitude_pct = ((max(close_series) - min(close_series)) / close_series[0] * 100.0) if close_series[0] else 0.0
+                slope_pct = ((close_series[-1] - close_series[0]) / close_series[0] * 100.0) if close_series[0] else 0.0
+                direction_changes = sum(
+                    1 for i in range(2, len(close_series))
+                    if (close_series[i] - close_series[i-1]) * (close_series[i-1] - close_series[i-2]) < 0
+                )
+                if amplitude_pct >= 3.2 and direction_changes >= 3:
+                    pattern = "volatile"
+                elif slope_pct >= 1.2:
+                    pattern = "uptrend"
+                elif slope_pct <= -1.2:
+                    pattern = "downtrend"
+                else:
+                    pattern = "range"
             items.append(
                 {
                     "symbol": sym,
                     "name": str(name),
                     "price": safe_price,
+                    "change": round(change, 2) if change == change and change not in (float('inf'), float('-inf')) else None,
                     "changePct": safe_change_pct,
+                    "prevClose": round(prev, 2) if prev == prev and prev not in (float('inf'), float('-inf')) else None,
+                    "dayHigh": round(day_high, 2) if day_high == day_high and day_high not in (float('inf'), float('-inf')) else None,
+                    "dayLow": round(day_low, 2) if day_low == day_low and day_low not in (float('inf'), float('-inf')) else None,
+                    "series": [round(v, 2) for v in close_series[-8:]],
+                    "pattern": pattern,
                 }
             )
         except Exception as exc:  # noqa: BLE001
