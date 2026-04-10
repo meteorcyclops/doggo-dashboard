@@ -11,6 +11,7 @@ const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
   card_order: [...defaultVisibleCards],
+  collapsed_cards: ['weather'],
   flight_origin: 'TPE',
   flight_regions: ['日本', '韓國', '東南亞'],
 };
@@ -463,6 +464,18 @@ function applyCardVisibility() {
   });
 }
 
+function applyCollapsedCards() {
+  const collapsed = new Set(dashboardPreferences.collapsed_cards || []);
+  document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
+    const cardId = btn.dataset.cardCollapseToggle;
+    const card = document.querySelector(`[data-card-id="${cardId}"]`);
+    if (!card) return;
+    const isCollapsed = collapsed.has(cardId);
+    card.classList.toggle('intel-panel-collapsed', isCollapsed);
+    btn.textContent = isCollapsed ? '展開' : '收起';
+  });
+}
+
 function renderLayoutOptions() {
   const root = document.getElementById('layout-card-options');
   if (!root) return;
@@ -517,6 +530,7 @@ function saveLocalPreferences() {
     localStorage.setItem(LOCAL_PREFS_KEY, JSON.stringify({
       visible_cards: dashboardPreferences.visible_cards,
       card_order: dashboardPreferences.card_order,
+      collapsed_cards: dashboardPreferences.collapsed_cards,
       theme: document.body.dataset.theme || 'day',
     }));
   } catch {}
@@ -538,6 +552,7 @@ async function loadPreferences() {
     dashboardPreferences = { ...dashboardPreferences, ...localPrefs };
   }
   applyCardVisibility();
+  applyCollapsedCards();
   renderLayoutOptions();
 }
 
@@ -960,15 +975,20 @@ function bindActions() {
     }
   });
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
+  document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const cardId = btn.dataset.cardCollapseToggle;
+      const next = new Set(dashboardPreferences.collapsed_cards || []);
+      if (next.has(cardId)) next.delete(cardId);
+      else next.add(cardId);
+      dashboardPreferences.collapsed_cards = Array.from(next);
+      applyCollapsedCards();
+      await savePreferences();
+    });
+  });
   document.getElementById('quote-expand-btn')?.addEventListener('click', () => {
     quotesExpanded = !quotesExpanded;
     if (currentData?.quotes) renderQuotes(currentData.quotes);
-  });
-  document.getElementById('weather-toggle-btn')?.addEventListener('click', () => {
-    const panel = document.getElementById('weather-panel');
-    const btn = document.getElementById('weather-toggle-btn');
-    const collapsed = panel?.classList.toggle('weather-panel-collapsed');
-    if (btn) btn.textContent = collapsed ? '展開天氣卡' : '收起天氣卡';
   });
   document.getElementById('theme-copy-btn')?.addEventListener('click', async () => {
     const hint = document.getElementById('action-hint');
