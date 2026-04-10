@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T06:31:22Z",
+  "generatedAt": "2026-04-10T06:35:20Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T06:30:57Z",
+    "asOf": "2026-04-10T06:34:53Z",
     "items": [
       {
         "symbol": "2330",
@@ -951,6 +951,16 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
+        "title": "中鋼3月營收286.22億元、年減2.3％  Q2接單優於Q1",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399512",
+        "time": "Fri, 10 Apr 2026 14:27:27 +0800"
+      },
+      {
+        "title": "網銀、APP登入異常 國泰世華：已啟動緊急處置",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399503",
+        "time": "Fri, 10 Apr 2026 14:26:25 +0800"
+      },
+      {
         "title": "勞動人權、移工引進新制 工總憂成本增 盼修法前有3年調適期",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399461",
         "time": "Fri, 10 Apr 2026 14:24:17 +0800"
@@ -979,16 +989,6 @@
         "title": "台股創新高收35417點！台積電大漲登2000元 指數漲556點",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399094",
         "time": "Fri, 10 Apr 2026 13:50:28 +0800"
-      },
-      {
-        "title": "台積電入列！全球最賺錢公司排行 第1名是這間亞洲企業",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399359",
-        "time": "Fri, 10 Apr 2026 13:32:00 +0800"
-      },
-      {
-        "title": "金價回檔成最佳買點？全球央行加碼、最大買家是「歐洲這國」",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399092",
-        "time": "Fri, 10 Apr 2026 13:27:17 +0800"
       }
     ]
   },
@@ -1047,21 +1047,43 @@
     "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
   },
   "flightDeals": {
-    "source": "doggo flight watchlist v1",
-    "asOf": "2026-04-10T06:31:17Z",
+    "source": "doggo flight watchlist v2",
+    "asOf": "2026-04-10T06:35:17Z",
+    "preferences": {
+      "origin": "TPE",
+      "regions": [
+        "日本",
+        "韓國",
+        "東南亞"
+      ],
+      "budgetFlexible": true
+    },
     "items": [
       {
         "origin": "TPE",
-        "destination": "香港",
-        "region": "港澳",
-        "price": 4288,
-        "baseline": 5600,
-        "airline": "香港快運觀察",
-        "window": "平日快閃",
-        "reason": "香港線適合撿短天數小旅行",
+        "destination": "沖繩",
+        "region": "日本",
+        "price": 5666,
+        "baseline": 7600,
+        "airline": "虎航 / 樂桃觀察",
+        "window": "平日短打",
+        "reason": "沖繩線很適合做輕旅行觀察",
         "badge": "LOOK",
         "note": "這條有甜，可以放進口袋名單。",
-        "discountPct": 23
+        "discountPct": 25
+      },
+      {
+        "origin": "TPE",
+        "destination": "釜山",
+        "region": "韓國",
+        "price": 5899,
+        "baseline": 7800,
+        "airline": "釜山航空觀察",
+        "window": "5月平日",
+        "reason": "釜山線常有低調甜價",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 24
       },
       {
         "origin": "TPE",
@@ -1075,6 +1097,19 @@
         "badge": "LOOK",
         "note": "這條有甜，可以放進口袋名單。",
         "discountPct": 23
+      },
+      {
+        "origin": "TPE",
+        "destination": "峴港",
+        "region": "東南亞",
+        "price": 6120,
+        "baseline": 8400,
+        "airline": "越捷觀察",
+        "window": "5月中旬",
+        "reason": "越南線近期有甜價空間",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 27
       },
       {
         "origin": "TPE",
@@ -1142,7 +1177,7 @@
         "discountPct": 26
       }
     ],
-    "summary": "目前最甜的是 香港 4,288 起，主要甜價集中在 港澳 / 東南亞 / 韓國。"
+    "summary": "以你固定 TPE 出發來看，目前最低門檻是 沖繩 5,666 起，整體以日本 / 韓國 / 東南亞最值得追。"
   },
   "dog": {
     "state": "sleepy",
@@ -1150,7 +1185,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T06:31:17Z",
+    "asOf": "2026-04-10T06:35:17Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T13:15:00+08:00",

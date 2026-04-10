@@ -441,9 +441,13 @@ function renderFlightDeals(flightDeals) {
   list.innerHTML = '';
   const asOf = flightDeals?.asOf ? formatShortDateTime(flightDeals.asOf) : '';
   if (meta) {
+    const prefs = flightDeals?.preferences;
+    const prefText = prefs
+      ? `${prefs.origin} 出發 · ${Array.isArray(prefs.regions) ? prefs.regions.join(' / ') : ''}`
+      : '台北出發 watchlist';
     meta.textContent = flightDeals?.error
       ? `機票雷達異常：${flightDeals.error}`
-      : `台北出發 watchlist · 更新 ${asOf}`;
+      : `${prefText} · 更新 ${asOf}`;
   }
   const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf });
   if (state) {
@@ -453,7 +457,7 @@ function renderFlightDeals(flightDeals) {
   flightDeals.items.forEach((item) => {
     const li = document.createElement('li');
     const badgeCls = item.badge === 'HOT' ? 'danger' : item.badge === 'LOOK' ? 'warn' : 'ok';
-    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.note}</small></span><b class="${badgeCls}">${item.badge}</b>`;
+    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.reason}<br>${item.note}</small></span><b class="${badgeCls}">${item.badge}</b>`;
     list.appendChild(li);
   });
   pulseChildren('#flight-list > li');
@@ -552,7 +556,7 @@ function buildBroadcastItems(data) {
       state: 'excited',
       title: (item.title || '便宜航點').slice(0, 28),
       detail: `約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · ${item.window || '近期觀察'}`,
-      bubble: `狗狗快報：${item.destination} 這條線現在約 NT$${Number(item.price).toLocaleString('zh-TW')} 起，${item.note || '值得繼續盯著。'}`,
+      bubble: `狗狗快報：以你固定 TPE 出發來看，${item.destination} 現在約 NT$${Number(item.price).toLocaleString('zh-TW')} 起，${item.note || '值得繼續盯著。'}`,
     });
   }
   for (const item of data?.trumpTruth?.items || []) {
