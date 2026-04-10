@@ -960,8 +960,13 @@ function activateFocusTarget(target) {
   const panel = document.querySelector(`[data-dog-target="${target}"]`);
   if (!panel) return;
   panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  document.querySelectorAll('.intel-panel').forEach((node) => node.classList.remove('is-focus'));
+  document.querySelectorAll('.intel-panel').forEach((node) => {
+    node.classList.remove('is-focus');
+    node.classList.remove('focus-flash');
+  });
   panel.classList.add('is-focus');
+  void panel.offsetWidth;
+  panel.classList.add('focus-flash');
   const guide = dogGuideLine(target);
   currentFocus = guide.focus || target;
   broadcastPausedUntil = Date.now() + 8000;
@@ -969,6 +974,7 @@ function activateFocusTarget(target) {
   if (currentData) renderSummary(currentData);
   window.setTimeout(() => {
     panel.classList.remove('is-focus');
+    panel.classList.remove('focus-flash');
     if (currentData) dogController.restoreDogScene();
   }, 2600);
 }

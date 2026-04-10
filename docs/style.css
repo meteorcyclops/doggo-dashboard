@@ -1263,6 +1263,23 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
   border-color: #c85386;
   box-shadow: 0 3px 0 #8f355f;
 }
+.intel-panel.focus-flash {
+  animation: focus-flash-pop 0.55s steps(5, end);
+}
+.intel-panel.focus-flash::before {
+  content: "TARGET LOCK";
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 2;
+  padding: 2px 6px;
+  font-size: 9px;
+  letter-spacing: .12em;
+  color: #fffdf7;
+  background: #ff6f8f;
+  border: 2px solid #a53a5b;
+  box-shadow: 0 2px 0 #6d2038;
+}
 .meta-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2131,6 +2148,13 @@ body[data-theme="night"] .summary-list b {
 @keyframes layout-option-flash {
   0% { filter: brightness(1.12); }
   100% { filter: brightness(1); }
+}
+
+@keyframes focus-flash-pop {
+  0% { transform: translateY(0) scale(1); filter: brightness(1); }
+  30% { transform: translateY(-2px) scale(1.02); filter: brightness(1.08); }
+  60% { transform: translateY(-1px) scale(1.01); filter: brightness(1.03); }
+  100% { transform: translateY(-2px) scale(1); filter: brightness(1); }
 }
 
 @media (max-width: 720px) {
