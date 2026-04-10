@@ -89,12 +89,14 @@ def fetch_quotes(symbols: list[str]) -> tuple[dict[str, Any], str | None]:
                 or info.get("symbol")
                 or sym
             )
+            safe_price = round(last, 2) if last == last and last not in (float('inf'), float('-inf')) else None
+            safe_change_pct = round(change_pct, 2) if change_pct == change_pct and change_pct not in (float('inf'), float('-inf')) else None
             items.append(
                 {
                     "symbol": sym,
                     "name": str(name),
-                    "price": round(last, 2),
-                    "changePct": round(change_pct, 2),
+                    "price": safe_price,
+                    "changePct": safe_change_pct,
                 }
             )
         except Exception as exc:  # noqa: BLE001

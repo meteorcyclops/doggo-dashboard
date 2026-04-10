@@ -929,9 +929,10 @@ body[data-theme="night"] .frame {
 }
 .guestbook-shell {
   margin-top: 10px;
-  padding: 10px;
+  padding: 12px;
   position: relative;
-  background: linear-gradient(180deg, #fffdf4 0%, #fff4c9 100%);
+  background: linear-gradient(180deg, #fffdf7 0%, #ffeec4 100%);
+  box-shadow: inset 0 0 0 2px #fff7dc;
 }
 .side-card-hidden {
   display: none;
@@ -944,14 +945,14 @@ body[data-theme="night"] .frame {
   pointer-events: none;
 }
 .guestbook-prompt {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   color: var(--ink);
-  background: #fff;
+  background: linear-gradient(180deg, #fffef9 0%, #fff5d6 100%);
   border: 3px solid #7c74bf;
-  padding: 8px 10px;
-  box-shadow: inset 0 0 0 2px #fff4cc;
+  padding: 10px 12px;
+  box-shadow: inset 0 0 0 2px #fff8e4;
 }
 .guestbook-form {
   display: grid;
@@ -1008,9 +1009,9 @@ body[data-theme="night"] .frame {
 .guestbook-note {
   position: relative;
   padding: 14px 12px 12px;
-  background: linear-gradient(180deg, #fffdf0 0%, #ffe694 100%);
+  background: linear-gradient(180deg, #fffef4 0%, #ffe39b 100%);
   border: 4px solid #7b72c0;
-  box-shadow: inset 0 0 0 2px #fff9dd, 0 6px 0 #b6b0e2;
+  box-shadow: inset 0 0 0 2px #fff9e6, 0 6px 0 #b6b0e2;
   transform-origin: center bottom;
 }
 .guestbook-note::after {
@@ -1030,16 +1031,17 @@ body[data-theme="night"] .frame {
   position: absolute;
   right: 14px;
   top: -6px;
-  width: 22px;
+  width: 24px;
   height: 12px;
   background: #ffb7d8;
   border: 3px solid #d85d93;
+  box-shadow: 0 2px 0 rgba(0,0,0,.08);
 }
 .guestbook-note:nth-child(3n+2) {
-  background: linear-gradient(180deg, #f8fbff 0%, #cce9ff 100%);
+  background: linear-gradient(180deg, #f9fcff 0%, #d5ecff 100%);
 }
 .guestbook-note:nth-child(3n+3) {
-  background: linear-gradient(180deg, #fff9fb 0%, #ffd0e5 100%);
+  background: linear-gradient(180deg, #fffafc 0%, #ffd7e8 100%);
 }
 .guestbook-note-head {
   display: flex;
