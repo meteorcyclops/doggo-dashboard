@@ -7,6 +7,7 @@ const supabase = guestbookCfg.supabaseUrl && guestbookCfg.supabaseAnonKey
   ? createClient(guestbookCfg.supabaseUrl, guestbookCfg.supabaseAnonKey)
   : null;
 const defaultVisibleCards = ['quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
+const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
   card_order: [...defaultVisibleCards],
@@ -503,29 +504,47 @@ function renderLayoutOptions() {
   });
 }
 
+function loadLocalPreferences() {
+  try {
+    const raw = localStorage.getItem(LOCAL_PREFS_KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function saveLocalPreferences() {
+  try {
+    localStorage.setItem(LOCAL_PREFS_KEY, JSON.stringify({
+      visible_cards: dashboardPreferences.visible_cards,
+      card_order: dashboardPreferences.card_order,
+      theme: document.body.dataset.theme || 'day',
+    }));
+  } catch {}
+}
+
 async function loadPreferences() {
-  if (!supabase) return;
-  const { data, error } = await supabase
-    .from('dashboard_preferences')
-    .select('profile_id,visible_cards,card_order,flight_origin,flight_regions')
-    .eq('profile_id', profileId)
-    .maybeSingle();
-  if (!error && data) {
-    dashboardPreferences = { ...dashboardPreferences, ...data };
+  if (supabase) {
+    const { data, error } = await supabase
+      .from('dashboard_preferences')
+      .select('profile_id,visible_cards,card_order,flight_origin,flight_regions')
+      .eq('profile_id', profileId)
+      .maybeSingle();
+    if (!error && data) {
+      dashboardPreferences = { ...dashboardPreferences, ...data };
+    }
+  }
+  const localPrefs = loadLocalPreferences();
+  if (localPrefs) {
+    dashboardPreferences = { ...dashboardPreferences, ...localPrefs };
   }
   applyCardVisibility();
   renderLayoutOptions();
 }
 
 async function savePreferences() {
-  if (!supabase) return;
-  await supabase.from('dashboard_preferences').upsert({
-    profile_id: profileId,
-    visible_cards: dashboardPreferences.visible_cards,
-    card_order: dashboardPreferences.card_order,
-    flight_origin: dashboardPreferences.flight_origin,
-    flight_regions: dashboardPreferences.flight_regions,
-  }, { onConflict: 'profile_id' });
+  saveLocalPreferences();
 }
 
 function renderFlightDeals(flightDeals) {
@@ -885,6 +904,7 @@ function applyTheme(theme) {
   void document.body.offsetWidth;
   document.body.classList.add('theme-scene-flash');
   try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
+  saveLocalPreferences();
   if (currentData) {
     dogController.syncDog(currentData);
     dogController.setDogBubble(theme === 'night' ? dogController.pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
