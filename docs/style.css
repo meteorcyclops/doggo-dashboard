@@ -489,7 +489,7 @@ body[data-theme="night"] .grass {
   transition: max-height .22s steps(6), padding-right .16s steps(3);
 }
 .quote-list-shell.is-expanded {
-  max-height: 520px;
+  max-height: 760px;
   overflow: auto;
   padding-right: 4px;
   scrollbar-width: thin;
