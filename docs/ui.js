@@ -143,6 +143,25 @@ function dogMoodCN(state) {
   }
 }
 
+function heroDogStatusText(data, { jammed = 0, alerts = 0 } = {}) {
+  const state = currentDogState || data?.dog?.state || 'idle';
+  const now = new Date();
+  const hour = Number(now.toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Taipei' }));
+  const topQuote = data?.quotes?.items?.[0];
+  const hasHotTrump = data?.trumpTruth?.items?.some((item) => item.important);
+  const hasFeed = !!data?.feed?.items?.length;
+  if (alerts) return '外面有警報冒出來了，狗狗正在把需要先看的事往前推。';
+  if (jammed) return '有幾個追蹤項目卡卡的，但狗狗還在守著主要情報台。';
+  if (hasHotTrump) return '川普那邊有新動靜，狗狗現在盯著快訊台。';
+  if (topQuote?.changePct >= 1.5) return `盤面偏熱，狗狗正盯著 ${topQuote.symbol} 這種領頭股。`;
+  if (topQuote?.changePct <= -1.5) return `盤面有點轉弱，狗狗先守著 ${topQuote.symbol} 這類前排訊號。`;
+  if (hasFeed) return '外面的新聞一直有更新，狗狗正在整理今天先值得看的幾條。';
+  if (hour >= 22 || hour < 8 || state === 'sleepy') return '夜色比較深了，狗狗改成安靜值班，幫你守著最新一輪資料。';
+  if (state === 'excited') return '今天氣氛不錯，狗狗一邊晃尾巴，一邊幫你巡盤。';
+  if (state === 'work') return '狗狗正在上工，把台股、新聞和摘要慢慢排好給你看。';
+  return '今天整體還算平穩，狗狗先幫你把情報台維持在順順的節奏。';
+}
+
 function heroFocusLabel(data) {
   if (data?.trumpTruth?.items?.some((item) => item.important)) return '川普發言快訊';
   if (data?.feed?.items?.length) return '新聞雷達';
@@ -575,6 +594,7 @@ function renderSummary(data) {
   const session = twSessionLabel(data.generatedAt);
   const dogLabel = data.dog?.label || '今日';
   const mood = dogMoodCN(currentDogState || data.dog?.state || 'idle');
+  const heroDogText = heroDogStatusText(data, { jammed, alerts });
   const focus = heroFocusLabel(data);
   const prov = data.provenance || '—';
   const buildTrigger = buildTriggerLabel(data.buildTrigger);
@@ -614,7 +634,7 @@ function renderSummary(data) {
   const trumpRow = trumpSummaryRow(data.trumpTruth);
 
   document.getElementById('hero-session').textContent = session;
-  document.getElementById('hero-dog-state').textContent = `${dogLabel} · ${mood}`;
+  document.getElementById('hero-dog-state').textContent = heroDogText;
   document.getElementById('hero-provenance').textContent = prov;
   document.getElementById('hero-focus').textContent = focus;
 
