@@ -195,6 +195,36 @@ body[data-theme="night"] {
   color: var(--muted);
   max-width: 58ch;
 }
+.market-session-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.market-session-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #3d3366;
+  background: rgba(255,255,255,.86);
+  border: 3px solid #8d86cb;
+  box-shadow: inset 0 0 0 2px #fff8dd;
+}
+.market-session-pill.ok {
+  background: linear-gradient(180deg, #e8ffd9 0%, #bbef9f 100%);
+  border-color: #72a33d;
+}
+.market-session-pill.warn {
+  background: linear-gradient(180deg, #fff3c8 0%, #ffd97d 100%);
+  border-color: #c79029;
+}
+.market-session-pill.danger {
+  background: linear-gradient(180deg, #ffd9e5 0%, #ffb0c7 100%);
+  border-color: #c35b7d;
+}
 .hero-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;

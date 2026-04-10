@@ -979,6 +979,33 @@ function activateFocusTarget(target) {
   }, 2600);
 }
 
+function marketSessionTone(label) {
+  if (label.includes('盤中')) return 'ok';
+  if (label.includes('盤前') || label.includes('盤後')) return 'warn';
+  return 'danger';
+}
+
+function usSessionLabel(session) {
+  const map = {
+    premarket: '美股盤前',
+    market: '美股盤中',
+    afterhours: '美股盤後',
+    closed: '美股休市',
+  };
+  return map[session] || '美股時段';
+}
+
+function renderMarketSessionStrip(data) {
+  const root = document.getElementById('market-session-strip');
+  if (!root) return;
+  const twLabel = twSessionLabel(data?.generatedAt);
+  const usLabel = usSessionLabel(data?.usQuotes?.session);
+  root.innerHTML = `
+    <span class="market-session-pill ${marketSessionTone(twLabel)}">台股：${escHtml(twLabel)}</span>
+    <span class="market-session-pill ${marketSessionTone(usLabel)}">美股：${escHtml(usLabel)}</span>
+  `;
+}
+
 function renderFocusPills(data) {
   const root = document.getElementById('focus-pill-list');
   if (!root) return;
@@ -1067,6 +1094,7 @@ function renderSummary(data) {
   const weatherBadge = document.getElementById('weather-badge');
   if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
 
+  renderMarketSessionStrip(data);
   renderFocusPills(data);
   const summary = document.getElementById('summary-list');
   summary.innerHTML = `
