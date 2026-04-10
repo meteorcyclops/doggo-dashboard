@@ -268,10 +268,14 @@ function summarizeQuotes(items) {
   return `今天追蹤股多半在盤整，平均變動 ${avg.toFixed(2)}%。`;
 }
 
+let quotesExpanded = false;
+
 function renderQuotes(quotes) {
   const list = document.getElementById('quote-list');
   const meta = document.getElementById('quote-meta');
   const summaryEl = document.getElementById('quote-summary');
+  const shell = document.querySelector('.quote-list-shell');
+  const expandBtn = document.getElementById('quote-expand-btn');
   if (!list) return;
   list.innerHTML = '';
   const asOf = quotes?.asOf;
@@ -286,11 +290,17 @@ function renderQuotes(quotes) {
     renderStateCard(list, meta, state, '台股快報暫時沒有完整資料');
     return;
   }
-  quotes.items.forEach((q) => {
+  const items = quotesExpanded ? quotes.items : quotes.items.slice(0, 10);
+  if (shell) shell.classList.toggle('is-expanded', quotesExpanded);
+  if (expandBtn) {
+    expandBtn.hidden = (quotes.items?.length || 0) <= 10;
+    expandBtn.textContent = quotesExpanded ? '收起追蹤股清單' : `展開其餘 ${Math.max((quotes.items?.length || 0) - 10, 0)} 檔`;
+  }
+  items.forEach((q) => {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong>　<span class="quote-change-label">漲跌</span> <strong class="quote-change-value ${cls}">${formatChangePct(q.changePct)}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
   });
 }
@@ -684,10 +694,8 @@ function initTheme() {
 function bindActions() {
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
   document.getElementById('quote-expand-btn')?.addEventListener('click', () => {
-    const shell = document.querySelector('.quote-list-shell');
-    const btn = document.getElementById('quote-expand-btn');
-    const expanded = shell?.classList.toggle('is-expanded');
-    if (btn) btn.textContent = expanded ? '收起追蹤股清單' : '展開更多追蹤股';
+    quotesExpanded = !quotesExpanded;
+    if (currentData?.quotes) renderQuotes(currentData.quotes);
   });
   document.getElementById('theme-copy-btn')?.addEventListener('click', async () => {
     const hint = document.getElementById('action-hint');

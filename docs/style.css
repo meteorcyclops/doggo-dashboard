@@ -482,7 +482,12 @@ body[data-theme="night"] .grass {
 }
 .quote-list-shell {
   margin-top: 8px;
-  max-height: 300px;
+  max-height: none;
+  overflow: visible;
+  padding-right: 0;
+}
+.quote-list-shell.is-expanded {
+  max-height: 420px;
   overflow: auto;
   padding-right: 4px;
   scrollbar-width: thin;
@@ -495,14 +500,14 @@ body[data-theme="night"] .grass {
 .quote-list-shell.is-expanded {
   max-height: 460px;
 }
-.quote-list-shell::-webkit-scrollbar {
+.quote-list-shell.is-expanded::-webkit-scrollbar {
   width: 14px;
 }
-.quote-list-shell::-webkit-scrollbar-track {
+.quote-list-shell.is-expanded::-webkit-scrollbar-track {
   background: #f6efc8;
   border: 3px solid #8d86cb;
 }
-.quote-list-shell::-webkit-scrollbar-thumb {
+.quote-list-shell.is-expanded::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #8d86cb 0%, #645bb2 100%);
   border: 3px solid #4d458f;
 }
@@ -536,22 +541,6 @@ body[data-theme="night"] .grass {
 .quote-price-value {
   color: #2f2957;
 }
-.quote-change-label {
-  color: #6e679a;
-}
-.quote-change-value {
-  font-size: 13px;
-  letter-spacing: .06em;
-}
-.quote-change-value.ok {
-  color: #d84f6f;
-}
-.quote-change-value.warn {
-  color: #a2771c;
-}
-.quote-change-value.danger {
-  color: #2c9a63;
-}
 .quote-mini-pattern {
   display: inline-block;
   margin-left: 8px;
@@ -559,7 +548,7 @@ body[data-theme="night"] .grass {
 }
 .quote-change-badge {
   display: inline-block;
-  min-width: 62px;
+  min-width: 76px;
   padding: 4px 6px;
   text-align: center;
   font-size: 12px;
