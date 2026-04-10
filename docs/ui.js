@@ -192,6 +192,10 @@ function topUsMover(data) {
 
 function computeFocusRanking(data) {
   const ranking = [];
+  const twSession = twSessionLabel(data?.generatedAt);
+  const usSession = usSessionLabel(data?.usQuotes?.session);
+  const isTwActive = twSession.includes('盤中') || twSession.includes('盤前');
+  const isUsActive = usSession.includes('盤中') || usSession.includes('盤前') || usSession.includes('盤後');
   const hotTrump = topImportantTrump(data);
   if (hotTrump) {
     ranking.push({
@@ -211,7 +215,7 @@ function computeFocusRanking(data) {
       detail: topUs.dogSummary || `${topUs.symbol} ${formatChangePct(topUs.changePct)}`,
       state: 'work',
       mode: 'US MODE',
-      score: Math.abs(Number(topUs.changePct) || 0) >= 2 ? 80 : 45,
+      score: isUsActive ? (Math.abs(Number(topUs.changePct) || 0) >= 2 ? 88 : 72) : 45,
     });
   }
   const topTw = topTwMover(data);
@@ -222,7 +226,7 @@ function computeFocusRanking(data) {
       detail: topTw.dogSummary || `${topTw.symbol} ${formatChangePct(topTw.changePct)}`,
       state: 'work',
       mode: 'MARKET MODE',
-      score: Math.abs(Number(topTw.changePct) || 0) >= 1.5 ? 70 : 40,
+      score: isTwActive ? (Math.abs(Number(topTw.changePct) || 0) >= 1.5 ? 86 : 70) : 40,
     });
   }
   if (data?.feed?.items?.length) {
