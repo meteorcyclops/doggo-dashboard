@@ -1,4 +1,18 @@
 import { createDogController } from './dog-controller.js';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const guestbookCfg = window.DOGGO_GUESTBOOK_CONFIG || {};
+const profileId = guestbookCfg.profileId || 'default';
+const supabase = guestbookCfg.supabaseUrl && guestbookCfg.supabaseAnonKey
+  ? createClient(guestbookCfg.supabaseUrl, guestbookCfg.supabaseAnonKey)
+  : null;
+const defaultVisibleCards = ['quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
+let dashboardPreferences = {
+  visible_cards: [...defaultVisibleCards],
+  card_order: [...defaultVisibleCards],
+  flight_origin: 'TPE',
+  flight_regions: ['日本', '韓國', '東南亞'],
+};
 
 function pulseChildren(selector) {
   document.querySelectorAll(selector).forEach((el) => {
@@ -71,6 +85,12 @@ function formatChangePct(p) {
   const n = Number(p);
   const sign = n > 0 ? '+' : '';
   return `${sign}${n.toFixed(2)}%`;
+}
+
+function buildFlightSearchUrl(origin, destination) {
+  const from = encodeURIComponent(origin || 'TPE');
+  const to = encodeURIComponent(destination || 'Tokyo');
+  return `https://www.google.com/travel/flights?q=Flights%20from%20${from}%20to%20${to}`;
 }
 
 function safeHttpUrl(raw) {
@@ -434,6 +454,70 @@ function renderWeather(weather) {
   pulseChildren('#weather-list > li');
 }
 
+function applyCardVisibility() {
+  const visible = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
+  document.querySelectorAll('[data-card-id]').forEach((el) => {
+    const id = el.dataset.cardId;
+    el.hidden = !visible.has(id);
+  });
+}
+
+function renderLayoutOptions() {
+  const root = document.getElementById('layout-card-options');
+  if (!root) return;
+  const labels = {
+    quotes: '台股快報',
+    weather: '生活天氣提醒',
+    feed: '新聞雷達',
+    flight: '特價機票雷達',
+    trump: '川普發言快訊',
+    guestbook: '8-bit 留言板',
+  };
+  const visible = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
+  root.innerHTML = defaultVisibleCards.map((id) => `
+    <label class="layout-option">
+      <input type="checkbox" data-card-toggle="${id}" ${visible.has(id) ? 'checked' : ''} />
+      <span>${labels[id] || id}</span>
+    </label>
+  `).join('');
+  root.querySelectorAll('[data-card-toggle]').forEach((input) => {
+    input.addEventListener('change', async (e) => {
+      const cardId = e.target.dataset.cardToggle;
+      const next = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
+      if (e.target.checked) next.add(cardId);
+      else next.delete(cardId);
+      dashboardPreferences.visible_cards = defaultVisibleCards.filter((id) => next.has(id));
+      applyCardVisibility();
+      await savePreferences();
+    });
+  });
+}
+
+async function loadPreferences() {
+  if (!supabase) return;
+  const { data, error } = await supabase
+    .from('dashboard_preferences')
+    .select('profile_id,visible_cards,card_order,flight_origin,flight_regions')
+    .eq('profile_id', profileId)
+    .maybeSingle();
+  if (!error && data) {
+    dashboardPreferences = { ...dashboardPreferences, ...data };
+  }
+  applyCardVisibility();
+  renderLayoutOptions();
+}
+
+async function savePreferences() {
+  if (!supabase) return;
+  await supabase.from('dashboard_preferences').upsert({
+    profile_id: profileId,
+    visible_cards: dashboardPreferences.visible_cards,
+    card_order: dashboardPreferences.card_order,
+    flight_origin: dashboardPreferences.flight_origin,
+    flight_regions: dashboardPreferences.flight_regions,
+  }, { onConflict: 'profile_id' });
+}
+
 function renderFlightDeals(flightDeals) {
   const list = document.getElementById('flight-list');
   const meta = document.getElementById('flight-meta');
@@ -457,7 +541,8 @@ function renderFlightDeals(flightDeals) {
   flightDeals.items.forEach((item) => {
     const li = document.createElement('li');
     const badgeCls = item.badge === 'HOT' ? 'danger' : item.badge === 'LOOK' ? 'warn' : 'ok';
-    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.reason}<br>${item.note}</small></span><b class="${badgeCls}">${item.badge}</b>`;
+    const url = buildFlightSearchUrl(item.origin, item.destination);
+    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.reason}<br>${item.note}<br><a href="${url}" target="_blank" rel="noreferrer">去查票 ↗</a></small></span><b class="${badgeCls}">${item.badge}</b>`;
     list.appendChild(li);
   });
   pulseChildren('#flight-list > li');
@@ -819,6 +904,17 @@ function initTheme() {
 }
 
 function bindActions() {
+  document.getElementById('layout-toggle')?.addEventListener('click', () => {
+    document.getElementById('layout-modal')?.removeAttribute('hidden');
+  });
+  document.getElementById('layout-close-btn')?.addEventListener('click', () => {
+    document.getElementById('layout-modal')?.setAttribute('hidden', 'hidden');
+  });
+  document.getElementById('layout-modal')?.addEventListener('click', (e) => {
+    if (e.target?.id === 'layout-modal') {
+      document.getElementById('layout-modal')?.setAttribute('hidden', 'hidden');
+    }
+  });
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
   document.getElementById('quote-expand-btn')?.addEventListener('click', () => {
     quotesExpanded = !quotesExpanded;
@@ -841,10 +937,15 @@ function bindActions() {
   });
 }
 
-setInterval(tickClock, 1000);
-tickClock();
-initTheme();
-bindActions();
-dogController.bindDogPet();
-loadData();
-setInterval(() => loadData({ silent: true }), POLL_MS);
+async function initApp() {
+  setInterval(tickClock, 1000);
+  tickClock();
+  initTheme();
+  bindActions();
+  dogController.bindDogPet();
+  await loadPreferences();
+  loadData();
+  setInterval(() => loadData({ silent: true }), POLL_MS);
+}
+
+initApp();

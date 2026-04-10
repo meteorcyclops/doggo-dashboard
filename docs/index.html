@@ -20,6 +20,7 @@
           <div class="stat-pill"><span>同步</span><b id="gateway-pill">—</b></div>
           <div class="stat-pill"><span>時間</span><b id="clock">--:--:--</b></div>
           <button class="stat-pill theme-toggle" id="theme-toggle" type="button" aria-describedby="theme-toggle-hint"><span>主題</span><b id="theme-label">DAY</b><small id="theme-toggle-hint">點一下切換日夜</small></button>
+          <button class="stat-pill layout-toggle" id="layout-toggle" type="button"><span>版面</span><b>設定</b><small>卡片顯示與偏好</small></button>
         </div>
       </header>
 
@@ -145,7 +146,7 @@
                 </div>
               </div>
 
-              <article class="intel-panel frame white-panel" data-dog-target="quotes" data-focus-label="台股快報">
+              <article class="intel-panel frame white-panel" data-card-id="quotes" data-dog-target="quotes" data-focus-label="台股快報">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">MARKET SNAPSHOT</div>
@@ -163,7 +164,7 @@
                 <button class="quote-expand-btn cmd-btn" id="quote-expand-btn" type="button">展開更多追蹤股</button>
               </article>
 
-              <article class="intel-panel frame white-panel weather-panel weather-panel-collapsed" data-dog-target="weather" data-focus-label="生活天氣提醒" id="weather-panel">
+              <article class="intel-panel frame white-panel weather-panel weather-panel-collapsed" data-card-id="weather" data-dog-target="weather" data-focus-label="生活天氣提醒" id="weather-panel">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">WEATHER WATCH</div>
@@ -182,7 +183,7 @@
                 </ul>
               </article>
 
-              <article class="intel-panel frame white-panel" data-dog-target="feed" data-focus-label="新聞雷達">
+              <article class="intel-panel frame white-panel" data-card-id="feed" data-dog-target="feed" data-focus-label="新聞雷達">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">NEWS RADAR</div>
@@ -196,7 +197,7 @@
                 </ul>
               </article>
 
-              <article class="intel-panel frame white-panel" data-dog-target="flight" data-focus-label="特價機票雷達">
+              <article class="intel-panel frame white-panel" data-card-id="flight" data-dog-target="flight" data-focus-label="特價機票雷達">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">FLIGHT DEALS</div>
@@ -210,7 +211,7 @@
                 </ul>
               </article>
 
-              <article class="intel-panel frame white-panel" data-dog-target="trump" data-focus-label="川普發言快訊">
+              <article class="intel-panel frame white-panel" data-card-id="trump" data-dog-target="trump" data-focus-label="川普發言快訊">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">TRUTH WATCH</div>
@@ -256,7 +257,7 @@
             </ul>
           </section>
 
-          <section class="frame candy side-card guestbook-card" data-dog-target="guestbook">
+          <section class="frame candy side-card guestbook-card" data-card-id="guestbook" data-dog-target="guestbook">
             <div class="guestbook-header">
               <div>
                 <div class="guestbook-kicker">PIXEL NOTE WALL</div>
@@ -295,6 +296,22 @@
           </section>
         </aside>
       </main>
+    </div>
+
+    <div class="layout-modal" id="layout-modal" hidden>
+      <div class="layout-modal-card frame white-panel">
+        <div class="layout-modal-head">
+          <div>
+            <div class="intel-kicker">DOGGO LAYOUT</div>
+            <div class="side-title">我的面板</div>
+          </div>
+          <button class="cmd-btn" id="layout-close-btn" type="button">關閉</button>
+        </div>
+        <div class="layout-section">
+          <div class="layout-section-title">顯示卡片</div>
+          <div class="layout-option-list" id="layout-card-options"></div>
+        </div>
+      </div>
     </div>
 
     <script type="module" src="./ui.js"></script>

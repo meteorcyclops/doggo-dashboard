@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T06:35:20Z",
+  "generatedAt": "2026-04-10T06:48:04Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T06:34:53Z",
+    "asOf": "2026-04-10T06:47:36Z",
     "items": [
       {
         "symbol": "2330",
@@ -951,6 +951,11 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
+        "title": "北市汰換節能設備補助2.1億 蔣萬安承諾將持續補助",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399456",
+        "time": "Fri, 10 Apr 2026 14:29:51 +0800"
+      },
+      {
         "title": "中鋼3月營收286.22億元、年減2.3％  Q2接單優於Q1",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399512",
         "time": "Fri, 10 Apr 2026 14:27:27 +0800"
@@ -984,11 +989,6 @@
         "title": "史上最強！台積電3月與Q1營收雙雙創新高",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399442",
         "time": "Fri, 10 Apr 2026 13:51:21 +0800"
-      },
-      {
-        "title": "台股創新高收35417點！台積電大漲登2000元 指數漲556點",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399094",
-        "time": "Fri, 10 Apr 2026 13:50:28 +0800"
       }
     ]
   },
@@ -1008,13 +1008,13 @@
           "tempMin": 27.4,
           "tempMax": 28.1
         },
-        "asOf": "2026-04-10T14:30"
+        "asOf": "2026-04-10T14:45"
       },
       {
         "key": "zhonghe",
         "label": "中和",
         "icon": "☀️",
-        "tempC": 30.3,
+        "tempC": 30.2,
         "rainChance": 0,
         "weatherCode": 1,
         "advice": "短袖就好，注意防曬和補水。",
@@ -1024,7 +1024,7 @@
           "tempMin": 29.4,
           "tempMax": 30.4
         },
-        "asOf": "2026-04-10T14:30"
+        "asOf": "2026-04-10T14:45"
       },
       {
         "key": "songshan",
@@ -1040,7 +1040,7 @@
           "tempMin": 30.8,
           "tempMax": 31.4
         },
-        "asOf": "2026-04-10T14:30"
+        "asOf": "2026-04-10T14:45"
       }
     ],
     "summary": "今天大致穩。",
@@ -1048,7 +1048,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T06:35:17Z",
+    "asOf": "2026-04-10T06:47:59Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1185,7 +1185,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T06:35:17Z",
+    "asOf": "2026-04-10T06:47:59Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T13:15:00+08:00",
