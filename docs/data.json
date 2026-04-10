@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T15:00:18Z",
+  "generatedAt": "2026-04-10T15:03:17Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T14:59:37Z",
+    "asOf": "2026-04-10T15:02:50Z",
     "items": [
       {
         "symbol": "2330",
@@ -61,7 +61,8 @@
           1955.0,
           2000.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2330 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2317",
@@ -79,7 +80,8 @@
           200.0,
           200.5
         ],
-        "pattern": "volatile"
+        "pattern": "volatile",
+        "dogSummary": "狗狗重點：2317 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2454",
@@ -97,7 +99,8 @@
           1575.0,
           1575.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2454 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2412",
@@ -115,7 +118,8 @@
           135.0,
           135.5
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2412 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "6505",
@@ -133,7 +137,8 @@
           52.7,
           52.0
         ],
-        "pattern": "downtrend"
+        "pattern": "downtrend",
+        "dogSummary": "狗狗重點：6505 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2308",
@@ -151,7 +156,8 @@
           1645.0,
           1735.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2308 今天很衝，已經是台股前排強勢股。"
       },
       {
         "symbol": "2303",
@@ -169,7 +175,8 @@
           60.0,
           62.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2303 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2881",
@@ -187,7 +194,8 @@
           88.5,
           87.6
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2881 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2882",
@@ -205,7 +213,8 @@
           73.6,
           72.9
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2882 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1303",
@@ -223,7 +232,8 @@
           85.2,
           81.6
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：1303 跌幅偏大，今天要特別小心這檔。"
       },
       {
         "symbol": "1301",
@@ -241,7 +251,8 @@
           47.4,
           46.95
         ],
-        "pattern": "volatile"
+        "pattern": "volatile",
+        "dogSummary": "狗狗重點：1301 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2002",
@@ -259,7 +270,8 @@
           20.2,
           20.05
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2002 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2886",
@@ -277,7 +289,8 @@
           39.75,
           39.85
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2886 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2891",
@@ -295,7 +308,8 @@
           54.8,
           54.0
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2891 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1216",
@@ -313,7 +327,8 @@
           72.0,
           71.8
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：1216 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2382",
@@ -331,7 +346,8 @@
           313.0,
           321.5
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2382 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2884",
@@ -349,7 +365,8 @@
           32.6,
           32.25
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2884 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2885",
@@ -367,7 +384,8 @@
           47.95,
           47.7
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2885 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "3711",
@@ -385,7 +403,8 @@
           392.0,
           393.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：3711 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2880",
@@ -403,7 +422,8 @@
           34.6,
           34.1
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2880 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "5880",
@@ -421,7 +441,8 @@
           24.05,
           23.85
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：5880 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "3045",
@@ -439,7 +460,8 @@
           110.0,
           110.0
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：3045 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2883",
@@ -457,7 +479,8 @@
           21.3,
           21.15
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2883 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2207",
@@ -475,7 +498,8 @@
           497.5,
           508.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2207 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2912",
@@ -493,7 +517,8 @@
           231.0,
           227.5
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2912 明顯轉弱，今天盤面有點保守。"
       },
       {
         "symbol": "3008",
@@ -511,7 +536,8 @@
           2280.0,
           2310.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：3008 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "4904",
@@ -529,7 +555,8 @@
           95.3,
           94.6
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：4904 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "5871",
@@ -547,7 +574,8 @@
           108.5,
           107.0
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：5871 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "6415",
@@ -565,7 +593,8 @@
           282.0,
           279.5
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：6415 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "3034",
@@ -583,7 +612,8 @@
           399.5,
           394.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：3034 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2892",
@@ -601,7 +631,8 @@
           29.1,
           28.6
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2892 明顯轉弱，今天盤面有點保守。"
       },
       {
         "symbol": "1326",
@@ -619,7 +650,8 @@
           45.6,
           45.45
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：1326 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2603",
@@ -637,7 +669,8 @@
           203.0,
           202.5
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2603 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1101",
@@ -655,7 +688,8 @@
           25.1,
           25.4
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：1101 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2887",
@@ -673,7 +707,8 @@
           24.65,
           24.55
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2887 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2327",
@@ -691,7 +726,8 @@
           281.5,
           285.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2327 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2357",
@@ -709,7 +745,8 @@
           568.0,
           578.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2357 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2379",
@@ -727,7 +764,8 @@
           512.0,
           508.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2379 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "4938",
@@ -745,7 +783,8 @@
           80.0,
           80.7
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：4938 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2408",
@@ -763,7 +802,8 @@
           205.0,
           215.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2408 今天很衝，已經是台股前排強勢股。"
       },
       {
         "symbol": "1590",
@@ -781,7 +821,8 @@
           1075.0,
           1115.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：1590 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "3037",
@@ -799,7 +840,8 @@
           625.0,
           638.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：3037 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2356",
@@ -817,7 +859,8 @@
           43.8,
           44.3
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2356 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2801",
@@ -835,7 +878,8 @@
           21.0,
           21.15
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2801 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2609",
@@ -853,7 +897,8 @@
           51.3,
           51.3
         ],
-        "pattern": "downtrend"
+        "pattern": "downtrend",
+        "dogSummary": "狗狗重點：2609 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2615",
@@ -871,7 +916,8 @@
           78.3,
           77.1
         ],
-        "pattern": "range"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2615 明顯轉弱，今天盤面有點保守。"
       },
       {
         "symbol": "8046",
@@ -889,7 +935,8 @@
           669.0,
           667.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：8046 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "0050",
@@ -907,7 +954,8 @@
           79.15,
           80.75
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：0050 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "0056",
@@ -925,7 +973,8 @@
           39.08,
           39.41
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：0056 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2606",
@@ -943,124 +992,125 @@
           60.8,
           61.0
         ],
-        "pattern": "uptrend"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2606 目前波動不算大，先放在觀察名單前段。"
       }
     ]
   },
   "usQuotes": {
-    "asOf": "2026-04-10T14:59:56Z",
+    "asOf": "2026-04-10T15:03:09Z",
     "session": "market",
     "summary": "NVDA 漲幅最明顯，今天美股情緒偏熱。",
     "items": [
       {
         "symbol": "NVDA",
         "name": "NVIDIA Corporation",
-        "price": 188.88,
-        "changePct": 2.7,
+        "price": 188.95,
+        "changePct": 2.74,
         "series": [
           177.64,
           178.1,
           182.08,
           183.91,
-          188.88
+          188.95
         ],
         "dogSummary": "狗狗重點：NVDA 明顯走強，今晚市場情緒偏偏多。"
       },
       {
         "symbol": "AMZN",
         "name": "Amazon.com, Inc.",
-        "price": 239.1,
-        "changePct": 2.33,
+        "price": 239.24,
+        "changePct": 2.39,
         "series": [
           212.79,
           213.77,
           221.25,
           233.65,
-          239.1
+          239.24
         ],
         "dogSummary": "狗狗重點：AMZN 明顯走強，今晚市場情緒偏偏多。"
       },
       {
         "symbol": "PLTR",
         "name": "Palantir Technologies Inc.",
-        "price": 128.16,
-        "changePct": -1.79,
+        "price": 128.0,
+        "changePct": -1.91,
         "series": [
           147.93,
           150.07,
           140.76,
           130.49,
-          128.16
+          128.0
         ],
         "dogSummary": "狗狗重點：PLTR 明顯轉弱，今晚市場有點緊。"
       },
       {
         "symbol": "META",
         "name": "Meta Platforms, Inc.",
-        "price": 632.11,
-        "changePct": 0.59,
+        "price": 632.45,
+        "changePct": 0.65,
         "series": [
           573.02,
           575.05,
           612.42,
           628.39,
-          632.11
+          632.45
         ],
         "dogSummary": "狗狗重點：META 目前波動不算大，盤中還在觀察。"
       },
       {
-        "symbol": "AAPL",
-        "name": "Apple Inc.",
-        "price": 261.75,
-        "changePct": 0.48,
-        "series": [
-          258.86,
-          253.5,
-          258.9,
-          260.49,
-          261.75
-        ],
-        "dogSummary": "狗狗重點：AAPL 目前波動不算大，盤中還在觀察。"
-      },
-      {
         "symbol": "TSLA",
         "name": "Tesla, Inc.",
-        "price": 346.79,
-        "changePct": 0.34,
+        "price": 347.05,
+        "changePct": 0.41,
         "series": [
           352.82,
           346.65,
           343.25,
           345.62,
-          346.79
+          347.05
         ],
         "dogSummary": "狗狗重點：TSLA 目前波動不算大，盤中還在觀察。"
       },
       {
         "symbol": "GOOGL",
         "name": "Alphabet Inc.",
-        "price": 319.26,
-        "changePct": 0.24,
+        "price": 319.52,
+        "changePct": 0.32,
         "series": [
           299.99,
           305.46,
           317.32,
           318.49,
-          319.26
+          319.52
         ],
         "dogSummary": "狗狗重點：GOOGL 目前波動不算大，盤中還在觀察。"
       },
       {
+        "symbol": "AAPL",
+        "name": "Apple Inc.",
+        "price": 261.3,
+        "changePct": 0.31,
+        "series": [
+          258.86,
+          253.5,
+          258.9,
+          260.49,
+          261.3
+        ],
+        "dogSummary": "狗狗重點：AAPL 目前波動不算大，盤中還在觀察。"
+      },
+      {
         "symbol": "MSFT",
         "name": "Microsoft Corporation",
-        "price": 372.26,
-        "changePct": -0.22,
+        "price": 372.46,
+        "changePct": -0.16,
         "series": [
           372.88,
           372.29,
           374.33,
           373.07,
-          372.26
+          372.46
         ],
         "dogSummary": "狗狗重點：MSFT 目前波動不算大，盤中還在觀察。"
       }
@@ -1069,6 +1119,11 @@
   "feed": {
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
+      {
+        "title": "鄭麗文反感日本殖民卻熱愛京都 日媒這樣解讀",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5399943",
+        "time": "Fri, 10 Apr 2026 22:59:01 +0800"
+      },
       {
         "title": "美伊談判在即  傳伊朗還沒談就爆內鬨",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5400142",
@@ -1103,16 +1158,27 @@
         "title": "歷經10年 兆豐銀紐約分行裁罰令終獲撤銷",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5400095",
         "time": "Fri, 10 Apr 2026 21:44:14 +0800"
-      },
-      {
-        "title": "伊朗想強索荷姆茲「買路財」！英媒曝1殘酷現實",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5400049",
-        "time": "Fri, 10 Apr 2026 21:40:36 +0800"
       }
     ]
   },
   "weather": {
     "items": [
+      {
+        "key": "shipai",
+        "label": "石牌",
+        "icon": "☀️",
+        "tempC": 22.7,
+        "rainChance": 0,
+        "weatherCode": 1,
+        "advice": "建議薄外套，體感比較穩。",
+        "feel": "薄外套剛好。",
+        "next3h": {
+          "rainPeak": 0,
+          "tempMin": 22.0,
+          "tempMax": 22.7
+        },
+        "asOf": "2026-04-10T23:00"
+      },
       {
         "key": "zhonghe",
         "label": "中和",
@@ -1147,12 +1213,11 @@
       }
     ],
     "summary": "今天大致穩。",
-    "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。",
-    "error": "石牌: 502 Server Error: Bad Gateway for url: https://api.open-meteo.com/v1/forecast?latitude=25.114&longitude=121.515&current=temperature_2m,weather_code,precipitation_probability&hourly=precipitation_probability,temperature_2m&forecast_hours=3&timezone=Asia%2FTaipei"
+    "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T15:00:14Z",
+    "asOf": "2026-04-10T15:03:13Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1289,7 +1354,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T15:00:14Z",
+    "asOf": "2026-04-10T15:03:13Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T22:32:00+08:00",

@@ -103,6 +103,20 @@ def tw_trading_window(now: datetime) -> bool:
     return dt_time(9, 0) <= t < dt_time(13, 30)
 
 
+def summarize_tw_quote(item: dict[str, Any]) -> str:
+    pct = float(item.get("changePct") or 0)
+    symbol = item.get("symbol") or "這檔"
+    if pct >= 4:
+        return f"狗狗重點：{symbol} 今天很衝，已經是台股前排強勢股。"
+    if pct >= 1.5:
+        return f"狗狗重點：{symbol} 明顯走強，今天台股氣氛偏偏多。"
+    if pct <= -4:
+        return f"狗狗重點：{symbol} 跌幅偏大，今天要特別小心這檔。"
+    if pct <= -1.5:
+        return f"狗狗重點：{symbol} 明顯轉弱，今天盤面有點保守。"
+    return f"狗狗重點：{symbol} 目前波動不算大，先放在觀察名單前段。"
+
+
 def fetch_quotes(symbols: list[str]) -> tuple[dict[str, Any], str | None]:
     items: list[dict[str, Any]] = []
     err: str | None = None
@@ -171,6 +185,8 @@ def fetch_quotes(symbols: list[str]) -> tuple[dict[str, Any], str | None]:
             )
         except Exception as exc:  # noqa: BLE001
             err = str(exc)
+    for item in items:
+        item["dogSummary"] = summarize_tw_quote(item)
     out: dict[str, Any] = {"asOf": as_of, "items": items}
     if err and not items:
         out["error"] = err

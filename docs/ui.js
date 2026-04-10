@@ -246,6 +246,7 @@ function taskBubbleText(data, jammed, alerts) {
   if (topUsQuote?.dogSummary) return `狗狗快報：${topUsQuote.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topUsQuote?.symbol) return `狗狗快報：今晚美股先看 ${topUsQuote.symbol}，目前 ${formatChangePct(topUsQuote.changePct)}。`;
   if (topFeed?.title) return `狗狗快報：新聞雷達剛抓到，${topFeed.title.slice(0, 44)}${topFeed.title.length > 44 ? '…' : ''}`;
+  if (topQuote?.dogSummary) return `狗狗快報：${topQuote.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topQuote?.symbol) return `狗狗快報：${topQuote.symbol} ${formatChangePct(topQuote.changePct)}，目前是最前排的盤面訊號。`;
   const byState = {
     idle: `狗狗快報：${label}，我正在輪播台股、新聞和摘要。`,
@@ -370,7 +371,7 @@ function renderQuotes(quotes) {
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
     const prev = previousQuoteMap.get(q.symbol);
     const changed = !!prev && (prev.price !== q.price || prev.changePct !== q.changePct || JSON.stringify(prev.series || []) !== JSON.stringify(q.series || []));
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value ${changed ? 'flash-update' : ''}">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series, changed)}<b class="quote-change-badge ${cls} ${changed ? 'flash-update' : ''}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value ${changed ? 'flash-update' : ''}">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small>${q.dogSummary ? `<br><small class="trump-dog-summary">${q.dogSummary}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series, changed)}<b class="quote-change-badge ${cls} ${changed ? 'flash-update' : ''}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
     previousQuoteMap.set(q.symbol, { price: q.price, changePct: q.changePct, series: q.series || [] });
   });
@@ -755,8 +756,8 @@ function buildBroadcastItems(data) {
       mode: 'MARKET MODE',
       state: 'work',
       title: `${q.symbol} ${formatChangePct(q.changePct)}`,
-      detail: `${q.name || '盤面快照'} · 收盤價附近觀察`,
-      bubble: `狗狗快報：${q.symbol} ${formatChangePct(q.changePct)}，${q.name || '這檔'}現在在盤面前排。`,
+      detail: q.dogSummary || `${q.name || '盤面快照'} · 收盤價附近觀察`,
+      bubble: `狗狗快報：${(q.dogSummary || `${q.symbol} ${formatChangePct(q.changePct)}，${q.name || '這檔'}現在在盤面前排。`).replace(/^狗狗重點：/, '')}`,
     });
   }
   for (const item of data?.usQuotes?.items || []) {
