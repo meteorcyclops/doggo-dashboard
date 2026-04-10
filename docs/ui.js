@@ -1,3 +1,5 @@
+import { createDogController } from './dog-controller.js';
+
 function tickClock() {
   const el = document.getElementById('clock');
   if (!el) return;
@@ -106,6 +108,17 @@ function heroFocusLabel(data) {
   return '狗狗主舞台';
 }
 
+function battleModeLabel(data) {
+  if (data?.trumpTruth?.items?.some((item) => item.important)) return 'ALERT MODE';
+  if (data?.feed?.items?.length) return 'SCAN MODE';
+  if (data?.quotes?.items?.length) return 'MARKET MODE';
+  return 'IDLE MODE';
+}
+
+function battleRhythmLabel(session, prov) {
+  return `${session} · ${String(prov || 'SNAPSHOT').replace(/^LIVE\s*/,'LIVE ')}`;
+}
+
 function dogGuideLine(target) {
   switch (target) {
     case 'quotes':
@@ -115,7 +128,7 @@ function dogGuideLine(target) {
     case 'trump':
       return { state: 'worried', text: '狗狗：這區屬於高波動訊號，應該用警報感而不是一般 feed 感。' };
     default:
-      return { state: currentDogState, text: taskBubbleText(currentData || {}, 0, 0) };
+      return { state: 'idle', text: '狗狗：主舞台正在整理今天最值得先看的內容。' };
   }
 }
 
@@ -317,83 +330,21 @@ function renderHeadlines(feed) {
   });
 }
 
-const DOG_LINES = {
-  idle: ['汪，我幫你盯著市場～', '今天目前風平浪靜，先摸魚一下。'],
-  excited: ['汪！這則新聞有點重要喔！', '今天外面的世界很熱鬧！'],
-  worried: ['嗚，我先幫你守著這些異動。', '這條任務卡一下，但我還在盯。'],
-  sleepy: ['晚安模式啟動，我抱著枕頭值班。', '夜深了，我會安靜幫你顧著。'],
-  bone: ['耶，得到獎勵骨頭了！', '汪汪，這次做得不錯吧。'],
-  work: ['工作眼鏡戴好了，準備上工。', '我正在很認真看資料喔。'],
-  ok: ['全部看起來都順順的。', '今天的資料很乖，讚。'],
-};
-
 let currentDogState = 'idle';
 let currentData = null;
-let dogClickCount = 0;
-let dogClickTimer = null;
 
-function pickDogLine(state) {
-  const pool = DOG_LINES[state] || DOG_LINES.idle;
-  return pool[Math.floor(Math.random() * pool.length)];
-}
-
-function setDogBubble(text) {
-  const bubble = document.getElementById('task-bubble');
-  if (bubble) bubble.textContent = text;
-}
-
-function spawnDogParticles(kind = 'heart', count = 3) {
-  const root = document.getElementById('dog-particles');
-  const dog = document.getElementById('dog-sprite');
-  if (!root || !dog) return;
-  const rect = dog.getBoundingClientRect();
-  const stage = root.getBoundingClientRect();
-  for (let i = 0; i < count; i += 1) {
-    const node = document.createElement('div');
-    node.className = `dog-particle ${kind}`;
-    node.style.left = `${rect.left - stage.left + 90 + i * 10}px`;
-    node.style.top = `${rect.top - stage.top + 20 - i * 6}px`;
-    root.appendChild(node);
-    if (typeof gsap !== 'undefined') {
-      gsap.fromTo(node, { opacity: 1, y: 0, scale: 0.8 }, {
-        opacity: 0,
-        y: -30 - i * 6,
-        x: (i - 1) * 10,
-        scale: 1.1,
-        duration: 0.6,
-        ease: 'power2.out',
-        onComplete: () => node.remove(),
-      });
-    } else {
-      setTimeout(() => node.remove(), 700);
-    }
-  }
-}
-
-function setDogState(state, bubbleText) {
-  const el = document.getElementById('dog-sprite');
-  if (!el) return;
-  const allowed = ['idle', 'bone', 'excited', 'worried', 'sleepy', 'work', 'ok'];
-  currentDogState = allowed.includes(state) ? state : 'idle';
-  el.dataset.dogState = currentDogState;
-  if (bubbleText) setDogBubble(bubbleText);
-}
-
-function resolveDogState(data) {
-  const base = data?.dog?.state || 'idle';
-  if (document.body?.dataset?.theme === 'night') return 'sleepy';
-  const jobs = (data?.jobs || []).filter((j) => j.enabled);
-  const jammed = jobs.some((j) => mapStatus(j).badge === 'JAM');
-  if (jammed) return 'worried';
-  if (data?.feed?.items?.length || data?.trumpTruth?.items?.some((item) => item.important)) return 'excited';
-  if (base === 'bone') return 'bone';
-  return jobs.length ? 'ok' : 'idle';
-}
-
-function setDogSprite(data) {
-  currentData = data;
-  setDogState(resolveDogState(data));
-}
+const dogController = createDogController({
+  mapStatus,
+  taskBubbleText,
+  dogGuideLine,
+  onStateChange: (state) => {
+    currentDogState = state;
+    const mood = document.getElementById('lobster-mood');
+    if (mood && currentData) mood.textContent = dogMoodCN(state);
+  },
+  getCurrentData: () => currentData,
+  getCurrentState: () => currentDogState,
+});
 
 function renderTasks(jobs) {
   const list = document.getElementById('task-list');
@@ -417,9 +368,9 @@ function renderSummary(data) {
 
   const session = twSessionLabel(data.generatedAt);
   const dogLabel = data.dog?.label || '今日';
-  const dogState = data.dog?.state || 'idle';
-  const mood = dogMoodCN(dogState);
+  const mood = dogMoodCN(currentDogState || data.dog?.state || 'idle');
   const focus = heroFocusLabel(data);
+  const prov = data.provenance || '—';
 
   const statusEl = document.getElementById('current-status');
   if (statusEl) {
@@ -427,18 +378,26 @@ function renderSummary(data) {
     statusEl.textContent = jammed || alerts ? `追蹤小記有待留意 · ${core}` : core;
   }
 
+  const battleKicker = document.getElementById('battle-kicker');
+  const battleChip = document.getElementById('battle-chip');
+  const battleFocusTitle = document.getElementById('battle-focus-title');
+  const battleFocusSubtitle = document.getElementById('battle-focus-subtitle');
+  if (battleKicker) battleKicker.textContent = battleModeLabel(data);
+  if (battleChip) battleChip.textContent = focus;
+  if (battleFocusTitle) battleFocusTitle.textContent = focus;
+  if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, prov);
+
   const stuck = jobs.length - ready;
   document.getElementById('automation-count').textContent = `${jobs.length} 項追蹤 · ${ready} 項順利${
     stuck ? ` · ${stuck} 項待留意` : ''
   }`;
 
   document.getElementById('lobster-mood').textContent = mood;
-  setDogBubble(taskBubbleText(data, jammed, alerts));
+  dogController.setDogBubble(taskBubbleText(data, jammed, alerts));
 
   document.getElementById('gateway-pill').textContent = pillGateway(!!data.gatewayOnline);
   document.getElementById('line-link').textContent = pillLineStatus(data.lineStatus);
 
-  const prov = data.provenance || '—';
   const provCls = provenanceClass(prov);
   const genAt = data.generatedAt
     ? new Date(data.generatedAt).toLocaleString('zh-TW', { hour12: false })
@@ -474,7 +433,6 @@ function renderSummary(data) {
 }
 
 const POLL_MS = 60_000;
-
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
@@ -503,12 +461,13 @@ async function loadData(opts = {}) {
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    currentData = data;
     renderTasks(data.jobs || []);
     renderQuotes(data.quotes);
     renderHeadlines(data.feed);
     renderTrumpTruth(data.trumpTruth);
+    dogController.syncDog(data);
     renderSummary(data);
-    setDogSprite(data);
     staggerFeedLists(silent);
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false });
@@ -525,8 +484,9 @@ function applyTheme(theme) {
   if (label) label.textContent = theme === 'night' ? 'NIGHT' : 'DAY';
   try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
   if (currentData) {
-    setDogSprite(currentData);
-    setDogBubble(theme === 'night' ? pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
+    dogController.syncDog(currentData);
+    dogController.setDogBubble(theme === 'night' ? dogController.pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
+    renderSummary(currentData);
   }
   syncCommentsTheme(theme);
 }
@@ -559,90 +519,10 @@ function bindActions() {
   });
 }
 
-function bindDogPet() {
-  const el = document.getElementById('dog-sprite');
-  if (!el) return;
-  let busy = false;
-  const triggerPet = () => {
-    if (busy) return;
-    busy = true;
-    el.classList.add('dog-pet');
-    spawnDogParticles('heart', 3);
-    setDogBubble(pickDogLine(currentDogState));
-    window.setTimeout(() => {
-      el.classList.remove('dog-pet');
-      busy = false;
-    }, 320);
-  };
-
-  const handleClick = (part) => {
-    dogClickCount += 1;
-    clearTimeout(dogClickTimer);
-    dogClickTimer = window.setTimeout(() => { dogClickCount = 0; }, 550);
-
-    if (dogClickCount >= 3) {
-      dogClickCount = 0;
-      el.classList.add('dog-super');
-      setDogState('bone', '汪！你連點三下，我開啟隱藏歡樂模式！');
-      spawnDogParticles('star', 5);
-      window.setTimeout(() => el.classList.remove('dog-super'), 1500);
-      return;
-    }
-
-    if (part === 'nose') {
-      setDogState('excited', '汪！鼻子被戳到了，好癢好開心！');
-      spawnDogParticles('heart', 2);
-    } else if (part === 'ear') {
-      setDogState('worried', '耳朵抖一下，我有在聽你說話喔。');
-      spawnDogParticles('star', 2);
-    } else if (part === 'tail') {
-      setDogState('ok', '尾巴搖搖，今天看起來一切都不錯。');
-      spawnDogParticles('heart', 2);
-    } else {
-      triggerPet();
-    }
-  };
-
-  el.addEventListener('mouseenter', () => {
-    if (currentDogState !== 'sleepy') setDogState('work', '汪，我看向你了，有什麼想一起改的嗎？');
-  });
-  el.addEventListener('mouseleave', () => {
-    if (!currentData) return;
-    setDogSprite(currentData);
-    setDogBubble(document.body.dataset.theme === 'night' ? pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
-  });
-  el.addEventListener('click', (e) => {
-    e.preventDefault();
-    handleClick(e.target?.dataset?.part || 'body');
-  });
-  el.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      triggerPet();
-    }
-  });
-
-  document.querySelectorAll('[data-dog-target]').forEach((panel) => {
-    panel.addEventListener('mouseenter', () => {
-      const target = panel.getAttribute('data-dog-target');
-      const guide = dogGuideLine(target);
-      document.querySelectorAll('.intel-panel').forEach((node) => node.classList.remove('is-focus'));
-      panel.classList.add('is-focus');
-      setDogState(guide.state, guide.text);
-    });
-    panel.addEventListener('mouseleave', () => {
-      panel.classList.remove('is-focus');
-      if (!currentData) return;
-      setDogSprite(currentData);
-      setDogBubble(document.body.dataset.theme === 'night' ? pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
-    });
-  });
-}
-
 setInterval(tickClock, 1000);
 tickClock();
 initTheme();
 bindActions();
-bindDogPet();
+dogController.bindDogPet();
 loadData();
 setInterval(() => loadData({ silent: true }), POLL_MS);
