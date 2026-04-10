@@ -196,6 +196,8 @@ function dogGuideLine(target) {
       return { state: 'work', text: '狗狗：先看台股快報，這裡是今天最像儀表板核心資訊的地方。', focus: '台股快報' };
     case 'feed':
       return { state: 'ok', text: '狗狗：新聞雷達適合拿來判斷今天外面世界的情緒背景。', focus: '新聞雷達' };
+    case 'flight':
+      return { state: 'excited', text: '狗狗：這區會幫你掃旅遊促銷和便宜航點，適合做靈感池。', focus: '特價機票雷達' };
     case 'trump':
       return { state: 'worried', text: '狗狗：這區屬於高波動訊號，應該用警報感而不是一般 feed 感。', focus: '川普發言快訊' };
     case 'guestbook':
@@ -432,6 +434,53 @@ function renderWeather(weather) {
   pulseChildren('#weather-list > li');
 }
 
+function renderFlightDeals(flightDeals) {
+  const list = document.getElementById('flight-list');
+  const meta = document.getElementById('flight-meta');
+  if (!list) return;
+  list.innerHTML = '';
+  const src = flightDeals?.source ? String(flightDeals.source).slice(0, 120) : '';
+  const asOf = flightDeals?.asOf ? formatShortDateTime(flightDeals.asOf) : '';
+  if (meta) {
+    meta.textContent = flightDeals?.error
+      ? `促銷來源：${src || '—'}（${flightDeals.error}）`
+      : asOf
+        ? `旅遊 / 機票線索 · 更新 ${asOf}`
+        : '旅遊促銷整理中';
+  }
+  const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf });
+  if (state) {
+    renderStateCard(list, meta, state, src || '特價機票雷達暫時沒有完整資料');
+    return;
+  }
+  flightDeals.items.forEach((item) => {
+    const li = document.createElement('li');
+    const span = document.createElement('span');
+    const url = safeHttpUrl(item.url);
+    if (url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noreferrer';
+      a.textContent = item.title || '';
+      span.appendChild(a);
+    } else {
+      span.appendChild(document.createTextNode(item.title || ''));
+    }
+    span.appendChild(document.createElement('br'));
+    const small = document.createElement('small');
+    small.textContent = formatShortDateTime(item.time);
+    span.appendChild(small);
+    const badge = document.createElement('b');
+    badge.className = 'warn';
+    badge.textContent = 'AIR';
+    li.appendChild(span);
+    li.appendChild(badge);
+    list.appendChild(li);
+  });
+  pulseChildren('#flight-list > li');
+}
+
 function renderHeadlines(feed) {
   const list = document.getElementById('headline-list');
   const meta = document.getElementById('feed-meta');
@@ -516,6 +565,16 @@ function buildBroadcastItems(data) {
       title: (item.title || '新聞更新').slice(0, 30),
       detail: item.time || '外部新聞更新',
       bubble: `狗狗快報：${(item.title || '新聞更新').slice(0, 52)}${(item.title || '').length > 52 ? '…' : ''}`,
+    });
+  }
+  for (const item of data?.flightDeals?.items || []) {
+    items.push({
+      focus: '特價機票雷達',
+      mode: 'AIR MODE',
+      state: 'excited',
+      title: (item.title || '便宜航點').slice(0, 28),
+      detail: item.time || '旅遊促銷更新',
+      bubble: `狗狗快報：${(item.title || '剛抓到一則機票促銷').slice(0, 52)}${(item.title || '').length > 52 ? '…' : ''}`,
     });
   }
   for (const item of data?.trumpTruth?.items || []) {
@@ -665,9 +724,11 @@ function renderSummary(data) {
 
   const quoteBadge = document.getElementById('quote-badge');
   const feedBadge = document.getElementById('feed-badge');
+  const flightBadge = document.getElementById('flight-badge');
   const trumpBadge = document.getElementById('trump-badge');
   if (quoteBadge) quoteBadge.textContent = data.quotes?.items?.length ? 'LIVE' : 'WAIT';
   if (feedBadge) feedBadge.textContent = data.feed?.items?.length ? 'SCAN' : 'WAIT';
+  if (flightBadge) flightBadge.textContent = data.flightDeals?.items?.length ? 'AIR' : 'WAIT';
   if (trumpBadge) trumpBadge.textContent = data.trumpTruth?.items?.some((item) => item.important) ? 'HOT' : 'WATCH';
   const weatherBadge = document.getElementById('weather-badge');
   if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
@@ -687,7 +748,7 @@ function renderSummary(data) {
 }
 
 const POLL_MS = 30_000;
-const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#trump-list', '#task-list', '#summary-list'];
+const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
   if (silent || typeof gsap === 'undefined') return;
@@ -719,6 +780,7 @@ async function loadData(opts = {}) {
     renderTasks(data.jobs || []);
     renderQuotes(data.quotes);
     renderHeadlines(data.feed);
+    renderFlightDeals(data.flightDeals);
     renderTrumpTruth(data.trumpTruth);
     renderWeather(data.weather);
     dogController.syncDog(data);

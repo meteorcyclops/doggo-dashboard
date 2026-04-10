@@ -36,6 +36,10 @@ DEFAULT_RSS = [
     "https://news.ltn.com.tw/rss/business.xml",
     "https://news.ltn.com.tw/rss/world.xml",
 ]
+DEFAULT_FLIGHT_RSS = [
+    "https://www.skyscanner.com.tw/news/feed",
+    "https://tw.trip.com/pages/news/rss/travel.xml",
+]
 WEATHER_SPOTS = [
     {"key": "shipai", "label": "石牌", "lat": 25.114, "lon": 121.515},
     {"key": "zhonghe", "label": "中和", "lat": 24.999, "lon": 121.498},
@@ -302,6 +306,42 @@ def weather_feel_text(temp: float | None, rain: float | None) -> str:
     return "建議外套。"
 
 
+def summarize_flight_deals(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return "今天還沒掃到值得先看的機票促銷。"
+    highlights = []
+    for item in items[:3]:
+        title = str(item.get('title') or '').strip()
+        if not title:
+            continue
+        highlights.append(title[:28] + ('…' if len(title) > 28 else ''))
+    if not highlights:
+        return "狗狗有看到旅遊消息，但還沒整理出明確促銷重點。"
+    return f"狗狗先幫你抓到 {len(items)} 則旅遊 / 機票促銷線索，前排是：{'、'.join(highlights)}。"
+
+
+def fetch_flight_deals(urls: list[str], session: requests.Session) -> dict[str, Any]:
+    feed = fetch_feed(urls, session)
+    raw_items = feed.get('items') or []
+    filtered = []
+    keywords = ['機票', '航班', '航空', '飛日本', '飛韓國', '廉航', '促銷', 'travel', 'flight', 'airline', 'fare', 'deal']
+    for item in raw_items:
+        title = str(item.get('title') or '')
+        if any(k.lower() in title.lower() for k in keywords):
+            filtered.append(item)
+    out = {
+        'source': feed.get('source', ''),
+        'asOf': datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        'items': filtered[:6],
+        'summary': summarize_flight_deals(filtered[:6]),
+    }
+    if feed.get('error'):
+        out['error'] = feed['error']
+    if not out['items'] and not out.get('error'):
+        out['error'] = '目前來源裡沒有明確機票促銷標題'
+    return out
+
+
 def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -506,6 +546,7 @@ def main() -> None:
     quotes, _ = fetch_quotes(symbols)
     feed = fetch_feed(rss_urls, session)
     weather = fetch_weather(WEATHER_SPOTS, session)
+    flight_deals = fetch_flight_deals(DEFAULT_FLIGHT_RSS, session)
     now_tw = datetime.now(TW)
     dog = compute_dog(quotes, now_tw)
     provenance = build_provenance(quotes, feed)
@@ -521,6 +562,7 @@ def main() -> None:
         "quotes": quotes,
         "feed": feed,
         "weather": weather,
+        "flightDeals": flight_deals,
         "dog": dog,
         "trumpTruth": trump_truth,
     }
