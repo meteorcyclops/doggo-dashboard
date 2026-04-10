@@ -1006,6 +1006,12 @@ function renderMarketSessionStrip(data) {
   `;
 }
 
+function renderHeroFocusTheme(data) {
+  const hero = document.querySelector('.hero-hud');
+  if (!hero) return;
+  hero.dataset.focusTheme = computeTopFocus(data).key || 'doggo';
+}
+
 function renderFocusPills(data) {
   const root = document.getElementById('focus-pill-list');
   if (!root) return;
@@ -1094,6 +1100,7 @@ function renderSummary(data) {
   const weatherBadge = document.getElementById('weather-badge');
   if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
 
+  renderHeroFocusTheme(data);
   renderMarketSessionStrip(data);
   renderFocusPills(data);
   const summary = document.getElementById('summary-list');

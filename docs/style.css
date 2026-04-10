@@ -174,6 +174,26 @@ body[data-theme="night"] {
   align-items: stretch;
   background: linear-gradient(180deg, rgba(255,255,255,.95) 0%, rgba(255,248,228,.95) 100%);
 }
+.hero-hud[data-focus-theme="trump"] {
+  background: linear-gradient(180deg, rgba(255,245,232,.98) 0%, rgba(255,221,210,.98) 100%);
+  border-color: #cc7f64;
+  box-shadow: inset 0 0 0 2px #fff4ec, 0 6px 0 #c78974;
+}
+.hero-hud[data-focus-theme="us-quotes"] {
+  background: linear-gradient(180deg, rgba(240,250,255,.98) 0%, rgba(214,233,255,.98) 100%);
+  border-color: #6e8dd8;
+  box-shadow: inset 0 0 0 2px #f6fbff, 0 6px 0 #8dacdf;
+}
+.hero-hud[data-focus-theme="quotes"] {
+  background: linear-gradient(180deg, rgba(250,255,238,.98) 0%, rgba(227,248,193,.98) 100%);
+  border-color: #8aad43;
+  box-shadow: inset 0 0 0 2px #fbfff1, 0 6px 0 #aacd63;
+}
+.hero-hud[data-focus-theme="feed"] {
+  background: linear-gradient(180deg, rgba(246,243,255,.98) 0%, rgba(227,220,255,.98) 100%);
+  border-color: #8a78c4;
+  box-shadow: inset 0 0 0 2px #fcfbff, 0 6px 0 #a89ad8;
+}
 .hero-copy {
   display: grid;
   gap: 8px;
