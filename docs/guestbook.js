@@ -73,6 +73,9 @@ function ensureModal() {
 
 function burstSticker(target, symbol = '❤') {
   if (!target) return;
+  target.classList.remove('note-wall-pulse');
+  void target.offsetWidth;
+  target.classList.add('note-wall-pulse');
   const sticker = document.createElement('div');
   sticker.textContent = symbol;
   sticker.style.position = 'absolute';
@@ -83,7 +86,10 @@ function burstSticker(target, symbol = '❤') {
   sticker.style.zIndex = '3';
   sticker.style.animation = 'sticker-burst 0.8s ease-out forwards';
   target.appendChild(sticker);
-  window.setTimeout(() => sticker.remove(), 820);
+  window.setTimeout(() => {
+    sticker.remove();
+    target.classList.remove('note-wall-pulse');
+  }, 820);
 }
 
 function noteLabel(note, index) {

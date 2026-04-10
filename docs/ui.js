@@ -1,5 +1,13 @@
 import { createDogController } from './dog-controller.js';
 
+function pulseChildren(selector) {
+  document.querySelectorAll(selector).forEach((el) => {
+    el.classList.remove('step-refresh');
+    void el.offsetWidth;
+    el.classList.add('step-refresh');
+  });
+}
+
 function tickClock() {
   const el = document.getElementById('clock');
   if (!el) return;
@@ -377,6 +385,7 @@ function renderTrumpTruth(trump) {
     li.appendChild(badge);
     list.appendChild(li);
   });
+  pulseChildren('#trump-list > li');
 }
 
 function renderHeadlines(feed) {
@@ -422,6 +431,7 @@ function renderHeadlines(feed) {
     li.appendChild(badge);
     list.appendChild(li);
   });
+  pulseChildren('#headline-list > li');
 }
 
 let currentDogState = 'idle';
@@ -626,6 +636,7 @@ function renderSummary(data) {
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
     <li><span>資料新鮮度</span><b class="${freshness.cls}">${escHtml(freshness.text)}</b></li>
   `;
+  pulseChildren('#summary-list > li');
 }
 
 const POLL_MS = 30_000;
@@ -683,6 +694,9 @@ function applyTheme(theme) {
   const toggle = document.getElementById('theme-toggle');
   if (label) label.textContent = theme === 'night' ? 'NIGHT' : 'DAY';
   if (toggle) toggle.classList.add('theme-toggle-flash');
+  document.body.classList.remove('theme-scene-flash');
+  void document.body.offsetWidth;
+  document.body.classList.add('theme-scene-flash');
   try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
   if (currentData) {
     dogController.syncDog(currentData);
@@ -690,7 +704,10 @@ function applyTheme(theme) {
     renderSummary(currentData);
     animateBattleHud();
   }
-  window.setTimeout(() => toggle?.classList.remove('theme-toggle-flash'), 320);
+  window.setTimeout(() => {
+    toggle?.classList.remove('theme-toggle-flash');
+    document.body.classList.remove('theme-scene-flash');
+  }, 320);
   syncCommentsTheme(theme);
 }
 

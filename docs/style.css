@@ -517,6 +517,17 @@ body[data-theme="night"] .grass {
 .mini-trend-refresh {
   animation: mini-trend-refresh .42s steps(4);
 }
+.step-refresh {
+  animation: hud-step-refresh .24s steps(4);
+}
+.note-wall-pulse {
+  animation: note-wall-pulse .28s steps(4);
+}
+.theme-scene-flash .frame,
+.theme-scene-flash .hero-hud,
+.theme-scene-flash .battle-card {
+  animation: theme-scene-flash .28s steps(4);
+}
 .battle-stage-refresh .enemy-bubble,
 .battle-stage-refresh .battle-focus-card,
 .battle-stage-refresh .battle-chip {
@@ -1718,6 +1729,18 @@ body[data-theme="night"] .summary-list b {
   0% { transform: translateY(0); filter: brightness(1); }
   50% { transform: translateY(2px); filter: brightness(1.08); }
   100% { transform: translateY(0); filter: brightness(1); }
+}
+
+@keyframes note-wall-pulse {
+  0% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-2px); filter: brightness(1.06); }
+  100% { transform: translateY(0); filter: brightness(1); }
+}
+
+@keyframes theme-scene-flash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.05); }
+  100% { filter: brightness(1); }
 }
 
 @keyframes spark-pulse {
