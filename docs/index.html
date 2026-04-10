@@ -51,6 +51,12 @@
       </section>
 
       <main class="dream-layout">
+        <div class="utility-strip frame white-panel">
+          <button class="cmd-btn" id="refresh-btn">刷新</button>
+          <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
+          <div class="hint utility-hint" id="action-hint">靜態儀表板；內容由建置流程寫入，報價與摘要非即時。</div>
+        </div>
+
         <section class="battle-card frame candy">
           <div class="battle-stage">
             <div class="moon"></div>
@@ -238,17 +244,6 @@
               </article>
 
             </div>
-
-            <div class="command-box frame white-panel">
-              <div class="command-title">快捷操作</div>
-              <div class="command-grid">
-                <button class="cmd-btn" id="refresh-btn">刷新</button>
-                <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
-                <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard" target="_blank" rel="noreferrer">GitHub</a>
-                <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard/tree/master/docs" target="_blank" rel="noreferrer">原始碼</a>
-              </div>
-              <div class="hint" id="action-hint">靜態儀表板；內容由建置流程寫入，報價與摘要非即時。</div>
-            </div>
           </div>
         </section>
 
@@ -267,6 +262,14 @@
               <li><span>資料來源</span><b>CHECK</b></li>
               <li><span>同步</span><b>WAIT</b></li>
             </ul>
+          </section>
+
+          <section class="frame candy side-card dev-card">
+            <div class="side-title">開發資訊</div>
+            <div class="dev-link-list">
+              <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard" target="_blank" rel="noreferrer">GitHub</a>
+              <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard/tree/master/docs" target="_blank" rel="noreferrer">原始碼</a>
+            </div>
           </section>
 
           <section class="frame candy side-card guestbook-card" data-card-id="guestbook" data-dog-target="guestbook">

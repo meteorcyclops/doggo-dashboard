@@ -1242,6 +1242,28 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
   grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
+.utility-strip {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 2px;
+}
+.utility-strip .cmd-btn {
+  min-width: 88px;
+  padding: 8px 10px;
+}
+.utility-hint {
+  margin-left: auto;
+  font-size: 11px;
+}
+.dev-link-list {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
 .cmd-btn {
   appearance: none;
   border: 3px solid #7c74bf;
@@ -1265,6 +1287,9 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
 .side-card:hover, .player-box:hover, .main-feed-panel:hover, .command-box:hover {
   transform: translateY(-2px);
   box-shadow: inset 0 0 0 2px #fff, 0 8px 0 #b3afdf;
+}
+.dev-card .cmd-btn {
+  width: 100%;
 }
 .side-stack {
   display: grid;
@@ -2050,6 +2075,13 @@ body[data-theme="night"] .summary-list b {
 }
 
 @media (max-width: 720px) {
+  .utility-strip {
+    align-items: stretch;
+  }
+  .utility-hint {
+    margin-left: 0;
+    width: 100%;
+  }
   .dream-shell {
     padding: 10px;
   }
