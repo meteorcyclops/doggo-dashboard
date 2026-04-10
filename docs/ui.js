@@ -205,9 +205,25 @@ function renderStateCard(list, meta, state, fallbackMeta) {
   if (meta) meta.textContent = fallbackMeta || state.detail;
 }
 
+function summarizeQuotes(items) {
+  if (!items?.length) return '今天盤面還沒有足夠資料，狗狗先守著觀察。';
+  const valid = items.filter((item) => Number.isFinite(Number(item.changePct)));
+  if (!valid.length) return '目前有股票名單，但漲跌資料還不夠完整。';
+  const avg = valid.reduce((sum, item) => sum + Number(item.changePct), 0) / valid.length;
+  const top = [...valid].sort((a, b) => Number(b.changePct) - Number(a.changePct)).slice(0, 8);
+  const semis = top.filter((item) => /積體電路|半導體|電子|電腦|SEMICONDUCTOR|ELECTRON|ADVANCED/i.test(String(item.name || ''))).length;
+  const finance = top.filter((item) => /金控|銀行|證券|保險|金融|FINANCIAL|BANK/i.test(String(item.name || ''))).length;
+  if (semis >= 3) return `今天半導體和電子族群偏強，前段班平均 ${avg.toFixed(2)}%。`;
+  if (finance >= 3) return `今天金融股相對撐盤，前段班平均 ${avg.toFixed(2)}%。`;
+  if (avg > 0.8) return `今天盤面整體偏強，追蹤股平均上漲 ${avg.toFixed(2)}%。`;
+  if (avg < -0.8) return `今天盤面偏弱，追蹤股平均下跌 ${Math.abs(avg).toFixed(2)}%。`;
+  return `今天追蹤股多半在盤整，平均變動 ${avg.toFixed(2)}%。`;
+}
+
 function renderQuotes(quotes) {
   const list = document.getElementById('quote-list');
   const meta = document.getElementById('quote-meta');
+  const summaryEl = document.getElementById('quote-summary');
   if (!list) return;
   list.innerHTML = '';
   const asOf = quotes?.asOf;
@@ -217,6 +233,7 @@ function renderQuotes(quotes) {
       : '尚無報價時間戳';
   }
   const state = cardStateFromData({ items: quotes?.items, error: quotes?.error, asOf });
+  if (summaryEl) summaryEl.textContent = summarizeQuotes(quotes?.items || []);
   if (state) {
     renderStateCard(list, meta, state, '台股快報暫時沒有完整資料');
     return;
@@ -225,7 +242,7 @@ function renderQuotes(quotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>收盤價附近 · ${formatChangePct(q.changePct)}</small></span><b class="${cls}">${formatChangePct(q.changePct)}</b>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>${q.price != null ? `現價 ${q.price} · ` : ''}漲跌 ${formatChangePct(q.changePct)}</small></span><b class="${cls}">${formatChangePct(q.changePct)}</b>`;
     list.appendChild(li);
   });
 }
@@ -621,6 +638,12 @@ function initTheme() {
 
 function bindActions() {
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
+  document.getElementById('quote-expand-btn')?.addEventListener('click', () => {
+    const shell = document.querySelector('.quote-list-shell');
+    const btn = document.getElementById('quote-expand-btn');
+    const expanded = shell?.classList.toggle('is-expanded');
+    if (btn) btn.textContent = expanded ? '收起追蹤股清單' : '展開更多追蹤股';
+  });
   document.getElementById('theme-copy-btn')?.addEventListener('click', async () => {
     const hint = document.getElementById('action-hint');
     try {

@@ -456,6 +456,9 @@ body[data-theme="night"] .grass {
   position: relative;
   overflow: hidden;
 }
+.battle-broadcast-card {
+  padding-right: 52px;
+}
 .battle-broadcast-card::after {
   content: "LIVE";
   position: absolute;
@@ -467,6 +470,28 @@ body[data-theme="night"] .grass {
   color: #fffdf7;
   background: #ff7f96;
   border: 2px solid #b24768;
+}
+.quote-summary {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--card-text);
+  background: linear-gradient(180deg, #fff7d4 0%, #ffe9a7 100%);
+  border: 3px solid #d2a64a;
+}
+.quote-list-shell {
+  margin-top: 8px;
+  max-height: 220px;
+  overflow: auto;
+  padding-right: 2px;
+}
+.quote-expand-btn {
+  margin-top: 8px;
+  width: 100%;
+}
+.quote-list-shell.is-expanded {
+  max-height: 460px;
 }
 .hp-wrap {
   display: flex;

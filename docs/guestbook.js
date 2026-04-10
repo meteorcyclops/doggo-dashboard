@@ -162,10 +162,18 @@ async function submitNote(e) {
     return;
   }
   setStatus('正在貼上便條紙…');
-  const { error } = await supabase.from('guestbook_notes').insert({ nickname, message });
+  const createdAt = new Date().toISOString();
+  const { error } = await supabase.from('guestbook_notes').insert({ nickname, message, created_at: createdAt });
   if (error) {
     setStatus(`送出失敗：${error.message}`);
     return;
+  }
+  if (cfg.notifyFunctionUrl) {
+    fetch(cfg.notifyFunctionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname, message, createdAt }),
+    }).catch(() => {});
   }
   if (messageEl) messageEl.value = '';
   if (nameEl && !nameEl.value.trim()) nameEl.value = '';
