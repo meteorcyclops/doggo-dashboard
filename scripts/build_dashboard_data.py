@@ -379,9 +379,11 @@ def main() -> None:
 
     trump_truth = translate_trump_truth(fetch_trump_truth())
 
+    build_trigger = (os.environ.get("DOGGO_BUILD_TRIGGER") or "manual").strip().lower()
     out: dict[str, Any] = {
         **seed,
         "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "buildTrigger": build_trigger,
         "provenance": provenance,
         "quotes": quotes,
         "feed": feed,

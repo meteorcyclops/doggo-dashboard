@@ -39,6 +39,8 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build dashboard data
+        env:
+          DOGGO_BUILD_TRIGGER: ${{ github.event_name }}
         run: python scripts/build_dashboard_data.py
 
       - name: Upload Pages artifact

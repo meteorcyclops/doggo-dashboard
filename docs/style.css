@@ -485,13 +485,31 @@ body[data-theme="night"] .grass {
   max-height: none;
   overflow: visible;
   padding-right: 0;
+  position: relative;
+  transition: max-height .22s steps(6), padding-right .16s steps(3);
 }
 .quote-list-shell.is-expanded {
-  max-height: 420px;
+  max-height: 520px;
   overflow: auto;
   padding-right: 4px;
   scrollbar-width: thin;
   scrollbar-color: #7c74bf #f6efc8;
+}
+.quote-list-shell.is-expanded::after {
+  content: '↓ 可向下捲動查看更多';
+  position: sticky;
+  bottom: 0;
+  display: block;
+  margin-top: 6px;
+  padding: 4px 8px;
+  font-size: 10px;
+  letter-spacing: .08em;
+  color: #fffdf7;
+  background: linear-gradient(180deg, rgba(111,103,183,.95) 0%, rgba(79,72,145,.95) 100%);
+  border: 2px solid #4f4891;
+}
+.quote-shell-animating {
+  animation: quote-shell-pop .22s steps(5);
 }
 .quote-expand-btn {
   margin-top: 8px;
@@ -1164,6 +1182,10 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
   box-shadow: inset 0 0 0 2px #fff, 0 4px 0 #c9a54d;
 }
 .cmd-btn:hover { filter: brightness(1.05); }
+.cmd-btn:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 0 0 2px #fff, 0 2px 0 #c9a54d;
+}
 .side-card, .player-box, .main-feed-panel, .command-box {
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
@@ -1666,6 +1688,12 @@ body[data-theme="night"] .task-list b,
 body[data-theme="night"] .summary-list b {
   color: #241f46;
 }
+@keyframes quote-shell-pop {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(2px); }
+  100% { transform: translateY(0); }
+}
+
 @keyframes spark-pulse {
   0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
   50%       { transform: rotate(45deg) scale(0.6); opacity: 0.45; }

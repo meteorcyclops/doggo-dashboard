@@ -44,6 +44,13 @@ function freshnessLabel(iso) {
   return { text: `${timeAgo(ts)} · 可能過期`, cls: 'danger' };
 }
 
+function buildTriggerLabel(trigger) {
+  if (trigger === 'schedule') return '排程';
+  if (trigger === 'push') return '手動推送';
+  if (trigger === 'workflow_dispatch') return '手動執行';
+  return '手動';
+}
+
 function mapStatus(job) {
   const status = job.state?.lastStatus || 'unknown';
   if (status === 'ok') return { badge: 'OK', cls: 'ok', desc: job.desc || '狀態穩定' };
@@ -292,6 +299,8 @@ function renderQuotes(quotes) {
   }
   const items = quotesExpanded ? quotes.items : quotes.items.slice(0, 10);
   if (shell) shell.classList.toggle('is-expanded', quotesExpanded);
+  if (shell) shell.classList.add('quote-shell-animating');
+  window.setTimeout(() => shell?.classList.remove('quote-shell-animating'), 220);
   if (expandBtn) {
     expandBtn.hidden = (quotes.items?.length || 0) <= 10;
     expandBtn.textContent = quotesExpanded ? '收起追蹤股清單' : `展開其餘 ${Math.max((quotes.items?.length || 0) - 10, 0)} 檔`;
@@ -552,6 +561,7 @@ function renderSummary(data) {
   const mood = dogMoodCN(currentDogState || data.dog?.state || 'idle');
   const focus = heroFocusLabel(data);
   const prov = data.provenance || '—';
+  const buildTrigger = buildTriggerLabel(data.buildTrigger);
 
   const statusEl = document.getElementById('current-status');
   if (statusEl) {
@@ -603,6 +613,7 @@ function renderSummary(data) {
   summary.innerHTML = `
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
     <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
+    <li><span>更新來源</span><b class="ok">${escHtml(buildTrigger)}</b></li>
     <li><span>報價快照</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
     <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
@@ -652,7 +663,7 @@ async function loadData(opts = {}) {
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
-      hint.textContent = `已載入資料 · 本地 ${localT} · 最後建置 ${fresh}`;
+      hint.textContent = `已載入資料 · 本地 ${localT} · 更新來源 ${buildTrigger} · 最後建置 ${fresh}`;
     }
   } catch (err) {
     if (hint) hint.textContent = `資料讀取失敗：${err.message}`;
