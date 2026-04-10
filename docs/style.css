@@ -471,16 +471,6 @@ body[data-theme="night"] .grass {
   background: #ff7f96;
   border: 2px solid #b24768;
 }
-.quote-summary {
-  margin-top: 8px;
-  margin-bottom: 10px;
-  padding: 8px 10px;
-  font-size: 12px;
-  line-height: 1.55;
-  color: var(--card-text);
-  background: linear-gradient(180deg, #fff7d4 0%, #ffe9a7 100%);
-  border: 3px solid #d2a64a;
-}
 .quote-list-shell {
   margin-top: 8px;
   max-height: none;
@@ -623,6 +613,7 @@ body[data-theme="night"] .grass {
   font-size: 11px;
   min-width: 98px;
 }
+.quote-summary,
 .weather-summary,
 .weather-commute {
   margin-top: 8px;
@@ -632,7 +623,10 @@ body[data-theme="night"] .grass {
   line-height: 1.55;
   color: var(--card-text);
   border: 3px solid #8d86cb;
-  background: rgba(255,255,255,.72);
+}
+.quote-summary {
+  background: linear-gradient(180deg, #fff7d4 0%, #ffe9a7 100%);
+  border-color: #d2a64a;
 }
 .weather-summary {
   background: linear-gradient(180deg, #f9f6ff 0%, #ebe4ff 100%);
@@ -1935,6 +1929,13 @@ body[data-theme="night"] .summary-list b {
   .command-grid { grid-template-columns: 1fr; display: grid; }
   .battle-stage { height: 620px; }
   .task-list li, .summary-list li { flex-direction: column; }
+  .weather-head-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .weather-toggle-btn {
+    min-width: 0;
+  }
   .game-title {
     font-size: 24px;
     line-height: 1.15;
