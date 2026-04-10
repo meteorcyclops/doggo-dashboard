@@ -538,7 +538,7 @@ function renderSummary(data) {
     : '—';
   const freshness = freshnessLabel(data.generatedAt);
   const quoteAsOf = data.quotes?.asOf
-    ? new Date(data.quotes.asOf).toLocaleString('zh-TW', { hour12: false })
+    ? `${new Date(data.quotes.asOf).toLocaleString('zh-TW', { hour12: false })}（台北時間）`
     : '—';
 
   const feedRow = feedSummaryRow(data.feed);
