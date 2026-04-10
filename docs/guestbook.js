@@ -84,7 +84,8 @@ function noteLabel(note, index) {
   if (/愛|喜歡|可愛|抱抱|讚|❤️|❤|♥|love/.test(text)) return 'LOVE';
   if (/急|救|壞|bug|錯|error|不行|有問題|help|求救|緊急/.test(text)) return 'ALERT';
   if (/嗨|hello|hi|哈囉|你好|晚安|早安|安安|路過/.test(text)) return 'MAIL';
-  const fallback = ['QUEST', 'MAIL', 'LOVE'];
+  if (/汪|狗|骨頭|散步|尾巴|罐罐/.test(text)) return 'WOOF';
+  const fallback = ['QUEST', 'MAIL', 'LOVE', 'WOOF'];
   return fallback[index % fallback.length];
 }
 
@@ -93,7 +94,7 @@ function renderNotes(notes) {
   const prevIds = lastRenderedIds;
   lastRenderedIds = notes.map((note) => note.id);
   if (!notes.length) {
-    listEl.innerHTML = '<div class="guestbook-empty">還沒有便條紙，來貼第一張吧。</div>';
+    listEl.innerHTML = '<div class="guestbook-empty">牆上還沒有便條紙，來替狗狗貼第一張吧。</div>';
     return;
   }
   listEl.innerHTML = notes.map((note, index) => `

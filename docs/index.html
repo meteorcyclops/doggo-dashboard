@@ -217,23 +217,41 @@
             </ul>
           </section>
 
-          <section class="frame candy side-card guestbook-card">
-            <div class="side-title">8-bit 留言板</div>
-            <div class="guestbook-shell white-panel">
-              <div class="guestbook-prompt">留一張小紙條給狗狗吧，像貼在牆上的祕密便條，會慢慢把小屋填滿。</div>
-              <form class="guestbook-form" id="guestbook-form">
-                <label>
-                  <span>暱稱</span>
-                  <input id="guestbook-name" maxlength="24" placeholder="例如：Koxuan / 路過的小狗" />
-                </label>
-                <label>
-                  <span>留言</span>
-                  <textarea id="guestbook-message" rows="4" maxlength="220" placeholder="寫點想對狗狗說的話吧"></textarea>
-                </label>
-                <button class="cmd-btn guestbook-submit" type="submit">貼上便條紙</button>
-              </form>
-              <div class="guestbook-status" id="guestbook-status">留言板準備中…</div>
-              <div class="guestbook-list" id="guestbook-list"></div>
+          <section class="frame candy side-card guestbook-card" data-dog-target="guestbook">
+            <div class="guestbook-header">
+              <div>
+                <div class="guestbook-kicker">PIXEL NOTE WALL</div>
+                <div class="side-title">8-bit 留言板</div>
+              </div>
+              <div class="guestbook-stamp">WOOF MAIL</div>
+            </div>
+            <div class="guestbook-scene white-panel">
+              <div class="guestbook-shelf" aria-hidden="true">
+                <span class="guestbook-toy star"></span>
+                <span class="guestbook-toy bone"></span>
+                <span class="guestbook-toy heart"></span>
+              </div>
+              <div class="guestbook-shell white-panel">
+                <div class="guestbook-prompt">留一張小紙條給狗狗吧，像貼在小屋牆上的祕密便條，會慢慢把這個角落填滿。</div>
+                <form class="guestbook-form" id="guestbook-form">
+                  <div class="guestbook-form-grid">
+                    <label>
+                      <span>暱稱</span>
+                      <input id="guestbook-name" maxlength="24" placeholder="例如：Koxuan / 路過的小狗" />
+                    </label>
+                    <label>
+                      <span>留言</span>
+                      <textarea id="guestbook-message" rows="4" maxlength="220" placeholder="寫點想對狗狗說的話吧"></textarea>
+                    </label>
+                  </div>
+                  <div class="guestbook-form-footer">
+                    <div class="guestbook-status" id="guestbook-status">留言板準備中…</div>
+                    <button class="cmd-btn guestbook-submit" type="submit">貼上便條紙</button>
+                  </div>
+                </form>
+                <div class="guestbook-divider" aria-hidden="true"></div>
+                <div class="guestbook-list" id="guestbook-list"></div>
+              </div>
             </div>
           </section>
         </aside>
