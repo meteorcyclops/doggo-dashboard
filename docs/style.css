@@ -265,6 +265,37 @@ body[data-theme="night"] .hero-hud[data-focus-theme="feed"] {
   background: linear-gradient(180deg, #ffd9e5 0%, #ffb0c7 100%);
   border-color: #c35b7d;
 }
+body[data-theme="night"] .market-session-pill {
+  color: #dce4ff;
+  background: rgba(18, 23, 43, .92);
+  border-color: #49537f;
+  box-shadow: inset 0 0 0 2px rgba(137,151,209,.1);
+}
+body[data-theme="night"] .market-session-pill.ok {
+  background: linear-gradient(180deg, rgba(37, 71, 49, .92) 0%, rgba(24, 45, 31, .92) 100%);
+  border-color: #567f57;
+}
+body[data-theme="night"] .market-session-pill.warn {
+  background: linear-gradient(180deg, rgba(88, 68, 28, .92) 0%, rgba(54, 40, 17, .92) 100%);
+  border-color: #8d7236;
+}
+body[data-theme="night"] .market-session-pill.danger {
+  background: linear-gradient(180deg, rgba(90, 34, 52, .92) 0%, rgba(56, 21, 32, .92) 100%);
+  border-color: #8d5365;
+}
+body[data-theme="night"] .focus-pill {
+  color: #dde5ff;
+  background: rgba(18, 23, 43, .92);
+  border-color: #4b5685;
+  box-shadow: inset 0 0 0 2px rgba(142,156,219,.1);
+}
+body[data-theme="night"] .focus-pill b {
+  color: #ffcf7e;
+}
+body[data-theme="night"] .focus-pill.is-top {
+  background: linear-gradient(180deg, rgba(63, 72, 120, .96) 0%, rgba(39, 46, 84, .96) 100%);
+  border-color: #7384c2;
+}
 .hero-metrics {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1089,9 +1120,9 @@ body[data-theme="night"] .grass {
 .spark.s2 { animation-delay: -0.7s; }
 .spark.s3 { animation-delay: -1.4s; }
 body[data-theme="night"] .spark {
-  background: #fff2a8;
-  border-color: #d9ba52;
-  box-shadow: 0 0 10px rgba(255, 242, 168, .5);
+  background: #cdb96b;
+  border-color: #8f7b36;
+  box-shadow: 0 0 6px rgba(205, 185, 107, .22);
 }
 body[data-theme="night"] .enemy-bubble,
 body[data-theme="night"] .player-box,
@@ -1155,8 +1186,8 @@ body[data-theme="night"] .game-kicker {
 }
 body[data-theme="night"] .game-title,
 body[data-theme="night"] .game-sub {
-  color: #fff7ff;
-  text-shadow: 3px 3px 0 #35285f;
+  color: #dfe6ff;
+  text-shadow: 2px 2px 0 #1f2447;
 }
 body[data-theme="night"] .stat-pill {
   background: rgba(18, 23, 43, .94);
@@ -1178,7 +1209,7 @@ body[data-theme="night"] .theme-toggle:focus-visible small {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(18, 23, 43, .96);
+  background: rgba(15, 19, 35, .96);
   border-color: var(--card-border-soft);
 }
 body[data-theme="night"] .intel-panel .task-list li,
@@ -1192,13 +1223,13 @@ body[data-theme="night"] .guestbook-password-input {
   color: var(--card-text);
 }
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #fff6bf 0%, #ffd76d 100%);
-  border-color: #8a76b9;
-  box-shadow: inset 0 0 0 2px #fffdf1, 0 4px 0 #b08d3d;
+  background: linear-gradient(180deg, #2a3358 0%, #1f2744 100%);
+  border-color: #566498;
+  box-shadow: inset 0 0 0 2px rgba(152,168,230,.12), 0 4px 0 #13192f;
 }
 body[data-theme="night"] .frame {
-  border-color: #454089;
-  box-shadow: inset 0 0 0 2px #dddfff, 0 6px 0 #2e2d60;
+  border-color: #3a426f;
+  box-shadow: inset 0 0 0 2px rgba(130,144,204,.1), 0 6px 0 #171a31;
 }
 .dialog {
   left: 22px;
