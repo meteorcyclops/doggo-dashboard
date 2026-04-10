@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T14:57:46Z",
+  "generatedAt": "2026-04-10T15:00:18Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T14:57:17Z",
+    "asOf": "2026-04-10T14:59:37Z",
     "items": [
       {
         "symbol": "2330",
@@ -948,113 +948,121 @@
     ]
   },
   "usQuotes": {
-    "asOf": "2026-04-10T14:57:36Z",
+    "asOf": "2026-04-10T14:59:56Z",
     "session": "market",
     "summary": "NVDA 漲幅最明顯，今天美股情緒偏熱。",
     "items": [
       {
         "symbol": "NVDA",
         "name": "NVIDIA Corporation",
-        "price": 188.66,
-        "changePct": 2.58,
+        "price": 188.88,
+        "changePct": 2.7,
         "series": [
           177.64,
           178.1,
           182.08,
           183.91,
-          188.66
-        ]
+          188.88
+        ],
+        "dogSummary": "狗狗重點：NVDA 明顯走強，今晚市場情緒偏偏多。"
       },
       {
         "symbol": "AMZN",
         "name": "Amazon.com, Inc.",
-        "price": 239.05,
-        "changePct": 2.31,
+        "price": 239.1,
+        "changePct": 2.33,
         "series": [
           212.79,
           213.77,
           221.25,
           233.65,
-          239.05
-        ]
+          239.1
+        ],
+        "dogSummary": "狗狗重點：AMZN 明顯走強，今晚市場情緒偏偏多。"
       },
       {
         "symbol": "PLTR",
         "name": "Palantir Technologies Inc.",
-        "price": 127.72,
-        "changePct": -2.12,
+        "price": 128.16,
+        "changePct": -1.79,
         "series": [
           147.93,
           150.07,
           140.76,
           130.49,
-          127.72
-        ]
+          128.16
+        ],
+        "dogSummary": "狗狗重點：PLTR 明顯轉弱，今晚市場有點緊。"
       },
       {
         "symbol": "META",
         "name": "Meta Platforms, Inc.",
-        "price": 632.37,
-        "changePct": 0.63,
+        "price": 632.11,
+        "changePct": 0.59,
         "series": [
           573.02,
           575.05,
           612.42,
           628.39,
-          632.37
-        ]
+          632.11
+        ],
+        "dogSummary": "狗狗重點：META 目前波動不算大，盤中還在觀察。"
       },
       {
         "symbol": "AAPL",
         "name": "Apple Inc.",
-        "price": 261.9,
-        "changePct": 0.54,
+        "price": 261.75,
+        "changePct": 0.48,
         "series": [
           258.86,
           253.5,
           258.9,
           260.49,
-          261.9
-        ]
+          261.75
+        ],
+        "dogSummary": "狗狗重點：AAPL 目前波動不算大，盤中還在觀察。"
       },
       {
-        "symbol": "MSFT",
-        "name": "Microsoft Corporation",
-        "price": 372.18,
-        "changePct": -0.24,
+        "symbol": "TSLA",
+        "name": "Tesla, Inc.",
+        "price": 346.79,
+        "changePct": 0.34,
         "series": [
-          372.88,
-          372.29,
-          374.33,
-          373.07,
-          372.18
-        ]
+          352.82,
+          346.65,
+          343.25,
+          345.62,
+          346.79
+        ],
+        "dogSummary": "狗狗重點：TSLA 目前波動不算大，盤中還在觀察。"
       },
       {
         "symbol": "GOOGL",
         "name": "Alphabet Inc.",
-        "price": 319.24,
+        "price": 319.26,
         "changePct": 0.24,
         "series": [
           299.99,
           305.46,
           317.32,
           318.49,
-          319.24
-        ]
+          319.26
+        ],
+        "dogSummary": "狗狗重點：GOOGL 目前波動不算大，盤中還在觀察。"
       },
       {
-        "symbol": "TSLA",
-        "name": "Tesla, Inc.",
-        "price": 346.22,
-        "changePct": 0.17,
+        "symbol": "MSFT",
+        "name": "Microsoft Corporation",
+        "price": 372.26,
+        "changePct": -0.22,
         "series": [
-          352.82,
-          346.65,
-          343.25,
-          345.62,
-          346.22
-        ]
+          372.88,
+          372.29,
+          374.33,
+          373.07,
+          372.26
+        ],
+        "dogSummary": "狗狗重點：MSFT 目前波動不算大，盤中還在觀察。"
       }
     ]
   },
@@ -1106,22 +1114,6 @@
   "weather": {
     "items": [
       {
-        "key": "shipai",
-        "label": "石牌",
-        "icon": "☀️",
-        "tempC": 22.9,
-        "rainChance": 0,
-        "weatherCode": 1,
-        "advice": "建議薄外套，體感比較穩。",
-        "feel": "薄外套剛好。",
-        "next3h": {
-          "rainPeak": 0,
-          "tempMin": 22.3,
-          "tempMax": 23.5
-        },
-        "asOf": "2026-04-10T22:45"
-      },
-      {
         "key": "zhonghe",
         "label": "中和",
         "icon": "☀️",
@@ -1135,7 +1127,7 @@
           "tempMin": 22.8,
           "tempMax": 22.9
         },
-        "asOf": "2026-04-10T22:45"
+        "asOf": "2026-04-10T23:00"
       },
       {
         "key": "songshan",
@@ -1148,18 +1140,19 @@
         "feel": "薄外套剛好。",
         "next3h": {
           "rainPeak": 0,
-          "tempMin": 23.5,
-          "tempMax": 24.0
+          "tempMin": 23.1,
+          "tempMax": 23.8
         },
-        "asOf": "2026-04-10T22:45"
+        "asOf": "2026-04-10T23:00"
       }
     ],
     "summary": "今天大致穩。",
-    "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
+    "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。",
+    "error": "石牌: 502 Server Error: Bad Gateway for url: https://api.open-meteo.com/v1/forecast?latitude=25.114&longitude=121.515&current=temperature_2m,weather_code,precipitation_probability&hourly=precipitation_probability,temperature_2m&forecast_hours=3&timezone=Asia%2FTaipei"
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T14:57:41Z",
+    "asOf": "2026-04-10T15:00:14Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1296,7 +1289,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T14:57:41Z",
+    "asOf": "2026-04-10T15:00:14Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T22:32:00+08:00",

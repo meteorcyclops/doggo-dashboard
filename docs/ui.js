@@ -243,6 +243,7 @@ function taskBubbleText(data, jammed, alerts) {
   if (topTrump?.dogSummary) return `狗狗快報：${topTrump.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topTrump?.excerptZhTw) return `狗狗快報：川普區有新重點，${topTrump.excerptZhTw.slice(0, 52)}${topTrump.excerptZhTw.length > 52 ? '…' : ''}`;
   const topUsQuote = data?.usQuotes?.items?.[0];
+  if (topUsQuote?.dogSummary) return `狗狗快報：${topUsQuote.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topUsQuote?.symbol) return `狗狗快報：今晚美股先看 ${topUsQuote.symbol}，目前 ${formatChangePct(topUsQuote.changePct)}。`;
   if (topFeed?.title) return `狗狗快報：新聞雷達剛抓到，${topFeed.title.slice(0, 44)}${topFeed.title.length > 44 ? '…' : ''}`;
   if (topQuote?.symbol) return `狗狗快報：${topQuote.symbol} ${formatChangePct(topQuote.changePct)}，目前是最前排的盤面訊號。`;
@@ -408,7 +409,7 @@ function renderUsQuotes(usQuotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong> · ${usQuotes.session || 'closed'}<br>${patternLabel(pct > 1 ? 'uptrend' : pct < -1 ? 'downtrend' : 'range')}</small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong> · ${usQuotes.session || 'closed'}<br>${patternLabel(pct > 1 ? 'uptrend' : pct < -1 ? 'downtrend' : 'range')}</small>${q.dogSummary ? `<br><small class="trump-dog-summary">${q.dogSummary}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
   });
   pulseChildren('#us-quote-list > li');
@@ -764,8 +765,8 @@ function buildBroadcastItems(data) {
       mode: 'US MODE',
       state: 'work',
       title: `${item.symbol} ${formatChangePct(item.changePct)}`,
-      detail: `${item.name || 'US stock'} · ${data?.usQuotes?.session || 'closed'}`,
-      bubble: `狗狗快報：今晚美股先看 ${item.symbol}，目前 ${formatChangePct(item.changePct)}。`,
+      detail: item.dogSummary || `${item.name || 'US stock'} · ${data?.usQuotes?.session || 'closed'}`,
+      bubble: `狗狗快報：${(item.dogSummary || `今晚美股先看 ${item.symbol}，目前 ${formatChangePct(item.changePct)}。`).replace(/^狗狗重點：/, '')}`,
     });
   }
   for (const item of data?.feed?.items || []) {

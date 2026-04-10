@@ -678,6 +678,26 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
     return trump_truth
 
 
+def summarize_us_quote(item: dict[str, Any], session: str) -> str:
+    pct = float(item.get("changePct") or 0)
+    symbol = item.get("symbol") or "這檔"
+    if pct >= 3:
+        return f"狗狗重點：{symbol} 今天衝得很兇，是今晚美股最熱的帶頭股之一。"
+    if pct >= 1.5:
+        return f"狗狗重點：{symbol} 明顯走強，今晚市場情緒偏偏多。"
+    if pct <= -3:
+        return f"狗狗重點：{symbol} 跌幅偏大，今晚這檔要特別留意。"
+    if pct <= -1.5:
+        return f"狗狗重點：{symbol} 明顯轉弱，今晚市場有點緊。"
+    session_map = {
+        "premarket": "盤前還在暖身",
+        "market": "盤中還在觀察",
+        "afterhours": "盤後還有餘波",
+        "closed": "現在已經休市",
+    }
+    return f"狗狗重點：{symbol} 目前波動不算大，{session_map.get(session, '今晚先列進觀察名單')}。"
+
+
 def fetch_us_quotes(symbols: list[str]) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     err: str | None = None
@@ -723,6 +743,8 @@ def fetch_us_quotes(symbols: list[str]) -> dict[str, Any]:
             session = "afterhours"
     summary = "美股觀察清單整理中。"
     if items:
+        for item in items:
+            item["dogSummary"] = summarize_us_quote(item, session)
         leader = items[0]
         pct = float(leader.get("changePct") or 0)
         if pct >= 2:
