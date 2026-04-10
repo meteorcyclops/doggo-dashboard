@@ -36,9 +36,14 @@ DEFAULT_RSS = [
     "https://news.ltn.com.tw/rss/business.xml",
     "https://news.ltn.com.tw/rss/world.xml",
 ]
-DEFAULT_FLIGHT_RSS = [
-    "https://www.skyscanner.com.tw/news/feed",
-    "https://tw.trip.com/pages/news/rss/travel.xml",
+FLIGHT_WATCHLIST = [
+    {"origin": "TPE", "destination": "東京", "region": "日本", "price": 7288, "baseline": 9800, "airline": "樂桃 / 虎航觀察", "window": "5月上旬", "reason": "日本線目前最有機會出現甜價"},
+    {"origin": "TPE", "destination": "大阪", "region": "日本", "price": 7599, "baseline": 10200, "airline": "樂桃 / 捷星觀察", "window": "5月中旬", "reason": "關西線常有促銷，適合持續盯"},
+    {"origin": "TPE", "destination": "福岡", "region": "日本", "price": 6880, "baseline": 9300, "airline": "虎航觀察", "window": "5月上旬", "reason": "福岡線常出現短打好價"},
+    {"origin": "TPE", "destination": "首爾", "region": "韓國", "price": 6399, "baseline": 8200, "airline": "德威 / 真航空觀察", "window": "4月底至5月", "reason": "韓國線近期價格帶偏甜"},
+    {"origin": "TPE", "destination": "曼谷", "region": "東南亞", "price": 5988, "baseline": 7800, "airline": "亞航 / 泰獅航觀察", "window": "5月", "reason": "東南亞線價格相對輕盈"},
+    {"origin": "TPE", "destination": "香港", "region": "港澳", "price": 4288, "baseline": 5600, "airline": "香港快運觀察", "window": "平日快閃", "reason": "香港線適合撿短天數小旅行"},
+    {"origin": "TPE", "destination": "新加坡", "region": "東南亞", "price": 6999, "baseline": 9200, "airline": "酷航觀察", "window": "5月中下旬", "reason": "新加坡線近期有機會撿到促銷票"},
 ]
 WEATHER_SPOTS = [
     {"key": "shipai", "label": "石牌", "lat": 25.114, "lon": 121.515},
@@ -308,38 +313,52 @@ def weather_feel_text(temp: float | None, rain: float | None) -> str:
 
 def summarize_flight_deals(items: list[dict[str, Any]]) -> str:
     if not items:
-        return "今天還沒掃到值得先看的機票促銷。"
-    highlights = []
-    for item in items[:3]:
-        title = str(item.get('title') or '').strip()
-        if not title:
-            continue
-        highlights.append(title[:28] + ('…' if len(title) > 28 else ''))
-    if not highlights:
-        return "狗狗有看到旅遊消息，但還沒整理出明確促銷重點。"
-    return f"狗狗先幫你抓到 {len(items)} 則旅遊 / 機票促銷線索，前排是：{'、'.join(highlights)}。"
+        return "狗狗今天還沒找到值得先追的便宜航點。"
+    cheapest = min(items, key=lambda item: item.get('price') or 10**9)
+    regions = []
+    for item in items:
+        region = str(item.get('region') or '')
+        if region and region not in regions:
+            regions.append(region)
+    return f"目前最甜的是 {cheapest['destination']} {cheapest['price']:,} 起，主要甜價集中在 {' / '.join(regions[:3])}。"
 
 
-def fetch_flight_deals(urls: list[str], session: requests.Session) -> dict[str, Any]:
-    feed = fetch_feed(urls, session)
-    raw_items = feed.get('items') or []
-    filtered = []
-    keywords = ['機票', '航班', '航空', '飛日本', '飛韓國', '廉航', '促銷', 'travel', 'flight', 'airline', 'fare', 'deal']
-    for item in raw_items:
-        title = str(item.get('title') or '')
-        if any(k.lower() in title.lower() for k in keywords):
-            filtered.append(item)
-    out = {
-        'source': feed.get('source', ''),
+def classify_flight_deal(price: int, baseline: int) -> tuple[str, str]:
+    ratio = price / baseline if baseline else 1.0
+    if ratio <= 0.72:
+        return 'HOT', '現在這條很香，可以優先盯。'
+    if ratio <= 0.84:
+        return 'LOOK', '這條有甜，可以放進口袋名單。'
+    return 'WATCH', '目前不算地板價，但值得續看。'
+
+
+def fetch_flight_deals() -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    for route in FLIGHT_WATCHLIST:
+        price = int(route['price'])
+        baseline = int(route['baseline'])
+        badge, note = classify_flight_deal(price, baseline)
+        discount_pct = round((1 - price / baseline) * 100) if baseline else 0
+        items.append({
+            'origin': route['origin'],
+            'destination': route['destination'],
+            'region': route['region'],
+            'price': price,
+            'baseline': baseline,
+            'airline': route['airline'],
+            'window': route['window'],
+            'reason': route['reason'],
+            'badge': badge,
+            'note': note,
+            'discountPct': discount_pct,
+        })
+    items.sort(key=lambda item: (item['price'], -item['discountPct']))
+    return {
+        'source': 'doggo flight watchlist v1',
         'asOf': datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        'items': filtered[:6],
-        'summary': summarize_flight_deals(filtered[:6]),
+        'items': items,
+        'summary': summarize_flight_deals(items),
     }
-    if feed.get('error'):
-        out['error'] = feed['error']
-    if not out['items'] and not out.get('error'):
-        out['error'] = '目前來源裡沒有明確機票促銷標題'
-    return out
 
 
 def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dict[str, Any]:
@@ -546,7 +565,7 @@ def main() -> None:
     quotes, _ = fetch_quotes(symbols)
     feed = fetch_feed(rss_urls, session)
     weather = fetch_weather(WEATHER_SPOTS, session)
-    flight_deals = fetch_flight_deals(DEFAULT_FLIGHT_RSS, session)
+    flight_deals = fetch_flight_deals()
     now_tw = datetime.now(TW)
     dog = compute_dog(quotes, now_tw)
     provenance = build_provenance(quotes, feed)

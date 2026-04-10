@@ -197,7 +197,7 @@ function dogGuideLine(target) {
     case 'feed':
       return { state: 'ok', text: '狗狗：新聞雷達適合拿來判斷今天外面世界的情緒背景。', focus: '新聞雷達' };
     case 'flight':
-      return { state: 'excited', text: '狗狗：這區會幫你掃旅遊促銷和便宜航點，適合做靈感池。', focus: '特價機票雷達' };
+      return { state: 'excited', text: '狗狗：這區現在會直接幫你看常用航線的甜價程度，不只是旅遊新聞。', focus: '特價機票雷達' };
     case 'trump':
       return { state: 'worried', text: '狗狗：這區屬於高波動訊號，應該用警報感而不是一般 feed 感。', focus: '川普發言快訊' };
     case 'guestbook':
@@ -439,43 +439,21 @@ function renderFlightDeals(flightDeals) {
   const meta = document.getElementById('flight-meta');
   if (!list) return;
   list.innerHTML = '';
-  const src = flightDeals?.source ? String(flightDeals.source).slice(0, 120) : '';
   const asOf = flightDeals?.asOf ? formatShortDateTime(flightDeals.asOf) : '';
   if (meta) {
     meta.textContent = flightDeals?.error
-      ? `促銷來源：${src || '—'}（${flightDeals.error}）`
-      : asOf
-        ? `旅遊 / 機票線索 · 更新 ${asOf}`
-        : '旅遊促銷整理中';
+      ? `機票雷達異常：${flightDeals.error}`
+      : `台北出發 watchlist · 更新 ${asOf}`;
   }
   const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf });
   if (state) {
-    renderStateCard(list, meta, state, src || '特價機票雷達暫時沒有完整資料');
+    renderStateCard(list, meta, state, '特價機票雷達暫時沒有完整資料');
     return;
   }
   flightDeals.items.forEach((item) => {
     const li = document.createElement('li');
-    const span = document.createElement('span');
-    const url = safeHttpUrl(item.url);
-    if (url) {
-      const a = document.createElement('a');
-      a.href = url;
-      a.target = '_blank';
-      a.rel = 'noreferrer';
-      a.textContent = item.title || '';
-      span.appendChild(a);
-    } else {
-      span.appendChild(document.createTextNode(item.title || ''));
-    }
-    span.appendChild(document.createElement('br'));
-    const small = document.createElement('small');
-    small.textContent = formatShortDateTime(item.time);
-    span.appendChild(small);
-    const badge = document.createElement('b');
-    badge.className = 'warn';
-    badge.textContent = 'AIR';
-    li.appendChild(span);
-    li.appendChild(badge);
+    const badgeCls = item.badge === 'HOT' ? 'danger' : item.badge === 'LOOK' ? 'warn' : 'ok';
+    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.note}</small></span><b class="${badgeCls}">${item.badge}</b>`;
     list.appendChild(li);
   });
   pulseChildren('#flight-list > li');
@@ -573,8 +551,8 @@ function buildBroadcastItems(data) {
       mode: 'AIR MODE',
       state: 'excited',
       title: (item.title || '便宜航點').slice(0, 28),
-      detail: item.time || '旅遊促銷更新',
-      bubble: `狗狗快報：${(item.title || '剛抓到一則機票促銷').slice(0, 52)}${(item.title || '').length > 52 ? '…' : ''}`,
+      detail: `約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · ${item.window || '近期觀察'}`,
+      bubble: `狗狗快報：${item.destination} 這條線現在約 NT$${Number(item.price).toLocaleString('zh-TW')} 起，${item.note || '值得繼續盯著。'}`,
     });
   }
   for (const item of data?.trumpTruth?.items || []) {

@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T06:26:03Z",
+  "generatedAt": "2026-04-10T06:31:22Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T06:25:34Z",
+    "asOf": "2026-04-10T06:30:57Z",
     "items": [
       {
         "symbol": "2330",
@@ -951,6 +951,16 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
+        "title": "勞動人權、移工引進新制 工總憂成本增 盼修法前有3年調適期",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399461",
+        "time": "Fri, 10 Apr 2026 14:24:17 +0800"
+      },
+      {
+        "title": "韓媒爆三星2奈米良率死穴未解 台積電有望通吃高通下一代AP訂單",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399448",
+        "time": "Fri, 10 Apr 2026 14:23:16 +0800"
+      },
+      {
         "title": "塑化報價大漲 台塑四寶3月營收大爆發Q1全數轉盈",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399452",
         "time": "Fri, 10 Apr 2026 13:55:52 +0800"
@@ -979,16 +989,6 @@
         "title": "金價回檔成最佳買點？全球央行加碼、最大買家是「歐洲這國」",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399092",
         "time": "Fri, 10 Apr 2026 13:27:17 +0800"
-      },
-      {
-        "title": "美國擬收緊對中國電信商打壓 3公司恐禁止在美營運資料中心",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399038",
-        "time": "Fri, 10 Apr 2026 13:15:00 +0800"
-      },
-      {
-        "title": "油價、塑膠、金屬連漲！家電五、六月喊漲3至5％",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399392",
-        "time": "Fri, 10 Apr 2026 13:07:48 +0800"
       }
     ]
   },
@@ -1008,7 +1008,7 @@
           "tempMin": 27.4,
           "tempMax": 28.1
         },
-        "asOf": "2026-04-10T14:15"
+        "asOf": "2026-04-10T14:30"
       },
       {
         "key": "zhonghe",
@@ -1024,7 +1024,7 @@
           "tempMin": 29.4,
           "tempMax": 30.4
         },
-        "asOf": "2026-04-10T14:15"
+        "asOf": "2026-04-10T14:30"
       },
       {
         "key": "songshan",
@@ -1040,18 +1040,109 @@
           "tempMin": 30.8,
           "tempMax": 31.4
         },
-        "asOf": "2026-04-10T14:15"
+        "asOf": "2026-04-10T14:30"
       }
     ],
     "summary": "今天大致穩。",
     "commuteWatch": "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
   },
   "flightDeals": {
-    "source": "https://www.skyscanner.com.tw/news/feed + https://tw.trip.com/pages/news/rss/travel.xml",
-    "asOf": "2026-04-10T06:25:55Z",
-    "items": [],
-    "summary": "今天還沒掃到值得先看的機票促銷。",
-    "error": "https://www.skyscanner.com.tw/news/feed: 404 Client Error: Not Found for url: https://www.skyscanner.com.tw/news/feed; https://tw.trip.com/pages/news/rss/travel.xml: 400 Client Error: Bad Request for url: https://tw.trip.com/pages/news/rss/travel.xml"
+    "source": "doggo flight watchlist v1",
+    "asOf": "2026-04-10T06:31:17Z",
+    "items": [
+      {
+        "origin": "TPE",
+        "destination": "香港",
+        "region": "港澳",
+        "price": 4288,
+        "baseline": 5600,
+        "airline": "香港快運觀察",
+        "window": "平日快閃",
+        "reason": "香港線適合撿短天數小旅行",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 23
+      },
+      {
+        "origin": "TPE",
+        "destination": "曼谷",
+        "region": "東南亞",
+        "price": 5988,
+        "baseline": 7800,
+        "airline": "亞航 / 泰獅航觀察",
+        "window": "5月",
+        "reason": "東南亞線價格相對輕盈",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 23
+      },
+      {
+        "origin": "TPE",
+        "destination": "首爾",
+        "region": "韓國",
+        "price": 6399,
+        "baseline": 8200,
+        "airline": "德威 / 真航空觀察",
+        "window": "4月底至5月",
+        "reason": "韓國線近期價格帶偏甜",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 22
+      },
+      {
+        "origin": "TPE",
+        "destination": "福岡",
+        "region": "日本",
+        "price": 6880,
+        "baseline": 9300,
+        "airline": "虎航觀察",
+        "window": "5月上旬",
+        "reason": "福岡線常出現短打好價",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 26
+      },
+      {
+        "origin": "TPE",
+        "destination": "新加坡",
+        "region": "東南亞",
+        "price": 6999,
+        "baseline": 9200,
+        "airline": "酷航觀察",
+        "window": "5月中下旬",
+        "reason": "新加坡線近期有機會撿到促銷票",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 24
+      },
+      {
+        "origin": "TPE",
+        "destination": "東京",
+        "region": "日本",
+        "price": 7288,
+        "baseline": 9800,
+        "airline": "樂桃 / 虎航觀察",
+        "window": "5月上旬",
+        "reason": "日本線目前最有機會出現甜價",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 26
+      },
+      {
+        "origin": "TPE",
+        "destination": "大阪",
+        "region": "日本",
+        "price": 7599,
+        "baseline": 10200,
+        "airline": "樂桃 / 捷星觀察",
+        "window": "5月中旬",
+        "reason": "關西線常有促銷，適合持續盯",
+        "badge": "LOOK",
+        "note": "這條有甜，可以放進口袋名單。",
+        "discountPct": 26
+      }
+    ],
+    "summary": "目前最甜的是 香港 4,288 起，主要甜價集中在 港澳 / 東南亞 / 韓國。"
   },
   "dog": {
     "state": "sleepy",
@@ -1059,7 +1150,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T06:25:55Z",
+    "asOf": "2026-04-10T06:31:17Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T13:15:00+08:00",
