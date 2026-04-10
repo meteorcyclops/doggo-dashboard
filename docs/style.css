@@ -161,8 +161,8 @@ body[data-theme="night"] {
 }
 .dream-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 0.85fr);
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.62fr) minmax(250px, 0.72fr);
+  gap: 10px;
   align-items: start;
 }
 .hero-hud {
@@ -1104,9 +1104,9 @@ body[data-theme="night"] .frame {
 }
 .bottom-panels {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.5fr);
-  gap: 12px;
-  margin-top: 12px;
+  grid-template-columns: minmax(0, 1.42fr) minmax(210px, 0.44fr);
+  gap: 10px;
+  margin-top: 10px;
   align-items: start;
 }
 .player-stack {
@@ -1296,10 +1296,10 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
 }
 .side-stack {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 .side-card {
-  padding: 12px;
+  padding: 10px;
 }
 .guestbook-card {
   overflow: hidden;
@@ -2084,6 +2084,16 @@ body[data-theme="night"] .summary-list b {
   .utility-hint {
     margin-left: 0;
     width: 100%;
+  }
+  .dream-layout {
+    gap: 14px;
+  }
+  .bottom-panels {
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .side-stack {
+    gap: 14px;
   }
   .dream-shell {
     padding: 10px;
