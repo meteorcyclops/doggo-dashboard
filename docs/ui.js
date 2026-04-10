@@ -20,7 +20,7 @@ function timeAgo(ms) {
 function mapStatus(job) {
   const status = job.state?.lastStatus || 'unknown';
   if (status === 'ok') return { badge: 'OK', cls: 'ok', desc: job.desc || '狀態穩定' };
-  if (status === 'error') return { badge: 'JAM', cls: 'warn', desc: job.desc || '需要注意' };
+  if (status === 'error') return { badge: 'JAM', cls: 'danger', desc: job.desc || '需要注意' };
   return { badge: 'WAIT', cls: 'warn', desc: job.desc || '等待中' };
 }
 
@@ -158,14 +158,14 @@ function pillGateway(online) {
 }
 
 function feedSummaryRow(feed) {
-  if (feed?.error) return { text: `異常 · ${feed.error}`, cls: 'warn' };
+  if (feed?.error) return { text: `異常 · ${feed.error}`, cls: 'danger' };
   const n = feed?.items?.length || 0;
   if (n) return { text: `${n} 則`, cls: 'ok' };
   return { text: '無資料', cls: 'warn' };
 }
 
 function trumpSummaryRow(tt) {
-  if (tt?.error) return { text: `異常 · ${tt.error}`, cls: 'warn' };
+  if (tt?.error) return { text: `異常 · ${tt.error}`, cls: 'danger' };
   const n = tt?.items?.length || 0;
   if (n) return { text: `${n} 則`, cls: 'ok' };
   return { text: '無資料', cls: 'warn' };

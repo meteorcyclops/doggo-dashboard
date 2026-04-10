@@ -18,6 +18,16 @@
   --dog1: #d9a16f;
   --dog2: #99633e;
   --dog3: #7a492d;
+  --card-text: #2f2a52;
+  --card-muted: #595381;
+  --card-link: #2943a8;
+  --card-border-soft: #8d86cb;
+  --status-ok-bg: #effcef;
+  --status-ok-fg: #21663c;
+  --status-warn-bg: #fff6d8;
+  --status-warn-fg: #8f6214;
+  --status-danger-bg: #ffe1e8;
+  --status-danger-fg: #9e3555;
 }
 
 * { box-sizing: border-box; image-rendering: pixelated; }
@@ -31,6 +41,16 @@ body {
 body[data-theme="night"] {
   --ink: #eef0ff;
   --muted: #bcc5ef;
+  --card-text: #241f46;
+  --card-muted: #514b7d;
+  --card-link: #2a3a9e;
+  --card-border-soft: #8a84cc;
+  --status-ok-bg: #e5f6ea;
+  --status-ok-fg: #246243;
+  --status-warn-bg: #fff1c9;
+  --status-warn-fg: #8c5d12;
+  --status-danger-bg: #ffd9e5;
+  --status-danger-fg: #9a3654;
   background: linear-gradient(180deg, #1a1e48 0%, #20295d 45%, #151630 100%);
 }
 .frame {
@@ -722,9 +742,10 @@ body[data-theme="night"] .enemy-bubble,
 body[data-theme="night"] .player-box,
 body[data-theme="night"] .main-feed-panel,
 body[data-theme="night"] .command-box,
-body[data-theme="night"] .dialog {
+body[data-theme="night"] .dialog,
+body[data-theme="night"] .intel-panel {
   background: #fcfbff;
-  color: #241f46;
+  color: var(--card-text);
   border-color: #6d66b4;
   box-shadow: inset 0 0 0 2px #ffffff, 0 6px 0 #938dd1;
 }
@@ -738,8 +759,12 @@ body[data-theme="night"] .meta-grid b,
 body[data-theme="night"] .stat-pill b,
 body[data-theme="night"] .summary-list b,
 body[data-theme="night"] .task-list b,
-body[data-theme="night"] .cmd-btn {
-  color: #241f46;
+body[data-theme="night"] .cmd-btn,
+body[data-theme="night"] .battle-focus-card b,
+body[data-theme="night"] .hero-title,
+body[data-theme="night"] .hero-metric b,
+body[data-theme="night"] .hero-desc {
+  color: var(--card-text);
 }
 body[data-theme="night"] .hp-wrap span,
 body[data-theme="night"] .meta-grid span,
@@ -747,14 +772,19 @@ body[data-theme="night"] .task-list small,
 body[data-theme="night"] .hint,
 body[data-theme="night"] .stat-pill span,
 body[data-theme="night"] .summary-list span,
-body[data-theme="night"] .task-list span {
-  color: #514b7d;
+body[data-theme="night"] .task-list span,
+body[data-theme="night"] .side-meta,
+body[data-theme="night"] .battle-kicker,
+body[data-theme="night"] .dialog-kicker,
+body[data-theme="night"] .intel-kicker,
+body[data-theme="night"] .hero-label,
+body[data-theme="night"] .battle-focus-card span,
+body[data-theme="night"] .hero-metric span {
+  color: var(--card-muted);
 }
-body[data-theme="night"] .side-meta {
-  color: #514b7d;
-}
-body[data-theme="night"] .headline-list a {
-  color: #2a3a9e;
+body[data-theme="night"] .headline-list a,
+body[data-theme="night"] .task-list a {
+  color: var(--card-link);
 }
 body[data-theme="night"] .candy {
   background: linear-gradient(180deg, #6e5bb1 0%, #52448f 100%);
@@ -776,7 +806,17 @@ body[data-theme="night"] .stat-pill {
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
   background: rgba(252, 250, 255, .98);
-  border-color: #8a84cc;
+  border-color: var(--card-border-soft);
+}
+body[data-theme="night"] .intel-panel .task-list li,
+body[data-theme="night"] .intel-panel .summary-list li,
+body[data-theme="night"] .guestbook-note,
+body[data-theme="night"] .guestbook-prompt,
+body[data-theme="night"] .guestbook-modal-card,
+body[data-theme="night"] .guestbook-form input,
+body[data-theme="night"] .guestbook-form textarea,
+body[data-theme="night"] .guestbook-password-input {
+  color: var(--card-text);
 }
 body[data-theme="night"] .cmd-btn {
   background: linear-gradient(180deg, #fff6bf 0%, #ffd76d 100%);
@@ -1313,11 +1353,26 @@ body[data-theme="night"] .frame {
   padding: 5px 6px;
 }
 .task-list b.ok,
-.summary-list b.ok { color: var(--mint2); }
+.summary-list b.ok {
+  color: var(--status-ok-fg);
+  background: var(--status-ok-bg);
+  border: 2px solid rgba(33, 102, 60, .18);
+  padding: 2px 6px;
+}
 .task-list b.warn,
-.summary-list b.warn { color: #c78a10; }
+.summary-list b.warn {
+  color: var(--status-warn-fg);
+  background: var(--status-warn-bg);
+  border: 2px solid rgba(143, 98, 20, .18);
+  padding: 2px 6px;
+}
 .task-list b.danger,
-.summary-list b.danger { color: #d85068; }
+.summary-list b.danger {
+  color: var(--status-danger-fg);
+  background: var(--status-danger-bg);
+  border: 2px solid rgba(158, 53, 85, .18);
+  padding: 2px 6px;
+}
 .hint {
   margin-top: 10px;
   font-size: 11px;
