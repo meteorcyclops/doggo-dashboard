@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T14:41:24Z",
+  "generatedAt": "2026-04-10T14:48:52Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T14:40:57Z",
+    "asOf": "2026-04-10T14:48:28Z",
     "items": [
       {
         "symbol": "2330",
@@ -951,6 +951,11 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
+        "title": "美伊談判在即  傳伊朗還沒談就爆內鬨",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5400142",
+        "time": "Fri, 10 Apr 2026 22:40:01 +0800"
+      },
+      {
         "title": "美伊週六停火談判 范斯警告：不要耍我們",
         "url": "https://news.ltn.com.tw/news/world/breakingnews/5400126",
         "time": "Fri, 10 Apr 2026 22:19:54 +0800"
@@ -984,11 +989,6 @@
         "title": "伊朗想強索荷姆茲「買路財」！英媒曝1殘酷現實",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5400049",
         "time": "Fri, 10 Apr 2026 21:40:36 +0800"
-      },
-      {
-        "title": "回應梅蘭妮亞談話 艾普斯坦控訴者喊話司法部釋出剩餘檔案",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5400094",
-        "time": "Fri, 10 Apr 2026 21:38:00 +0800"
       }
     ]
   },
@@ -998,7 +998,7 @@
         "key": "shipai",
         "label": "石牌",
         "icon": "☀️",
-        "tempC": 23.1,
+        "tempC": 22.9,
         "rainChance": 0,
         "weatherCode": 1,
         "advice": "建議薄外套，體感比較穩。",
@@ -1008,7 +1008,7 @@
           "tempMin": 22.3,
           "tempMax": 23.5
         },
-        "asOf": "2026-04-10T22:30"
+        "asOf": "2026-04-10T22:45"
       },
       {
         "key": "zhonghe",
@@ -1024,13 +1024,13 @@
           "tempMin": 22.8,
           "tempMax": 22.9
         },
-        "asOf": "2026-04-10T22:30"
+        "asOf": "2026-04-10T22:45"
       },
       {
         "key": "songshan",
         "label": "松山",
         "icon": "☁️",
-        "tempC": 23.9,
+        "tempC": 23.8,
         "rainChance": 0,
         "weatherCode": 2,
         "advice": "建議薄外套，體感比較穩。",
@@ -1040,7 +1040,7 @@
           "tempMin": 23.5,
           "tempMax": 24.0
         },
-        "asOf": "2026-04-10T22:30"
+        "asOf": "2026-04-10T22:45"
       }
     ],
     "summary": "今天大致穩。",
@@ -1048,7 +1048,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T14:41:21Z",
+    "asOf": "2026-04-10T14:48:49Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1185,20 +1185,22 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T14:41:21Z",
+    "asOf": "2026-04-10T14:48:49Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T22:32:00+08:00",
         "excerpt": "Palantir Technologies (PLTR) has proven to have great war fighting capabilities and equipment. Just ask our enemies!!! President DJT",
         "url": "https://www.trumpstruth.org/statuses/37688",
         "important": true,
-        "excerptZhTw": "Palantir Technologies (PLTR) 早就證明自己在作戰能力和裝備方面很有一套。不信去問我們的敵人！DJT"
+        "excerptZhTw": "Palantir Technologies (PLTR) 早就證明自己在作戰能力和裝備方面很有一套。不信去問我們的敵人！DJT",
+        "dogSummary": "狗狗重點：這則是在替 Palantir 背書，強調軍事能力與戰場價值。"
       },
       {
         "postedAtTw": "2026-04-10T21:31:00+08:00",
         "excerpt": "WORLD’S MOST POWERFUL RESET!!! President DJT",
         "url": "https://www.trumpstruth.org/statuses/37687",
-        "excerptZhTw": "史上最強重置！！！DJT"
+        "excerptZhTw": "史上最強重置！！！DJT",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
       },
       {
         "postedAtTw": "2026-04-10T13:15:00+08:00",
@@ -1206,52 +1208,60 @@
         "url": "https://www.trumpstruth.org/statuses/37686",
         "important": true,
         "linkUrl": "https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran",
-        "excerptZhTw": "在伊朗和委內瑞拉出手干預後，川普打亂了中國那套很賺錢的受制裁石油進口盤算"
+        "excerptZhTw": "在伊朗和委內瑞拉出手干預後，川普打亂了中國那套很賺錢的受制裁石油進口盤算",
+        "dogSummary": "狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。"
       },
       {
         "postedAtTw": "2026-04-10T13:14:00+08:00",
         "excerpt": "Two more major pharmaceutical companies to launch products through TrumpRx: https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx",
         "url": "https://www.trumpstruth.org/statuses/37684",
         "linkUrl": "https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx",
-        "excerptZhTw": "又有兩家大型製藥公司將透過 TrumpRx 推出產品"
+        "excerptZhTw": "又有兩家大型製藥公司將透過 TrumpRx 推出產品",
+        "dogSummary": "狗狗重點：這則是在宣傳 TrumpRx 擴張，比較像政策宣傳或品牌加分文。"
       },
       {
         "postedAtTw": "2026-04-10T13:13:00+08:00",
         "excerpt": "With Trump at the joystick, moon mission launches patriotism ahead of America’s 250th: https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250",
         "url": "https://www.trumpstruth.org/statuses/37685",
         "linkUrl": "https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250",
-        "excerptZhTw": "在川普主導下，登月任務替美國 250 週年前的氣氛先暖身，也把愛國情緒再度炒熱"
+        "excerptZhTw": "在川普主導下，登月任務替美國 250 週年前的氣氛先暖身，也把愛國情緒再度炒熱",
+        "dogSummary": "狗狗重點：這則是在把太空任務包裝成愛國敘事，屬於造勢型貼文。"
       },
       {
         "postedAtTw": "2026-04-10T07:49:00+08:00",
         "excerpt": "An Illegal Alien Criminal from Haiti, who was released into our Country by the WORST President in History, Crooked Joe Biden, and the Radical Democrats in Congress, just beat an innocent woman to death with a hammer at…",
         "url": "https://www.trumpstruth.org/statuses/37682",
-        "excerptZhTw": "一名來自海地的非法移民罪犯，被史上最糟的總統喬·拜登和國會裡的激進民主黨人放進美國，他剛剛拿鐵鎚活活打死一名無辜女子…"
+        "excerptZhTw": "一名來自海地的非法移民罪犯，被史上最糟的總統喬·拜登和國會裡的激進民主黨人放進美國，他剛剛拿鐵鎚活活打死一名無辜女子…",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
       },
       {
         "postedAtTw": "2026-04-10T07:45:00+08:00",
         "excerpt": "Highly Respected Prime Minister of Hungary, Viktor Orbán, is a truly strong and powerful Leader, with a proven track record of delivering phenomenal results. He fights tirelessly for, and loves, his Great Country and Pe…",
         "url": "https://www.trumpstruth.org/statuses/37683",
-        "excerptZhTw": "匈牙利總理維克多·歐爾班確實很有份量，過去交出的成績也很亮眼。他一直在為自己的國家和人民拚命，也是真的很愛他的國家…"
+        "excerptZhTw": "匈牙利總理維克多·歐爾班確實很有份量，過去交出的成績也很亮眼。他一直在為自己的國家和人民拚命，也是真的很愛他的國家…",
+        "dogSummary": "狗狗重點：這則是在稱讚友好政治人物，屬於表態支持型貼文。"
       },
       {
         "postedAtTw": "2026-04-10T07:34:00+08:00",
         "excerpt": "My friend, Congresswoman Elise Stefanik, of New York, has written a new book, \"POISONED IVIES: The Inside Account of the Academic and Moral Rot at America’s Elite Universities.\" There is nobody more qualified to speak o…",
         "url": "https://www.trumpstruth.org/statuses/37680",
-        "excerptZhTw": "我的朋友、來自紐約州的國會女議員埃莉斯·斯特凡尼克最近出了新書，《有毒的藤蔓：美國精英大學學術和道德腐爛的內幕》。沒有誰比她更適合談這件事…"
+        "excerptZhTw": "我的朋友、來自紐約州的國會女議員埃莉斯·斯特凡尼克最近出了新書，《有毒的藤蔓：美國精英大學學術和道德腐爛的內幕》。沒有誰比她更適合談這件事…",
+        "dogSummary": "狗狗重點：這則是在幫盟友新書宣傳，重點不是政策而是站台。"
       },
       {
         "postedAtTw": "2026-04-10T07:32:00+08:00",
         "excerpt": "I am pleased to nominate Benjamin Flowers to serve as Judge on the United States Court of Appeals for the Sixth Circuit in Ohio. Ben is a Highly Respected attorney who served as the Solicitor General of Ohio, where he r…",
         "url": "https://www.trumpstruth.org/statuses/37681",
-        "excerptZhTw": "我很高興提名 Benjamin Flowers 擔任俄亥俄州美國第六巡迴上訴法院法官。Benjamin Flowers 是一位頗受敬重的律師，曾擔任俄亥俄州副檢察長，他在任內…"
+        "excerptZhTw": "我很高興提名 Benjamin Flowers 擔任俄亥俄州美國第六巡迴上訴法院法官。Benjamin Flowers 是一位頗受敬重的律師，曾擔任俄亥俄州副檢察長，他在任內…",
+        "dogSummary": "狗狗重點：這則是人事提名文，重點在法院任命與政治布局。"
       },
       {
         "postedAtTw": "2026-04-10T06:29:00+08:00",
         "excerpt": "Iran is doing a very poor job, dishonorable some would say, of allowing Oil to go through the Strait of Hormuz. That is not the agreement we have! President DONALD J. TRUMP",
         "url": "https://www.trumpstruth.org/statuses/37679",
         "important": true,
-        "excerptZhTw": "伊朗在放行石油通過霍爾木茲海峽這件事上做得很差，有人會說這是不光彩的。這跟我們談好的不一樣！川普"
+        "excerptZhTw": "伊朗在放行石油通過霍爾木茲海峽這件事上做得很差，有人會說這是不光彩的。這跟我們談好的不一樣！川普",
+        "dogSummary": "狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。"
       }
     ]
   }

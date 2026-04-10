@@ -1679,6 +1679,25 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
   border: 2px solid #d8c27a;
   padding: 5px 6px;
 }
+.task-list small.trump-dog-summary {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: #3f2a52;
+  background: rgba(255, 220, 234, 0.88);
+  border: 2px solid rgba(200, 92, 133, 0.45);
+  padding: 5px 6px;
+}
+.task-list li.trump-important-card {
+  background: linear-gradient(180deg, rgba(255, 240, 208, 0.95) 0%, rgba(255, 220, 196, 0.95) 100%);
+  border-color: #d88d62;
+  box-shadow: inset 0 0 0 2px #fff6ea;
+}
+.task-list li.trump-important-card .trump-dog-summary {
+  background: rgba(255, 236, 188, 0.96);
+  border-color: rgba(193, 134, 34, 0.5);
+}
 .task-list b.ok,
 .summary-list b.ok {
   color: var(--status-ok-fg);

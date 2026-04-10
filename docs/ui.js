@@ -389,8 +389,9 @@ function renderTrumpTruth(trump) {
     renderStateCard(list, meta, state, src || '川普快訊暫時沒有完整資料');
     return;
   }
-  trump.items.forEach((item) => {
+  trump.items.forEach((item, index) => {
     const li = document.createElement('li');
+    li.classList.toggle('trump-important-card', !!item.important && index === 0);
     const span = document.createElement('span');
     const url = safeHttpUrl(item.url);
     const linkUrl = safeHttpUrl(item.linkUrl || item.url);
@@ -410,6 +411,13 @@ function renderTrumpTruth(trump) {
       zh.className = 'trump-translation';
       zh.textContent = `繁中：${item.excerptZhTw}`;
       span.appendChild(zh);
+    }
+    if (item.dogSummary) {
+      span.appendChild(document.createElement('br'));
+      const dog = document.createElement('small');
+      dog.className = 'trump-dog-summary';
+      dog.textContent = item.dogSummary;
+      span.appendChild(dog);
     }
     if (linkUrl && linkUrl !== url) {
       span.appendChild(document.createElement('br'));

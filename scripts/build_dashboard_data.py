@@ -614,14 +614,40 @@ def polish_tw_zh(text: str) -> str:
     return zh
 
 
+def summarize_trump_post(item: dict[str, Any]) -> str:
+    text = str(item.get("excerptZhTw") or item.get("excerpt") or "").strip()
+    if not text:
+        return "狗狗重點：這則內容太短，建議直接看原文。"
+    lower = str(item.get("excerpt") or "").lower()
+    if "iran" in lower or "hormuz" in lower or "oil" in lower:
+        return "狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。"
+    if "trumprx" in lower or "pharmaceutical" in lower:
+        return "狗狗重點：這則是在宣傳 TrumpRx 擴張，比較像政策宣傳或品牌加分文。"
+    if "moon" in lower or "artemis" in lower or "patriotism" in lower:
+        return "狗狗重點：這則是在把太空任務包裝成愛國敘事，屬於造勢型貼文。"
+    if "palantir" in lower:
+        return "狗狗重點：這則是在替 Palantir 背書，強調軍事能力與戰場價值。"
+    if "orbán" in lower or "orban" in lower:
+        return "狗狗重點：這則是在稱讚友好政治人物，屬於表態支持型貼文。"
+    if "stefanik" in lower or "book" in lower:
+        return "狗狗重點：這則是在幫盟友新書宣傳，重點不是政策而是站台。"
+    if "judge" in lower or "court of appeals" in lower or "nominate" in lower:
+        return "狗狗重點：這則是人事提名文，重點在法院任命與政治布局。"
+    if item.get("important"):
+        return "狗狗重點：這則屬於高優先度貼文，建議先看原文和語氣。"
+    return "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
+
+
 def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
     items = trump_truth.get("items") or []
     if not items:
         return trump_truth
     try:
         translator = GoogleTranslator(source="en", target="zh-TW")
-    except Exception as exc:  # noqa: BLE001
-        trump_truth["translationError"] = str(exc)
+    except Exception:
+        for item in items:
+            item["excerptZhTw"] = item.get("excerptZhTw") or ""
+            item["dogSummary"] = summarize_trump_post(item)
         return trump_truth
 
     for item in items:
@@ -631,19 +657,23 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
             item["linkUrl"] = trailing_url
         if not body and trailing_url:
             item["excerptZhTw"] = "這則主要是連結貼文，請直接點原文查看。"
+            item["dogSummary"] = summarize_trump_post(item)
             continue
         if not text:
             item["excerptZhTw"] = ""
+            item["dogSummary"] = summarize_trump_post(item)
             continue
         if text.startswith("http://") or text.startswith("https://"):
             item["excerptZhTw"] = "這則主要是連結貼文，請直接點原文查看。"
+            item["dogSummary"] = summarize_trump_post(item)
             continue
         try:
             raw = translator.translate(body[:TRUMP_TRANSLATE_MAX] if body else text[:TRUMP_TRANSLATE_MAX])
             item["excerptZhTw"] = polish_tw_zh(raw)
-        except Exception as exc:  # noqa: BLE001
+        except Exception:
             item["excerptZhTw"] = ""
-            trump_truth["translationError"] = str(exc)
+        item["dogSummary"] = summarize_trump_post(item)
+    trump_truth.pop("translationError", None)
     return trump_truth
 
 
