@@ -39,27 +39,27 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T03:33:23Z",
-  "buildTrigger": "push",
+  "generatedAt": "2026-04-10T04:07:44Z",
+  "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T03:33:00Z",
+    "asOf": "2026-04-10T04:07:21Z",
     "items": [
       {
         "symbol": "2330",
         "name": "台積電",
-        "price": 1980.0,
-        "change": 25.0,
-        "changePct": 1.28,
+        "price": 1985.0,
+        "change": 30.0,
+        "changePct": 1.53,
         "prevClose": 1955.0,
-        "dayHigh": 1985.0,
+        "dayHigh": 1990.0,
         "dayLow": 1970.0,
         "series": [
           1810.0,
           1860.0,
           1950.0,
           1955.0,
-          1980.0
+          1985.0
         ],
         "pattern": "uptrend"
       },
@@ -84,9 +84,9 @@
       {
         "symbol": "2454",
         "name": "聯發科",
-        "price": 1580.0,
-        "change": 5.0,
-        "changePct": 0.32,
+        "price": 1575.0,
+        "change": 0.0,
+        "changePct": 0.0,
         "prevClose": 1575.0,
         "dayHigh": 1605.0,
         "dayLow": 1570.0,
@@ -95,7 +95,7 @@
           1470.0,
           1580.0,
           1575.0,
-          1580.0
+          1575.0
         ],
         "pattern": "uptrend"
       },
@@ -120,27 +120,27 @@
       {
         "symbol": "6505",
         "name": "台塑化",
-        "price": 51.7,
-        "change": -1.0,
-        "changePct": -1.9,
+        "price": 51.8,
+        "change": -0.9,
+        "changePct": -1.71,
         "prevClose": 52.7,
         "dayHigh": 53.4,
-        "dayLow": 51.6,
+        "dayLow": 51.5,
         "series": [
           54.7,
           56.8,
           54.3,
           52.7,
-          51.7
+          51.8
         ],
         "pattern": "downtrend"
       },
       {
         "symbol": "2308",
         "name": "台達電",
-        "price": 1750.0,
-        "change": 105.0,
-        "changePct": 6.38,
+        "price": 1740.0,
+        "change": 95.0,
+        "changePct": 5.78,
         "prevClose": 1645.0,
         "dayHigh": 1750.0,
         "dayLow": 1675.0,
@@ -149,16 +149,16 @@
           1515.0,
           1665.0,
           1645.0,
-          1750.0
+          1740.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2303",
         "name": "聯電",
-        "price": 62.6,
-        "change": 2.6,
-        "changePct": 4.33,
+        "price": 62.9,
+        "change": 2.9,
+        "changePct": 4.83,
         "prevClose": 60.0,
         "dayHigh": 63.5,
         "dayLow": 59.3,
@@ -167,34 +167,34 @@
           58.3,
           60.3,
           60.0,
-          62.6
+          62.9
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2881",
         "name": "富邦金",
-        "price": 87.6,
-        "change": -0.9,
-        "changePct": -1.02,
+        "price": 87.3,
+        "change": -1.2,
+        "changePct": -1.36,
         "prevClose": 88.5,
         "dayHigh": 88.2,
-        "dayLow": 87.4,
+        "dayLow": 87.3,
         "series": [
           87.8,
           87.7,
           89.2,
           88.5,
-          87.6
+          87.3
         ],
         "pattern": "range"
       },
       {
         "symbol": "2882",
         "name": "國泰金",
-        "price": 72.8,
-        "change": -0.8,
-        "changePct": -1.09,
+        "price": 72.6,
+        "change": -1.0,
+        "changePct": -1.36,
         "prevClose": 73.6,
         "dayHigh": 73.9,
         "dayLow": 72.5,
@@ -203,34 +203,34 @@
           71.9,
           73.8,
           73.6,
-          72.8
+          72.6
         ],
-        "pattern": "uptrend"
+        "pattern": "range"
       },
       {
         "symbol": "1303",
         "name": "南亞",
-        "price": 81.5,
-        "change": -3.7,
-        "changePct": -4.34,
+        "price": 80.8,
+        "change": -4.4,
+        "changePct": -5.16,
         "prevClose": 85.2,
         "dayHigh": 87.2,
-        "dayLow": 81.1,
+        "dayLow": 80.6,
         "series": [
           77.1,
           80.5,
           85.1,
           85.2,
-          81.5
+          80.8
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "1301",
         "name": "台塑",
-        "price": 46.5,
-        "change": -0.9,
-        "changePct": -1.9,
+        "price": 46.7,
+        "change": -0.7,
+        "changePct": -1.48,
         "prevClose": 47.4,
         "dayHigh": 47.9,
         "dayLow": 46.4,
@@ -239,34 +239,34 @@
           47.5,
           47.2,
           47.4,
-          46.5
+          46.7
         ],
         "pattern": "volatile"
       },
       {
         "symbol": "2002",
         "name": "中鋼",
-        "price": 20.05,
-        "change": -0.15,
-        "changePct": -0.74,
+        "price": 20.0,
+        "change": -0.2,
+        "changePct": -0.99,
         "prevClose": 20.2,
         "dayHigh": 20.55,
-        "dayLow": 20.0,
+        "dayLow": 19.95,
         "series": [
           19.5,
           19.5,
           19.95,
           20.2,
-          20.05
+          20.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2886",
         "name": "兆豐金",
-        "price": 39.85,
-        "change": 0.1,
-        "changePct": 0.25,
+        "price": 39.7,
+        "change": -0.05,
+        "changePct": -0.13,
         "prevClose": 39.75,
         "dayHigh": 39.9,
         "dayLow": 39.6,
@@ -275,16 +275,16 @@
           39.4,
           39.35,
           39.75,
-          39.85
+          39.7
         ],
-        "pattern": "uptrend"
+        "pattern": "range"
       },
       {
         "symbol": "2891",
         "name": "中信金",
-        "price": 54.0,
-        "change": -0.8,
-        "changePct": -1.46,
+        "price": 53.9,
+        "change": -0.9,
+        "changePct": -1.64,
         "prevClose": 54.8,
         "dayHigh": 54.4,
         "dayLow": 53.6,
@@ -293,16 +293,16 @@
           55.8,
           56.5,
           54.8,
-          54.0
+          53.9
         ],
         "pattern": "range"
       },
       {
         "symbol": "1216",
         "name": "統一",
-        "price": 72.2,
-        "change": 0.2,
-        "changePct": 0.28,
+        "price": 72.0,
+        "change": 0.0,
+        "changePct": 0.0,
         "prevClose": 72.0,
         "dayHigh": 72.4,
         "dayLow": 71.0,
@@ -311,16 +311,16 @@
           72.5,
           72.7,
           72.0,
-          72.2
+          72.0
         ],
         "pattern": "range"
       },
       {
         "symbol": "2382",
         "name": "廣達",
-        "price": 324.5,
-        "change": 11.5,
-        "changePct": 3.67,
+        "price": 325.5,
+        "change": 12.5,
+        "changePct": 3.99,
         "prevClose": 313.0,
         "dayHigh": 327.5,
         "dayLow": 312.0,
@@ -329,99 +329,99 @@
           289.0,
           307.5,
           313.0,
-          324.5
+          325.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2884",
         "name": "玉山金",
-        "price": 32.35,
-        "change": -0.25,
-        "changePct": -0.77,
+        "price": 32.3,
+        "change": -0.3,
+        "changePct": -0.92,
         "prevClose": 32.6,
         "dayHigh": 32.6,
-        "dayLow": 32.35,
+        "dayLow": 32.3,
         "series": [
           32.15,
           32.4,
           32.45,
           32.6,
-          32.35
+          32.3
         ],
         "pattern": "range"
       },
       {
         "symbol": "2885",
         "name": "元大金",
-        "price": 47.95,
-        "change": 0.0,
-        "changePct": 0.0,
+        "price": 47.65,
+        "change": -0.3,
+        "changePct": -0.63,
         "prevClose": 47.95,
         "dayHigh": 48.35,
-        "dayLow": 47.85,
+        "dayLow": 47.65,
         "series": [
           45.85,
           46.5,
           47.1,
           47.95,
-          47.95
+          47.65
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "3711",
         "name": "日月光投控",
-        "price": 390.0,
-        "change": -2.0,
-        "changePct": -0.51,
+        "price": 397.5,
+        "change": 5.5,
+        "changePct": 1.4,
         "prevClose": 392.0,
-        "dayHigh": 390.5,
+        "dayHigh": 397.5,
         "dayLow": 385.0,
         "series": [
           361.0,
           352.0,
           383.0,
           392.0,
-          390.0
+          397.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2880",
         "name": "華南金",
-        "price": 34.4,
-        "change": -0.2,
-        "changePct": -0.58,
+        "price": 34.2,
+        "change": -0.4,
+        "changePct": -1.16,
         "prevClose": 34.6,
         "dayHigh": 34.85,
-        "dayLow": 34.35,
+        "dayLow": 34.2,
         "series": [
           33.85,
           34.0,
           33.95,
           34.6,
-          34.4
+          34.2
         ],
-        "pattern": "uptrend"
+        "pattern": "range"
       },
       {
         "symbol": "5880",
         "name": "合庫金",
-        "price": 23.95,
-        "change": -0.1,
-        "changePct": -0.42,
+        "price": 23.9,
+        "change": -0.15,
+        "changePct": -0.62,
         "prevClose": 24.05,
         "dayHigh": 24.1,
-        "dayLow": 23.95,
+        "dayLow": 23.9,
         "series": [
           23.65,
           23.7,
           23.85,
           24.05,
-          23.95
+          23.9
         ],
-        "pattern": "uptrend"
+        "pattern": "range"
       },
       {
         "symbol": "3045",
@@ -516,9 +516,9 @@
       {
         "symbol": "4904",
         "name": "遠傳",
-        "price": 95.2,
-        "change": -0.1,
-        "changePct": -0.1,
+        "price": 95.0,
+        "change": -0.3,
+        "changePct": -0.31,
         "prevClose": 95.3,
         "dayHigh": 95.3,
         "dayLow": 94.1,
@@ -527,16 +527,16 @@
           93.3,
           93.3,
           95.3,
-          95.2
+          95.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "5871",
         "name": "中租-KY",
-        "price": 108.0,
-        "change": -0.5,
-        "changePct": -0.46,
+        "price": 107.5,
+        "change": -1.0,
+        "changePct": -0.92,
         "prevClose": 108.5,
         "dayHigh": 109.5,
         "dayLow": 107.5,
@@ -545,16 +545,16 @@
           108.5,
           109.5,
           108.5,
-          108.0
+          107.5
         ],
         "pattern": "range"
       },
       {
         "symbol": "6415",
         "name": "矽力*-KY",
-        "price": 281.0,
-        "change": -1.0,
-        "changePct": -0.35,
+        "price": 280.0,
+        "change": -2.0,
+        "changePct": -0.71,
         "prevClose": 282.0,
         "dayHigh": 294.5,
         "dayLow": 278.5,
@@ -563,16 +563,16 @@
           281.5,
           299.5,
           282.0,
-          281.0
+          280.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "3034",
         "name": "聯詠",
-        "price": 397.0,
-        "change": -2.5,
-        "changePct": -0.63,
+        "price": 397.5,
+        "change": -2.0,
+        "changePct": -0.5,
         "prevClose": 399.5,
         "dayHigh": 401.5,
         "dayLow": 395.0,
@@ -581,7 +581,7 @@
           384.5,
           391.5,
           399.5,
-          397.0
+          397.5
         ],
         "pattern": "uptrend"
       },
@@ -593,7 +593,7 @@
         "changePct": -1.2,
         "prevClose": 29.1,
         "dayHigh": 29.1,
-        "dayLow": 28.75,
+        "dayLow": 28.7,
         "series": [
           28.4,
           28.6,
@@ -611,7 +611,7 @@
         "changePct": -1.1,
         "prevClose": 45.6,
         "dayHigh": 46.2,
-        "dayLow": 45.0,
+        "dayLow": 44.9,
         "series": [
           44.95,
           45.6,
@@ -624,9 +624,9 @@
       {
         "symbol": "2603",
         "name": "長榮",
-        "price": 203.0,
-        "change": 0.0,
-        "changePct": 0.0,
+        "price": 204.0,
+        "change": 1.0,
+        "changePct": 0.49,
         "prevClose": 203.0,
         "dayHigh": 204.0,
         "dayLow": 201.5,
@@ -635,16 +635,16 @@
           203.0,
           202.0,
           203.0,
-          203.0
+          204.0
         ],
         "pattern": "range"
       },
       {
         "symbol": "1101",
         "name": "台泥",
-        "price": 25.5,
-        "change": 0.4,
-        "changePct": 1.59,
+        "price": 25.4,
+        "change": 0.3,
+        "changePct": 1.2,
         "prevClose": 25.1,
         "dayHigh": 26.4,
         "dayLow": 25.3,
@@ -653,7 +653,7 @@
           24.0,
           25.4,
           25.1,
-          25.5
+          25.4
         ],
         "pattern": "uptrend"
       },
@@ -678,27 +678,27 @@
       {
         "symbol": "2327",
         "name": "國巨",
-        "price": 288.0,
-        "change": 6.5,
-        "changePct": 2.31,
+        "price": 287.5,
+        "change": 6.0,
+        "changePct": 2.13,
         "prevClose": 281.5,
         "dayHigh": 292.0,
-        "dayLow": 286.5,
+        "dayLow": 286.0,
         "series": [
           246.0,
           256.0,
           271.5,
           281.5,
-          288.0
+          287.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2357",
         "name": "華碩",
-        "price": 576.0,
-        "change": 8.0,
-        "changePct": 1.41,
+        "price": 578.0,
+        "change": 10.0,
+        "changePct": 1.76,
         "prevClose": 568.0,
         "dayHigh": 584.0,
         "dayLow": 576.0,
@@ -707,16 +707,16 @@
           550.0,
           562.0,
           568.0,
-          576.0
+          578.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2379",
         "name": "瑞昱",
-        "price": 508.0,
-        "change": -4.0,
-        "changePct": -0.78,
+        "price": 509.0,
+        "change": -3.0,
+        "changePct": -0.59,
         "prevClose": 512.0,
         "dayHigh": 516.0,
         "dayLow": 506.0,
@@ -725,16 +725,16 @@
           499.0,
           505.0,
           512.0,
-          508.0
+          509.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "4938",
         "name": "和碩",
-        "price": 80.7,
-        "change": 0.7,
-        "changePct": 0.87,
+        "price": 80.6,
+        "change": 0.6,
+        "changePct": 0.75,
         "prevClose": 80.0,
         "dayHigh": 81.0,
         "dayLow": 79.6,
@@ -743,7 +743,7 @@
           77.9,
           79.6,
           80.0,
-          80.7
+          80.6
         ],
         "pattern": "uptrend"
       },
@@ -786,9 +786,9 @@
       {
         "symbol": "3037",
         "name": "欣興",
-        "price": 631.0,
-        "change": 6.0,
-        "changePct": 0.96,
+        "price": 632.0,
+        "change": 7.0,
+        "changePct": 1.12,
         "prevClose": 625.0,
         "dayHigh": 660.0,
         "dayLow": 620.0,
@@ -797,16 +797,16 @@
           564.0,
           620.0,
           625.0,
-          631.0
+          632.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2356",
         "name": "英業達",
-        "price": 44.4,
-        "change": 0.6,
-        "changePct": 1.37,
+        "price": 44.45,
+        "change": 0.65,
+        "changePct": 1.48,
         "prevClose": 43.8,
         "dayHigh": 44.75,
         "dayLow": 43.9,
@@ -815,16 +815,16 @@
           40.85,
           42.65,
           43.8,
-          44.4
+          44.45
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2801",
         "name": "彰銀",
-        "price": 21.05,
-        "change": 0.05,
-        "changePct": 0.24,
+        "price": 21.1,
+        "change": 0.1,
+        "changePct": 0.48,
         "prevClose": 21.0,
         "dayHigh": 21.2,
         "dayLow": 21.05,
@@ -833,7 +833,7 @@
           20.8,
           20.9,
           21.0,
-          21.05
+          21.1
         ],
         "pattern": "uptrend"
       },
@@ -858,9 +858,9 @@
       {
         "symbol": "2615",
         "name": "萬海",
-        "price": 77.4,
-        "change": -0.9,
-        "changePct": -1.15,
+        "price": 77.6,
+        "change": -0.7,
+        "changePct": -0.89,
         "prevClose": 78.3,
         "dayHigh": 78.6,
         "dayLow": 77.4,
@@ -869,16 +869,16 @@
           79.4,
           78.8,
           78.3,
-          77.4
+          77.6
         ],
         "pattern": "range"
       },
       {
         "symbol": "8046",
         "name": "南電",
-        "price": 661.0,
-        "change": -8.0,
-        "changePct": -1.2,
+        "price": 657.0,
+        "change": -12.0,
+        "changePct": -1.79,
         "prevClose": 669.0,
         "dayHigh": 685.0,
         "dayLow": 646.0,
@@ -887,16 +887,16 @@
           624.0,
           637.0,
           669.0,
-          661.0
+          657.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "0050",
         "name": "元大台灣50",
-        "price": 80.5,
-        "change": 1.3,
-        "changePct": 1.64,
+        "price": 80.6,
+        "change": 1.4,
+        "changePct": 1.77,
         "prevClose": 79.2,
         "dayHigh": 80.65,
         "dayLow": 79.95,
@@ -904,7 +904,7 @@
           73.95,
           75.3,
           79.2,
-          80.5
+          80.6
         ],
         "pattern": "uptrend"
       },
@@ -928,9 +928,9 @@
       {
         "symbol": "2606",
         "name": "裕民",
-        "price": 61.1,
-        "change": 0.3,
-        "changePct": 0.49,
+        "price": 61.2,
+        "change": 0.4,
+        "changePct": 0.66,
         "prevClose": 60.8,
         "dayHigh": 61.7,
         "dayLow": 61.0,
@@ -939,7 +939,7 @@
           59.6,
           60.7,
           60.8,
-          61.1
+          61.2
         ],
         "pattern": "uptrend"
       }
@@ -948,6 +948,26 @@
   "feed": {
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
+      {
+        "title": "好市多加油連現「深夜貪食蛇」 這天車最少、祭200元抵用券",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399259",
+        "time": "Fri, 10 Apr 2026 11:46:30 +0800"
+      },
+      {
+        "title": "壓力越大賣越好？「轉運經濟」崛起 開運禮爆單52％成送禮黑馬",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399290",
+        "time": "Fri, 10 Apr 2026 11:45:47 +0800"
+      },
+      {
+        "title": "焦點股》大同：續拓海外商機 股價微幅上漲",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399291",
+        "time": "Fri, 10 Apr 2026 11:44:27 +0800"
+      },
+      {
+        "title": "「台灣有事」致兩國緊張 ！日本最新外交藍皮書將中國「降級」",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5399245",
+        "time": "Fri, 10 Apr 2026 11:37:26 +0800"
+      },
       {
         "title": "吳田玉：仁武基地動土 高雄產業升級、日月光續紮根台灣",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399252",
@@ -967,36 +987,47 @@
         "title": "月薪7.9萬買房卻後悔了！同事「1句話」讓他懷疑人生",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399119",
         "time": "Fri, 10 Apr 2026 11:18:00 +0800"
+      }
+    ]
+  },
+  "weather": {
+    "items": [
+      {
+        "key": "shipai",
+        "label": "石牌",
+        "tempC": 27.4,
+        "rainChance": 0,
+        "weatherCode": 2,
+        "advice": "短袖或薄襯衫就夠，早晚可帶薄外套。",
+        "asOf": "2026-04-10T12:00"
       },
       {
-        "title": "日月光福雷電攜手夥伴投資逾千億元 打造高雄仁武為AI高階測試產業園區",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399235",
-        "time": "Fri, 10 Apr 2026 11:09:51 +0800"
+        "key": "zhonghe",
+        "label": "中和",
+        "tempC": 30.2,
+        "rainChance": 0,
+        "weatherCode": 1,
+        "advice": "短袖就好，注意防曬和補水。",
+        "asOf": "2026-04-10T12:00"
       },
       {
-        "title": "焦點股》雙鴻：散熱族群表現分歧 平盤上下震盪",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399234",
-        "time": "Fri, 10 Apr 2026 11:06:58 +0800"
-      },
-      {
-        "title": "不求戰也不退讓！伊朗新領袖誓言「為父復仇」：戰損血債絕對追討",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5399087",
-        "time": "Fri, 10 Apr 2026 11:03:33 +0800"
-      },
-      {
-        "title": "伊朗仍控制荷姆茲海峽！北海現貨油價創新高 逼近147美元",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399151",
-        "time": "Fri, 10 Apr 2026 11:01:33 +0800"
+        "key": "songshan",
+        "label": "松山",
+        "tempC": 31.1,
+        "rainChance": 0,
+        "weatherCode": 2,
+        "advice": "短袖就好，注意防曬和補水。",
+        "asOf": "2026-04-10T12:00"
       }
     ]
   },
   "dog": {
-    "state": "bone",
-    "label": "行情不錯，開心晃晃"
+    "state": "excited",
+    "label": "活力滿滿盯盤中"
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T03:33:20Z",
+    "asOf": "2026-04-10T04:07:41Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T07:49:00+08:00",

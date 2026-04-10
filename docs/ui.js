@@ -407,6 +407,25 @@ function renderTrumpTruth(trump) {
   pulseChildren('#trump-list > li');
 }
 
+function renderWeather(weather) {
+  const list = document.getElementById('weather-list');
+  const meta = document.getElementById('weather-meta');
+  if (!list) return;
+  list.innerHTML = '';
+  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : '石牌 / 中和 / 松山 即時整理';
+  const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf });
+  if (state) {
+    renderStateCard(list, meta, state, '生活天氣提醒暫時沒有完整資料');
+    return;
+  }
+  weather.items.forEach((item) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<span>${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.advice || ''}</small></span><b class="ok">天氣</b>`;
+    list.appendChild(li);
+  });
+  pulseChildren('#weather-list > li');
+}
+
 function renderHeadlines(feed) {
   const list = document.getElementById('headline-list');
   const meta = document.getElementById('feed-meta');
@@ -644,6 +663,8 @@ function renderSummary(data) {
   if (quoteBadge) quoteBadge.textContent = data.quotes?.items?.length ? 'LIVE' : 'WAIT';
   if (feedBadge) feedBadge.textContent = data.feed?.items?.length ? 'SCAN' : 'WAIT';
   if (trumpBadge) trumpBadge.textContent = data.trumpTruth?.items?.some((item) => item.important) ? 'HOT' : 'WATCH';
+  const weatherBadge = document.getElementById('weather-badge');
+  if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
 
   const summary = document.getElementById('summary-list');
   summary.innerHTML = `
@@ -693,6 +714,7 @@ async function loadData(opts = {}) {
     renderQuotes(data.quotes);
     renderHeadlines(data.feed);
     renderTrumpTruth(data.trumpTruth);
+    renderWeather(data.weather);
     dogController.syncDog(data);
     renderSummary(data);
     startBroadcastRotation(data);

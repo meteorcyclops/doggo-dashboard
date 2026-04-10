@@ -36,6 +36,11 @@ DEFAULT_RSS = [
     "https://news.ltn.com.tw/rss/business.xml",
     "https://news.ltn.com.tw/rss/world.xml",
 ]
+WEATHER_SPOTS = [
+    {"key": "shipai", "label": "石牌", "lat": 25.114, "lon": 121.515},
+    {"key": "zhonghe", "label": "中和", "lat": 24.999, "lon": 121.498},
+    {"key": "songshan", "label": "松山", "lat": 25.050, "lon": 121.578},
+]
 TW_STOCK_NAME_MAP = {
     "2330": "台積電", "2317": "鴻海", "2454": "聯發科", "2412": "中華電", "6505": "台塑化",
     "2308": "台達電", "2303": "聯電", "2881": "富邦金", "2882": "國泰金", "1303": "南亞",
@@ -221,6 +226,58 @@ def fetch_feed(urls: list[str], session: requests.Session) -> dict[str, Any]:
     return out
 
 
+def weather_outfit_advice(temp: float | None, rain: float | None) -> str:
+    if temp is None:
+        return "帶件薄外套，先看天空臉色。"
+    if rain is not None and rain >= 60:
+        if temp >= 26:
+            return "短袖加摺傘，鞋子別太怕水。"
+        if temp >= 20:
+            return "薄外套加雨具，出門別穿太單薄。"
+        return "外套加雨具，今天偏濕涼。"
+    if temp >= 30:
+        return "短袖就好，注意防曬和補水。"
+    if temp >= 24:
+        return "短袖或薄襯衫就夠，早晚可帶薄外套。"
+    if temp >= 18:
+        return "建議薄外套，體感比較穩。"
+    return "建議外套，早晚會偏涼。"
+
+
+def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for spot in spots:
+        try:
+            url = (
+                "https://api.open-meteo.com/v1/forecast"
+                f"?latitude={spot['lat']}&longitude={spot['lon']}"
+                "&current=temperature_2m,weather_code,precipitation_probability"
+                "&timezone=Asia%2FTaipei"
+            )
+            r = session.get(url, timeout=REQUEST_TIMEOUT)
+            r.raise_for_status()
+            data = r.json()
+            current = data.get('current', {})
+            temp = current.get('temperature_2m')
+            rain = current.get('precipitation_probability')
+            items.append({
+                'key': spot['key'],
+                'label': spot['label'],
+                'tempC': round(float(temp), 1) if temp is not None else None,
+                'rainChance': int(round(float(rain))) if rain is not None else None,
+                'weatherCode': current.get('weather_code'),
+                'advice': weather_outfit_advice(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
+                'asOf': current.get('time'),
+            })
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{spot['label']}: {exc}")
+    out: dict[str, Any] = {'items': items}
+    if errors:
+        out['error'] = '; '.join(errors[:3])
+    return out
+
+
 def compute_dog(
     quotes: dict[str, Any],
     now_tw: datetime,
@@ -373,6 +430,7 @@ def main() -> None:
 
     quotes, _ = fetch_quotes(symbols)
     feed = fetch_feed(rss_urls, session)
+    weather = fetch_weather(WEATHER_SPOTS, session)
     now_tw = datetime.now(TW)
     dog = compute_dog(quotes, now_tw)
     provenance = build_provenance(quotes, feed)
@@ -387,6 +445,7 @@ def main() -> None:
         "provenance": provenance,
         "quotes": quotes,
         "feed": feed,
+        "weather": weather,
         "dog": dog,
         "trumpTruth": trump_truth,
     }
