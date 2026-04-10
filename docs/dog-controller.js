@@ -14,6 +14,7 @@ export function createDogController(options = {}) {
     taskBubbleText,
     dogGuideLine,
     onStateChange,
+    onGuideChange,
     getCurrentData,
     getCurrentState,
   } = options;
@@ -157,10 +158,12 @@ export function createDogController(options = {}) {
         const guide = dogGuideLine(target);
         document.querySelectorAll('.intel-panel').forEach((node) => node.classList.remove('is-focus'));
         panel.classList.add('is-focus');
+        onGuideChange?.(guide.focus || target);
         setDogState(guide.state, guide.text);
       });
       panel.addEventListener('mouseleave', () => {
         panel.classList.remove('is-focus');
+        onGuideChange?.('doggo');
         restoreDogScene();
       });
     });

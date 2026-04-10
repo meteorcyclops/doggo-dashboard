@@ -122,13 +122,15 @@ function battleRhythmLabel(session, prov) {
 function dogGuideLine(target) {
   switch (target) {
     case 'quotes':
-      return { state: 'work', text: '狗狗：先看台股快報，這裡是今天最像儀表板核心資訊的地方。' };
+      return { state: 'work', text: '狗狗：先看台股快報，這裡是今天最像儀表板核心資訊的地方。', focus: '台股快報' };
     case 'feed':
-      return { state: 'ok', text: '狗狗：新聞雷達適合拿來判斷今天外面世界的情緒背景。' };
+      return { state: 'ok', text: '狗狗：新聞雷達適合拿來判斷今天外面世界的情緒背景。', focus: '新聞雷達' };
     case 'trump':
-      return { state: 'worried', text: '狗狗：這區屬於高波動訊號，應該用警報感而不是一般 feed 感。' };
+      return { state: 'worried', text: '狗狗：這區屬於高波動訊號，應該用警報感而不是一般 feed 感。', focus: '川普發言快訊' };
+    case 'guestbook':
+      return { state: 'bone', text: '狗狗：這裡像小屋牆上的留言角，適合慢慢看大家留下來的心情。', focus: '8-bit 留言板' };
     default:
-      return { state: 'idle', text: '狗狗：主舞台正在整理今天最值得先看的內容。' };
+      return { state: 'idle', text: '狗狗：主舞台正在整理今天最值得先看的內容。', focus: '狗狗主舞台' };
   }
 }
 
@@ -326,6 +328,22 @@ function renderHeadlines(feed) {
 
 let currentDogState = 'idle';
 let currentData = null;
+let currentFocus = 'doggo';
+
+function animateBattleHud() {
+  if (typeof gsap === 'undefined') return;
+  gsap.fromTo(['#battle-chip', '#battle-focus-title', '#battle-focus-subtitle', '#task-bubble'],
+    { opacity: 0.35, y: 4 },
+    { opacity: 1, y: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out' }
+  );
+}
+
+function syncBattleStageMode(data) {
+  const stage = document.querySelector('.battle-stage');
+  if (!stage) return;
+  const mode = battleModeLabel(data).toLowerCase().replace(/\s+/g, '-');
+  stage.dataset.battleMode = mode;
+}
 
 const dogController = createDogController({
   mapStatus,
@@ -335,6 +353,10 @@ const dogController = createDogController({
     currentDogState = state;
     const mood = document.getElementById('lobster-mood');
     if (mood && currentData) mood.textContent = dogMoodCN(state);
+  },
+  onGuideChange: (focus) => {
+    currentFocus = focus || 'doggo';
+    if (currentData) renderSummary(currentData);
   },
   getCurrentData: () => currentData,
   getCurrentState: () => currentDogState,
@@ -377,9 +399,11 @@ function renderSummary(data) {
   const battleFocusTitle = document.getElementById('battle-focus-title');
   const battleFocusSubtitle = document.getElementById('battle-focus-subtitle');
   if (battleKicker) battleKicker.textContent = battleModeLabel(data);
-  if (battleChip) battleChip.textContent = focus;
-  if (battleFocusTitle) battleFocusTitle.textContent = focus;
+  if (battleChip) battleChip.textContent = currentFocus === 'doggo' ? focus : currentFocus;
+  if (battleFocusTitle) battleFocusTitle.textContent = currentFocus === 'doggo' ? focus : currentFocus;
   if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, prov);
+  syncBattleStageMode(data);
+  animateBattleHud();
 
   const stuck = jobs.length - ready;
   document.getElementById('automation-count').textContent = `${jobs.length} 項追蹤 · ${ready} 項順利${
@@ -475,13 +499,17 @@ async function loadData(opts = {}) {
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
   const label = document.getElementById('theme-label');
+  const toggle = document.getElementById('theme-toggle');
   if (label) label.textContent = theme === 'night' ? 'NIGHT' : 'DAY';
+  if (toggle) toggle.classList.add('theme-toggle-flash');
   try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
   if (currentData) {
     dogController.syncDog(currentData);
     dogController.setDogBubble(theme === 'night' ? dogController.pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
     renderSummary(currentData);
+    animateBattleHud();
   }
+  window.setTimeout(() => toggle?.classList.remove('theme-toggle-flash'), 320);
   syncCommentsTheme(theme);
 }
 

@@ -123,6 +123,15 @@ body[data-theme="night"] {
   appearance: none;
   cursor: pointer;
   text-align: left;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease;
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+.theme-toggle-flash {
+  animation: theme-flash 0.32s ease;
 }
 .stat-pill span {
   display: block;
@@ -229,6 +238,16 @@ body[data-theme="night"] {
   overflow: hidden;
   border: 4px solid #7f7cc3;
   background: linear-gradient(180deg, var(--bg1) 0%, var(--bg2) 68%, #d9ffd9 68%, #d9ffd9 100%);
+  transition: background 0.28s ease, filter 0.28s ease, box-shadow 0.28s ease;
+}
+.battle-stage[data-battle-mode="alert-mode"] {
+  box-shadow: inset 0 0 24px rgba(216, 93, 147, .22);
+}
+.battle-stage[data-battle-mode="scan-mode"] {
+  filter: saturate(1.04);
+}
+.battle-stage[data-battle-mode="market-mode"] {
+  box-shadow: inset 0 -16px 24px rgba(111, 227, 139, .18);
 }
 body[data-theme="night"] .battle-stage {
   background: linear-gradient(180deg, #20275f 0%, #4358aa 54%, #2e4b78 54%, #1f3553 100%);
@@ -941,6 +960,20 @@ body[data-theme="night"] .frame {
   border-color: #6f67b7;
   background: rgba(255,255,255,.92);
 }
+body[data-theme="night"] .intel-panel:hover .intel-list li:first-child,
+body[data-theme="night"] .intel-panel:hover .task-list li:first-child,
+body[data-theme="night"] .intel-panel:hover .summary-list li:first-child {
+  background: #fff7df;
+  border-color: #8a76b9;
+}
+body[data-theme="night"] .intel-panel:hover .intel-list li:first-child span,
+body[data-theme="night"] .intel-panel:hover .intel-list li:first-child small,
+body[data-theme="night"] .intel-panel:hover .intel-list li:first-child a,
+body[data-theme="night"] .intel-panel:hover .task-list li:first-child span,
+body[data-theme="night"] .intel-panel:hover .task-list li:first-child small,
+body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
+  color: #2b2550;
+}
 .intel-panel.is-focus {
   box-shadow: inset 0 0 0 2px #fff, 0 8px 0 #9f99d6;
   transform: translateY(-2px);
@@ -1487,6 +1520,11 @@ body[data-theme="night"] .summary-list b {
 @keyframes spark-pulse {
   0%, 100% { transform: rotate(45deg) scale(1); opacity: 1; }
   50%       { transform: rotate(45deg) scale(0.6); opacity: 0.45; }
+}
+@keyframes theme-flash {
+  0% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-1px) scale(1.03); }
+  100% { transform: translateY(0) scale(1); }
 }
 @keyframes bob {
   0%, 100% { transform: translateY(0); }
