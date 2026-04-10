@@ -257,11 +257,16 @@ body[data-theme="night"] .hero-hud {
   border-color: #5a53a3;
   box-shadow: inset 0 0 0 2px #fff, 0 6px 0 #3d3875;
 }
-body[data-theme="night"] .hero-label,
 body[data-theme="night"] .intel-badge {
   background: #56479d;
   border-color: #35285f;
   box-shadow: 0 3px 0 #21183f;
+}
+body[data-theme="night"] .hero-label {
+  background: #fff3bf;
+  border-color: #b78f35;
+  box-shadow: 0 3px 0 #7a5d1a;
+  color: #3a2f12;
 }
 body[data-theme="night"] .hero-metric {
   background: rgba(255,255,255,.96);
@@ -793,7 +798,11 @@ body[data-theme="night"] .cmd-btn,
 body[data-theme="night"] .battle-focus-card b,
 body[data-theme="night"] .hero-title,
 body[data-theme="night"] .hero-metric b,
-body[data-theme="night"] .hero-desc {
+body[data-theme="night"] .hero-desc,
+body[data-theme="night"] .player-box,
+body[data-theme="night"] .command-box,
+body[data-theme="night"] .command-box a,
+body[data-theme="night"] .command-grid a {
   color: var(--card-text);
 }
 body[data-theme="night"] .hp-wrap span,
@@ -807,7 +816,6 @@ body[data-theme="night"] .side-meta,
 body[data-theme="night"] .battle-kicker,
 body[data-theme="night"] .dialog-kicker,
 body[data-theme="night"] .intel-kicker,
-body[data-theme="night"] .hero-label,
 body[data-theme="night"] .battle-focus-card span,
 body[data-theme="night"] .hero-metric span {
   color: var(--card-muted);
@@ -832,6 +840,20 @@ body[data-theme="night"] .game-sub {
 }
 body[data-theme="night"] .stat-pill {
   background: rgba(240, 244, 255, .96);
+}
+body[data-theme="night"] .theme-toggle:hover,
+body[data-theme="night"] .theme-toggle:focus-visible {
+  background: #fff1b8;
+  border-color: #b88927;
+  box-shadow: inset 0 0 0 2px #fff9e6, 0 6px 0 #7b5a16;
+}
+body[data-theme="night"] .theme-toggle:hover span,
+body[data-theme="night"] .theme-toggle:hover b,
+body[data-theme="night"] .theme-toggle:hover small,
+body[data-theme="night"] .theme-toggle:focus-visible span,
+body[data-theme="night"] .theme-toggle:focus-visible b,
+body[data-theme="night"] .theme-toggle:focus-visible small {
+  color: #35290f;
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {

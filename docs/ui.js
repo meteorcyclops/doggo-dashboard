@@ -119,6 +119,16 @@ function battleRhythmLabel(session, prov) {
   return `${session} · ${String(prov || 'SNAPSHOT').replace(/^LIVE\s*/,'LIVE ')}`;
 }
 
+function battleBroadcastDetail(data, focus) {
+  if (focus === '川普發言快訊') return '狗狗正在播報高波動政治訊號與翻譯摘要。';
+  if (focus === '新聞雷達') return '狗狗正在整理外部新聞，幫你快速抓情緒背景。';
+  if (focus === '台股快報') return '狗狗正在盯盤面變化與主要股票快照。';
+  if (focus === '8-bit 留言板') return '狗狗正在翻看牆上的便條紙和大家留下的心情。';
+  return data?.trumpTruth?.items?.some((item) => item.important)
+    ? '狗狗正在優先播報最值得先看的重點快訊。'
+    : '狗狗正在整理今天值得先看的線索。';
+}
+
 function dogGuideLine(target) {
   switch (target) {
     case 'quotes':
@@ -137,14 +147,20 @@ function dogGuideLine(target) {
 function taskBubbleText(data, jammed, alerts) {
   const label = data.dog?.label || '今天';
   const st = data.dog?.state || 'idle';
-  if (alerts) return `狗狗：${label}——小劇場有項目要留意，一起看一下好嗎？`;
-  if (jammed) return `狗狗：${label}，追蹤小記裡有項目卡住；那是種子進度條，不是真實服務狀態。`;
+  const topTrump = data?.trumpTruth?.items?.[0];
+  const topFeed = data?.feed?.items?.[0];
+  const topQuote = data?.quotes?.items?.[0];
+  if (alerts) return `狗狗快報：${label}，有項目需要留意，我先幫你把警報掛在前面。`;
+  if (jammed) return `狗狗快報：${label}，追蹤小記裡有項目卡住，但主要資料台還在運作。`;
+  if (topTrump?.excerptZhTw) return `狗狗快報：川普區有新重點，${topTrump.excerptZhTw.slice(0, 52)}${topTrump.excerptZhTw.length > 52 ? '…' : ''}`;
+  if (topFeed?.title) return `狗狗快報：新聞雷達剛抓到，${topFeed.title.slice(0, 44)}${topFeed.title.length > 44 ? '…' : ''}`;
+  if (topQuote?.symbol) return `狗狗快報：${topQuote.symbol} ${formatChangePct(topQuote.changePct)}，目前是最前排的盤面訊號。`;
   const byState = {
-    idle: `狗狗：${label}，陪你看台股快照、新聞與摘要。`,
-    excited: `狗狗：${label}，今天資訊量滿滿！`,
-    worried: `狗狗：${label}，市面消息多，慢慢看沒關係。`,
-    sleepy: `狗狗：${label}，盤後了，慢慢整理資訊吧。`,
-    bone: `狗狗：${label}，今天的資料都咬回來了。`,
+    idle: `狗狗快報：${label}，我正在輪播台股、新聞和摘要。`,
+    excited: `狗狗快報：${label}，今天資訊量滿滿，我會一條一條唸給你。`,
+    worried: `狗狗快報：${label}，外面波動有點多，我先把重要的講前面。`,
+    sleepy: `狗狗快報：${label}，夜班模式中，我會安靜更新重點。`,
+    bone: `狗狗快報：${label}，今天的資料都順利咬回來了。`,
   };
   return byState[st] || byState.idle;
 }
@@ -398,10 +414,13 @@ function renderSummary(data) {
   const battleChip = document.getElementById('battle-chip');
   const battleFocusTitle = document.getElementById('battle-focus-title');
   const battleFocusSubtitle = document.getElementById('battle-focus-subtitle');
+  const battleBroadcastDetailEl = document.getElementById('battle-broadcast-detail');
+  const liveFocus = currentFocus === 'doggo' ? focus : currentFocus;
   if (battleKicker) battleKicker.textContent = battleModeLabel(data);
-  if (battleChip) battleChip.textContent = currentFocus === 'doggo' ? focus : currentFocus;
-  if (battleFocusTitle) battleFocusTitle.textContent = currentFocus === 'doggo' ? focus : currentFocus;
+  if (battleChip) battleChip.textContent = liveFocus;
+  if (battleFocusTitle) battleFocusTitle.textContent = liveFocus;
   if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, prov);
+  if (battleBroadcastDetailEl) battleBroadcastDetailEl.textContent = battleBroadcastDetail(data, liveFocus);
   syncBattleStageMode(data);
   animateBattleHud();
 
@@ -450,7 +469,7 @@ function renderSummary(data) {
   `;
 }
 
-const POLL_MS = 60_000;
+const POLL_MS = 30_000;
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
