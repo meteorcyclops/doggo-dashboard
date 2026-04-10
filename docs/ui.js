@@ -475,9 +475,10 @@ function renderLayoutOptions() {
   };
   const visible = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
   root.innerHTML = defaultVisibleCards.map((id) => `
-    <label class="layout-option">
+    <label class="layout-option ${visible.has(id) ? 'is-checked' : ''}">
       <input type="checkbox" data-card-toggle="${id}" ${visible.has(id) ? 'checked' : ''} />
-      <span>${labels[id] || id}</span>
+      <span class="layout-option-box" aria-hidden="true">${visible.has(id) ? '■' : '□'}</span>
+      <span class="layout-option-label">${labels[id] || id}</span>
     </label>
   `).join('');
   root.querySelectorAll('[data-card-toggle]').forEach((input) => {
@@ -487,9 +488,18 @@ function renderLayoutOptions() {
       if (e.target.checked) next.add(cardId);
       else next.delete(cardId);
       dashboardPreferences.visible_cards = defaultVisibleCards.filter((id) => next.has(id));
+      const row = e.target.closest('.layout-option');
+      row?.classList.toggle('is-checked', e.target.checked);
+      const box = row?.querySelector('.layout-option-box');
+      if (box) box.textContent = e.target.checked ? '■' : '□';
+      row?.classList.remove('layout-option-flash');
+      void row?.offsetWidth;
+      row?.classList.add('layout-option-flash');
       applyCardVisibility();
       await savePreferences();
     });
+  });
+}
   });
 }
 
@@ -906,12 +916,20 @@ function initTheme() {
 function bindActions() {
   const layoutModal = document.getElementById('layout-modal');
   const closeLayoutModal = () => {
-    layoutModal?.classList.remove('is-open');
-    layoutModal?.setAttribute('hidden', 'hidden');
+    if (!layoutModal) return;
+    layoutModal.classList.remove('is-open');
+    layoutModal.classList.add('is-closing');
+    window.setTimeout(() => {
+      layoutModal.setAttribute('hidden', 'hidden');
+      layoutModal.classList.remove('is-closing');
+    }, 170);
   };
   const openLayoutModal = () => {
-    layoutModal?.removeAttribute('hidden');
-    layoutModal?.classList.add('is-open');
+    if (!layoutModal) return;
+    layoutModal.removeAttribute('hidden');
+    layoutModal.classList.remove('is-closing');
+    void layoutModal.offsetWidth;
+    layoutModal.classList.add('is-open');
   };
   document.getElementById('layout-toggle')?.addEventListener('click', openLayoutModal);
   document.getElementById('layout-close-btn')?.addEventListener('click', closeLayoutModal);
