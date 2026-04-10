@@ -1,13 +1,11 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { guestbookCfg as cfg, supabase } from './supabase-client.js';
 
-const cfg = window.DOGGO_GUESTBOOK_CONFIG || {};
 const statusEl = document.getElementById('guestbook-status');
 const listEl = document.getElementById('guestbook-list');
 const formEl = document.getElementById('guestbook-form');
 const nameEl = document.getElementById('guestbook-name');
 const messageEl = document.getElementById('guestbook-message');
 
-let supabase = null;
 let pendingDeleteId = null;
 let lastRenderedIds = [];
 
@@ -232,8 +230,7 @@ async function submitDelete() {
 
 function initGuestbook() {
   formEl?.addEventListener('submit', submitNote);
-  if (cfg.supabaseUrl && cfg.supabaseAnonKey) {
-    supabase = createClient(cfg.supabaseUrl, cfg.supabaseAnonKey);
+  if (supabase) {
     loadNotes();
     supabase
       .channel('guestbook-notes')

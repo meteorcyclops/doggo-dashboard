@@ -1,11 +1,5 @@
 import { createDogController } from './dog-controller.js';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const guestbookCfg = window.DOGGO_GUESTBOOK_CONFIG || {};
-const profileId = guestbookCfg.profileId || 'default';
-const supabase = guestbookCfg.supabaseUrl && guestbookCfg.supabaseAnonKey
-  ? createClient(guestbookCfg.supabaseUrl, guestbookCfg.supabaseAnonKey)
-  : null;
+import { profileId, supabase } from './supabase-client.js';
 const defaultVisibleCards = ['squad', 'quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
 const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
@@ -474,6 +468,8 @@ function applyCollapsedCards() {
     card.classList.toggle('intel-panel-collapsed', isCollapsed);
     btn.textContent = isCollapsed ? '展開' : '收起';
   });
+  const weatherPanel = document.getElementById('weather-panel');
+  weatherPanel?.classList.remove('weather-panel-collapsed');
 }
 
 function renderLayoutOptions() {
