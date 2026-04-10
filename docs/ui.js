@@ -345,13 +345,90 @@ function renderHeadlines(feed) {
 let currentDogState = 'idle';
 let currentData = null;
 let currentFocus = 'doggo';
+let broadcastItems = [];
+let broadcastIndex = 0;
+let broadcastTimer = null;
+let broadcastPausedUntil = 0;
 
 function animateBattleHud() {
   if (typeof gsap === 'undefined') return;
-  gsap.fromTo(['#battle-chip', '#battle-focus-title', '#battle-focus-subtitle', '#task-bubble'],
+  gsap.fromTo(['#battle-chip', '#battle-focus-title', '#battle-focus-subtitle', '#battle-broadcast-detail', '#task-bubble'],
     { opacity: 0.35, y: 4 },
     { opacity: 1, y: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out' }
   );
+}
+
+function buildBroadcastItems(data) {
+  const items = [];
+  for (const q of data?.quotes?.items || []) {
+    items.push({
+      focus: '台股快報',
+      mode: 'MARKET MODE',
+      state: 'work',
+      title: `${q.symbol} ${formatChangePct(q.changePct)}`,
+      detail: `${q.name || '盤面快照'} · 收盤價附近觀察`,
+      bubble: `狗狗快報：${q.symbol} ${formatChangePct(q.changePct)}，${q.name || '這檔'}現在在盤面前排。`,
+    });
+  }
+  for (const item of data?.feed?.items || []) {
+    items.push({
+      focus: '新聞雷達',
+      mode: 'SCAN MODE',
+      state: 'ok',
+      title: (item.title || '新聞更新').slice(0, 30),
+      detail: item.time || '外部新聞更新',
+      bubble: `狗狗快報：${(item.title || '新聞更新').slice(0, 52)}${(item.title || '').length > 52 ? '…' : ''}`,
+    });
+  }
+  for (const item of data?.trumpTruth?.items || []) {
+    const text = item.excerptZhTw || item.excerpt || '川普快訊';
+    items.push({
+      focus: '川普發言快訊',
+      mode: item.important ? 'ALERT MODE' : 'SCAN MODE',
+      state: item.important ? 'worried' : 'ok',
+      title: item.important ? '川普重點快訊' : '川普摘要',
+      detail: text.slice(0, 36) + (text.length > 36 ? '…' : ''),
+      bubble: `狗狗快報：${text.slice(0, 56)}${text.length > 56 ? '…' : ''}`,
+    });
+  }
+  if (!items.length) {
+    items.push({
+      focus: '狗狗主舞台',
+      mode: 'IDLE MODE',
+      state: 'idle',
+      title: '今日資料整理中',
+      detail: '等新資料進來後，狗狗會開始輪播。',
+      bubble: '狗狗快報：我先守著主舞台，等資料一到就開始播報。',
+    });
+  }
+  return items;
+}
+
+function applyBroadcastItem(item) {
+  if (!item) return;
+  currentFocus = item.focus;
+  const battleKicker = document.getElementById('battle-kicker');
+  const battleChip = document.getElementById('battle-chip');
+  const battleFocusTitle = document.getElementById('battle-focus-title');
+  const battleBroadcastDetailEl = document.getElementById('battle-broadcast-detail');
+  if (battleKicker) battleKicker.textContent = item.mode;
+  if (battleChip) battleChip.textContent = item.focus;
+  if (battleFocusTitle) battleFocusTitle.textContent = item.title;
+  if (battleBroadcastDetailEl) battleBroadcastDetailEl.textContent = item.detail;
+  dogController.setDogState(item.state, item.bubble);
+  animateBattleHud();
+}
+
+function startBroadcastRotation(data) {
+  broadcastItems = buildBroadcastItems(data);
+  broadcastIndex = 0;
+  clearInterval(broadcastTimer);
+  applyBroadcastItem(broadcastItems[0]);
+  broadcastTimer = window.setInterval(() => {
+    if (Date.now() < broadcastPausedUntil || !broadcastItems.length) return;
+    broadcastIndex = (broadcastIndex + 1) % broadcastItems.length;
+    applyBroadcastItem(broadcastItems[broadcastIndex]);
+  }, 4800);
 }
 
 function syncBattleStageMode(data) {
@@ -370,8 +447,11 @@ const dogController = createDogController({
     const mood = document.getElementById('lobster-mood');
     if (mood && currentData) mood.textContent = dogMoodCN(state);
   },
-  onGuideChange: (focus) => {
+  onGuideChange: (focus, options = {}) => {
     currentFocus = focus || 'doggo';
+    if (options.pauseBroadcast) {
+      broadcastPausedUntil = Date.now() + 8000;
+    }
     if (currentData) renderSummary(currentData);
   },
   getCurrentData: () => currentData,
@@ -410,19 +490,10 @@ function renderSummary(data) {
     statusEl.textContent = jammed || alerts ? `追蹤小記有待留意 · ${core}` : core;
   }
 
-  const battleKicker = document.getElementById('battle-kicker');
-  const battleChip = document.getElementById('battle-chip');
-  const battleFocusTitle = document.getElementById('battle-focus-title');
   const battleFocusSubtitle = document.getElementById('battle-focus-subtitle');
-  const battleBroadcastDetailEl = document.getElementById('battle-broadcast-detail');
   const liveFocus = currentFocus === 'doggo' ? focus : currentFocus;
-  if (battleKicker) battleKicker.textContent = battleModeLabel(data);
-  if (battleChip) battleChip.textContent = liveFocus;
-  if (battleFocusTitle) battleFocusTitle.textContent = liveFocus;
   if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, prov);
-  if (battleBroadcastDetailEl) battleBroadcastDetailEl.textContent = battleBroadcastDetail(data, liveFocus);
   syncBattleStageMode(data);
-  animateBattleHud();
 
   const stuck = jobs.length - ready;
   document.getElementById('automation-count').textContent = `${jobs.length} 項追蹤 · ${ready} 項順利${
@@ -505,6 +576,7 @@ async function loadData(opts = {}) {
     renderTrumpTruth(data.trumpTruth);
     dogController.syncDog(data);
     renderSummary(data);
+    startBroadcastRotation(data);
     staggerFeedLists(silent);
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false });

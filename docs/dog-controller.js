@@ -158,7 +158,7 @@ export function createDogController(options = {}) {
         const guide = dogGuideLine(target);
         document.querySelectorAll('.intel-panel').forEach((node) => node.classList.remove('is-focus'));
         panel.classList.add('is-focus');
-        onGuideChange?.(guide.focus || target);
+        onGuideChange?.(guide.focus || target, { pauseBroadcast: true });
         setDogState(guide.state, guide.text);
       });
       panel.addEventListener('mouseleave', () => {
