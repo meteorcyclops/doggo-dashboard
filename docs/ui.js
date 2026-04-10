@@ -904,15 +904,18 @@ function initTheme() {
 }
 
 function bindActions() {
+  const layoutModal = document.getElementById('layout-modal');
+  const closeLayoutModal = () => layoutModal?.setAttribute('hidden', 'hidden');
   document.getElementById('layout-toggle')?.addEventListener('click', () => {
-    document.getElementById('layout-modal')?.removeAttribute('hidden');
+    layoutModal?.removeAttribute('hidden');
   });
-  document.getElementById('layout-close-btn')?.addEventListener('click', () => {
-    document.getElementById('layout-modal')?.setAttribute('hidden', 'hidden');
+  document.getElementById('layout-close-btn')?.addEventListener('click', closeLayoutModal);
+  layoutModal?.addEventListener('click', (e) => {
+    if (e.target === layoutModal) closeLayoutModal();
   });
-  document.getElementById('layout-modal')?.addEventListener('click', (e) => {
-    if (e.target?.id === 'layout-modal') {
-      document.getElementById('layout-modal')?.setAttribute('hidden', 'hidden');
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && layoutModal && !layoutModal.hasAttribute('hidden')) {
+      closeLayoutModal();
     }
   });
   document.getElementById('refresh-btn')?.addEventListener('click', loadData);
