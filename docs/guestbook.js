@@ -168,12 +168,22 @@ async function submitNote(e) {
     setStatus(`送出失敗：${error.message}`);
     return;
   }
-  if (cfg.notifyFunctionUrl) {
-    fetch(cfg.notifyFunctionUrl, {
+  if (cfg.notifyFunctionUrl && cfg.supabaseAnonKey) {
+    const notifyRes = await fetch(cfg.notifyFunctionUrl, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: cfg.supabaseAnonKey,
+        Authorization: `Bearer ${cfg.supabaseAnonKey}`,
+      },
       body: JSON.stringify({ nickname, message, createdAt }),
-    }).catch(() => {});
+    });
+    if (!notifyRes.ok) {
+      const detail = await notifyRes.text().catch(() => 'notify failed');
+      setStatus(`便條紙貼上成功，但通知寄送失敗：${detail || notifyRes.status}`);
+      await loadNotes();
+      return;
+    }
   }
   if (messageEl) messageEl.value = '';
   if (nameEl && !nameEl.value.trim()) nameEl.value = '';
