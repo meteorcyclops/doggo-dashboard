@@ -37,6 +37,7 @@ DEFAULT_RSS = [
     "https://news.ltn.com.tw/rss/business.xml",
     "https://news.ltn.com.tw/rss/world.xml",
 ]
+DEFAULT_US_STOCKS = ["TSLA", "NVDA", "AAPL", "MSFT", "AMZN", "META", "GOOGL", "PLTR"]
 FLIGHT_PREFERENCES = {
     "origin": "TPE",
     "regions": ["日本", "韓國", "東南亞"],
@@ -677,6 +678,68 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
     return trump_truth
 
 
+def fetch_us_quotes(symbols: list[str]) -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    err: str | None = None
+    as_of = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for sym in symbols:
+        sym = sym.strip().upper()
+        if not sym:
+            continue
+        ticker = yf.Ticker(sym)
+        try:
+            hist = ticker.history(period="5d", interval="1d")
+            if hist is None or hist.empty:
+                err = err or "empty history"
+                continue
+            close_series = [float(v) for v in hist["Close"].tail(8).tolist() if v == v and v not in (float('inf'), float('-inf'))]
+            last = float(hist["Close"].iloc[-1])
+            prev = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else last
+            change_pct = ((last - prev) / prev * 100.0) if prev else 0.0
+            info = {}
+            try:
+                info = ticker.info or {}
+            except Exception:
+                pass
+            items.append({
+                "symbol": sym,
+                "name": info.get("shortName") or info.get("longName") or sym,
+                "price": round(last, 2),
+                "changePct": round(change_pct, 2),
+                "series": [round(v, 2) for v in close_series[-5:]],
+            })
+        except Exception as exc:  # noqa: BLE001
+            err = err or str(exc)
+    items.sort(key=lambda item: abs(float(item.get("changePct") or 0)), reverse=True)
+    session = "closed"
+    now_ny = datetime.now(ZoneInfo("America/New_York"))
+    mins = now_ny.hour * 60 + now_ny.minute
+    if now_ny.weekday() < 5:
+        if 4 * 60 <= mins < 9 * 60 + 30:
+            session = "premarket"
+        elif 9 * 60 + 30 <= mins < 16 * 60:
+            session = "market"
+        elif 16 * 60 <= mins < 20 * 60:
+            session = "afterhours"
+    summary = "美股觀察清單整理中。"
+    if items:
+        leader = items[0]
+        pct = float(leader.get("changePct") or 0)
+        if pct >= 2:
+            summary = f"{leader['symbol']} 漲幅最明顯，今天美股情緒偏熱。"
+        elif pct <= -2:
+            summary = f"{leader['symbol']} 波動最大且偏弱，美股情緒有點緊。"
+        else:
+            summary = f"{leader['symbol']} 目前最活躍，美股整體還在觀察區。"
+    return {
+        "asOf": as_of,
+        "session": session,
+        "summary": summary,
+        "items": items,
+        **({"error": err} if err and not items else {}),
+    }
+
+
 def build_provenance(quotes: dict[str, Any], feed: dict[str, Any]) -> str:
     q_ok = bool(quotes.get("items"))
     f_ok = bool(feed.get("items"))
@@ -692,6 +755,8 @@ def build_provenance(quotes: dict[str, Any], feed: dict[str, Any]) -> str:
 def main() -> None:
     stock_env = os.environ.get("DOGGO_STOCK_SYMBOLS", "")
     symbols = [s.strip() for s in stock_env.split(",") if s.strip()] or list(DEFAULT_STOCKS)
+    us_stock_env = os.environ.get("DOGGO_US_STOCK_SYMBOLS", "")
+    us_symbols = [s.strip() for s in us_stock_env.split(",") if s.strip()] or list(DEFAULT_US_STOCKS)
     rss_env = os.environ.get("DOGGO_RSS_URLS", "")
     rss_urls = [s.strip() for s in rss_env.split(",") if s.strip()] or list(DEFAULT_RSS)
 
@@ -699,6 +764,7 @@ def main() -> None:
     session = _session()
 
     quotes, _ = fetch_quotes(symbols)
+    us_quotes = fetch_us_quotes(us_symbols)
     feed = fetch_feed(rss_urls, session)
     weather = fetch_weather(WEATHER_SPOTS, session)
     flight_deals = fetch_flight_deals()
@@ -715,6 +781,7 @@ def main() -> None:
         "buildTrigger": build_trigger,
         "provenance": provenance,
         "quotes": quotes,
+        "usQuotes": us_quotes,
         "feed": feed,
         "weather": weather,
         "flightDeals": flight_deals,

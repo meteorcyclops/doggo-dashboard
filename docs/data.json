@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T14:48:52Z",
+  "generatedAt": "2026-04-10T14:57:46Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T14:48:28Z",
+    "asOf": "2026-04-10T14:57:17Z",
     "items": [
       {
         "symbol": "2330",
@@ -947,6 +947,117 @@
       }
     ]
   },
+  "usQuotes": {
+    "asOf": "2026-04-10T14:57:36Z",
+    "session": "market",
+    "summary": "NVDA 漲幅最明顯，今天美股情緒偏熱。",
+    "items": [
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corporation",
+        "price": 188.66,
+        "changePct": 2.58,
+        "series": [
+          177.64,
+          178.1,
+          182.08,
+          183.91,
+          188.66
+        ]
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com, Inc.",
+        "price": 239.05,
+        "changePct": 2.31,
+        "series": [
+          212.79,
+          213.77,
+          221.25,
+          233.65,
+          239.05
+        ]
+      },
+      {
+        "symbol": "PLTR",
+        "name": "Palantir Technologies Inc.",
+        "price": 127.72,
+        "changePct": -2.12,
+        "series": [
+          147.93,
+          150.07,
+          140.76,
+          130.49,
+          127.72
+        ]
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms, Inc.",
+        "price": 632.37,
+        "changePct": 0.63,
+        "series": [
+          573.02,
+          575.05,
+          612.42,
+          628.39,
+          632.37
+        ]
+      },
+      {
+        "symbol": "AAPL",
+        "name": "Apple Inc.",
+        "price": 261.9,
+        "changePct": 0.54,
+        "series": [
+          258.86,
+          253.5,
+          258.9,
+          260.49,
+          261.9
+        ]
+      },
+      {
+        "symbol": "MSFT",
+        "name": "Microsoft Corporation",
+        "price": 372.18,
+        "changePct": -0.24,
+        "series": [
+          372.88,
+          372.29,
+          374.33,
+          373.07,
+          372.18
+        ]
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc.",
+        "price": 319.24,
+        "changePct": 0.24,
+        "series": [
+          299.99,
+          305.46,
+          317.32,
+          318.49,
+          319.24
+        ]
+      },
+      {
+        "symbol": "TSLA",
+        "name": "Tesla, Inc.",
+        "price": 346.22,
+        "changePct": 0.17,
+        "series": [
+          352.82,
+          346.65,
+          343.25,
+          345.62,
+          346.22
+        ]
+      }
+    ]
+  },
   "feed": {
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
@@ -1048,7 +1159,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T14:48:49Z",
+    "asOf": "2026-04-10T14:57:41Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1185,7 +1296,7 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T14:48:49Z",
+    "asOf": "2026-04-10T14:57:41Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T22:32:00+08:00",

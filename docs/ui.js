@@ -1,6 +1,6 @@
 import { createDogController } from './dog-controller.js';
 import { profileId, supabase } from './supabase-client.js';
-const defaultVisibleCards = ['squad', 'quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
+const defaultVisibleCards = ['squad', 'quotes', 'us-quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
 const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
@@ -206,6 +206,7 @@ function battleBroadcastDetail(data, focus) {
   if (focus === '川普發言快訊') return '狗狗正在播報高波動政治訊號與翻譯摘要。';
   if (focus === '新聞雷達') return '狗狗正在整理外部新聞，幫你快速抓情緒背景。';
   if (focus === '台股快報') return '狗狗正在盯盤面變化與主要股票快照。';
+  if (focus === '美股快報') return '狗狗正在看今晚美股誰最有動靜。';
   if (focus === '8-bit 留言板') return '狗狗正在翻看牆上的便條紙和大家留下的心情。';
   return hotTrump
     ? '狗狗正在優先播報最值得先看的重點快訊。'
@@ -218,6 +219,8 @@ function dogGuideLine(target) {
       return { state: 'work', text: '狗狗：先看台股快報，這裡是今天最像儀表板核心資訊的地方。', focus: '台股快報' };
     case 'feed':
       return { state: 'ok', text: '狗狗：新聞雷達適合拿來判斷今天外面世界的情緒背景。', focus: '新聞雷達' };
+    case 'us-quotes':
+      return { state: 'work', text: '狗狗：這區是美股觀察台，會先抓今晚最活躍的幾檔。', focus: '美股快報' };
     case 'flight':
       return { state: 'excited', text: '狗狗：這區現在會直接幫你看常用航線的甜價程度，不只是旅遊新聞。', focus: '特價機票雷達' };
     case 'trump':
@@ -239,6 +242,8 @@ function taskBubbleText(data, jammed, alerts) {
   if (jammed) return `狗狗快報：${label}，追蹤小記裡有項目卡住，但主要資料台還在運作。`;
   if (topTrump?.dogSummary) return `狗狗快報：${topTrump.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topTrump?.excerptZhTw) return `狗狗快報：川普區有新重點，${topTrump.excerptZhTw.slice(0, 52)}${topTrump.excerptZhTw.length > 52 ? '…' : ''}`;
+  const topUsQuote = data?.usQuotes?.items?.[0];
+  if (topUsQuote?.symbol) return `狗狗快報：今晚美股先看 ${topUsQuote.symbol}，目前 ${formatChangePct(topUsQuote.changePct)}。`;
   if (topFeed?.title) return `狗狗快報：新聞雷達剛抓到，${topFeed.title.slice(0, 44)}${topFeed.title.length > 44 ? '…' : ''}`;
   if (topQuote?.symbol) return `狗狗快報：${topQuote.symbol} ${formatChangePct(topQuote.changePct)}，目前是最前排的盤面訊號。`;
   const byState = {
@@ -375,6 +380,40 @@ function formatTrumpTime(iso) {
   return formatShortDateTime(iso);
 }
 
+function renderUsQuotes(usQuotes) {
+  const list = document.getElementById('us-quote-list');
+  const meta = document.getElementById('us-quote-meta');
+  const summaryEl = document.getElementById('us-quote-summary');
+  if (!list) return;
+  list.innerHTML = '';
+  const asOf = usQuotes?.asOf;
+  const sessionMap = {
+    premarket: '盤前',
+    market: '盤中',
+    afterhours: '盤後',
+    closed: '休市',
+  };
+  if (meta) {
+    meta.textContent = usQuotes?.error
+      ? `美股資料有缺口：${usQuotes.error}`
+      : `美股 ${sessionMap[usQuotes?.session] || '觀察中'} · 更新 ${formatShortDateTime(asOf)}`;
+  }
+  if (summaryEl) summaryEl.textContent = usQuotes?.summary || '狗狗正在整理今晚要先看的美股動向…';
+  const state = cardStateFromData({ items: usQuotes?.items, error: usQuotes?.error, asOf });
+  if (state) {
+    renderStateCard(list, meta, state, '美股快報暫時沒有完整資料');
+    return;
+  }
+  usQuotes.items.forEach((q) => {
+    const li = document.createElement('li');
+    const pct = Number(q.changePct);
+    const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong> · ${usQuotes.session || 'closed'}<br>${patternLabel(pct > 1 ? 'uptrend' : pct < -1 ? 'downtrend' : 'range')}</small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    list.appendChild(li);
+  });
+  pulseChildren('#us-quote-list > li');
+}
+
 function renderTrumpTruth(trump) {
   const list = document.getElementById('trump-list');
   const meta = document.getElementById('trump-meta');
@@ -506,6 +545,7 @@ function renderLayoutOptions() {
   const labels = {
     squad: '狗狗小隊',
     quotes: '台股快報',
+    'us-quotes': '美股快報',
     weather: '生活天氣提醒',
     feed: '新聞雷達',
     flight: '特價機票雷達',
@@ -718,6 +758,16 @@ function buildBroadcastItems(data) {
       bubble: `狗狗快報：${q.symbol} ${formatChangePct(q.changePct)}，${q.name || '這檔'}現在在盤面前排。`,
     });
   }
+  for (const item of data?.usQuotes?.items || []) {
+    items.push({
+      focus: '美股快報',
+      mode: 'US MODE',
+      state: 'work',
+      title: `${item.symbol} ${formatChangePct(item.changePct)}`,
+      detail: `${item.name || 'US stock'} · ${data?.usQuotes?.session || 'closed'}`,
+      bubble: `狗狗快報：今晚美股先看 ${item.symbol}，目前 ${formatChangePct(item.changePct)}。`,
+    });
+  }
   for (const item of data?.feed?.items || []) {
     items.push({
       focus: '新聞雷達',
@@ -889,6 +939,8 @@ function renderSummary(data) {
   const flightBadge = document.getElementById('flight-badge');
   const trumpBadge = document.getElementById('trump-badge');
   if (quoteBadge) quoteBadge.textContent = data.quotes?.items?.length ? 'LIVE' : 'WAIT';
+  const usQuoteBadge = document.getElementById('us-quote-badge');
+  if (usQuoteBadge) usQuoteBadge.textContent = data.usQuotes?.items?.length ? 'US' : 'WAIT';
   if (feedBadge) feedBadge.textContent = data.feed?.items?.length ? 'SCAN' : 'WAIT';
   if (flightBadge) flightBadge.textContent = data.flightDeals?.items?.length ? 'AIR' : 'WAIT';
   if (trumpBadge) trumpBadge.textContent = data.trumpTruth?.items?.some((item) => item.important) ? 'HOT' : 'WATCH';
@@ -910,7 +962,7 @@ function renderSummary(data) {
 }
 
 const POLL_MS = 30_000;
-const STAGGER_LIST_SELECTORS = ['#quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
+const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
   if (silent || typeof gsap === 'undefined') return;
@@ -941,6 +993,7 @@ async function loadData(opts = {}) {
     currentData = data;
     renderTasks(data.jobs || []);
     renderQuotes(data.quotes);
+    renderUsQuotes(data.usQuotes);
     renderHeadlines(data.feed);
     renderFlightDeals(data.flightDeals);
     renderTrumpTruth(data.trumpTruth);
