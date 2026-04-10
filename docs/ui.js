@@ -537,7 +537,7 @@ async function loadPreferences() {
   if (supabase) {
     const { data, error } = await supabase
       .from('dashboard_preferences')
-      .select('profile_id,visible_cards,card_order,flight_origin,flight_regions')
+      .select('profile_id,visible_cards,card_order,collapsed_cards,flight_origin,flight_regions')
       .eq('profile_id', profileId)
       .maybeSingle();
     if (!error && data) {
@@ -555,6 +555,21 @@ async function loadPreferences() {
 
 async function savePreferences() {
   saveLocalPreferences();
+  if (!supabase) return;
+  const payload = {
+    profile_id: profileId,
+    visible_cards: dashboardPreferences.visible_cards,
+    card_order: dashboardPreferences.card_order,
+    collapsed_cards: dashboardPreferences.collapsed_cards,
+    flight_origin: dashboardPreferences.flight_origin,
+    flight_regions: dashboardPreferences.flight_regions,
+  };
+  const { error } = await supabase
+    .from('dashboard_preferences')
+    .upsert(payload, { onConflict: 'profile_id' });
+  if (error) {
+    console.warn('Failed to sync dashboard preferences to Supabase:', error.message);
+  }
 }
 
 function renderFlightDeals(flightDeals) {
