@@ -6,6 +6,24 @@ function tickClock() {
   el.textContent = new Date().toLocaleTimeString('zh-TW', { hour12: false });
 }
 
+function formatShortDateTime(value) {
+  if (!value) return '無紀錄';
+  try {
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return String(value);
+    return d.toLocaleString('zh-TW', {
+      hour12: false,
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Taipei',
+    });
+  } catch {
+    return String(value);
+  }
+}
+
 function timeAgo(ms) {
   if (!ms) return '無紀錄';
   const diff = Math.max(0, Date.now() - ms);
@@ -259,7 +277,7 @@ function renderQuotes(quotes) {
   const asOf = quotes?.asOf;
   if (meta) {
     meta.textContent = asOf
-      ? `報價快照（UTC）：${asOf}`
+      ? `報價快照：${formatShortDateTime(asOf)}`
       : '尚無報價時間戳';
   }
   const state = cardStateFromData({ items: quotes?.items, error: quotes?.error, asOf });
@@ -279,13 +297,7 @@ function renderQuotes(quotes) {
 
 function formatTrumpTime(iso) {
   if (!iso || typeof iso !== 'string') return '';
-  try {
-    const d = new Date(iso);
-    if (Number.isNaN(d.getTime())) return iso;
-    return d.toLocaleString('zh-TW', { hour12: false });
-  } catch {
-    return iso;
-  }
+  return formatShortDateTime(iso);
 }
 
 function renderTrumpTruth(trump) {
@@ -378,7 +390,7 @@ function renderHeadlines(feed) {
     }
     span.appendChild(document.createElement('br'));
     const small = document.createElement('small');
-    small.textContent = item.time || '';
+    small.textContent = formatShortDateTime(item.time);
     span.appendChild(small);
     const badge = document.createElement('b');
     badge.className = 'ok';
@@ -555,11 +567,11 @@ function renderSummary(data) {
 
   const provCls = provenanceClass(prov);
   const genAt = data.generatedAt
-    ? new Date(data.generatedAt).toLocaleString('zh-TW', { hour12: false })
+    ? `${formatShortDateTime(data.generatedAt)}（台北時間）`
     : '—';
   const freshness = freshnessLabel(data.generatedAt);
   const quoteAsOf = data.quotes?.asOf
-    ? `${new Date(data.quotes.asOf).toLocaleString('zh-TW', { hour12: false })}（台北時間）`
+    ? `${formatShortDateTime(data.quotes.asOf)}（台北時間）`
     : '—';
 
   const feedRow = feedSummaryRow(data.feed);
@@ -581,7 +593,7 @@ function renderSummary(data) {
   summary.innerHTML = `
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
     <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
-    <li><span>報價快照（UTC）</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
+    <li><span>報價快照</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
     <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
@@ -628,7 +640,7 @@ async function loadData(opts = {}) {
     startBroadcastRotation(data);
     staggerFeedLists(silent);
     if (hint && !silent) {
-      const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false });
+      const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
       hint.textContent = `已載入資料 · 本地 ${localT} · 最後建置 ${fresh}`;
     }

@@ -25,7 +25,14 @@ function escHtml(s) {
 
 function formatTime(iso) {
   try {
-    return new Date(iso).toLocaleString('zh-TW', { hour12: false });
+    return new Date(iso).toLocaleString('zh-TW', {
+      hour12: false,
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Asia/Taipei',
+    });
   } catch {
     return iso || '';
   }
