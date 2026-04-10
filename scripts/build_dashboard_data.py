@@ -592,6 +592,25 @@ def polish_tw_zh(text: str) -> str:
     for old, new in soften_replacements.items():
         zh = zh.replace(old, new)
 
+    cleanup_replacements = {
+        "Benjamin Flowers (Benjamin Flowers)": "Benjamin Flowers",
+        "（Elise Stefanik）": "",
+        "他當時在那裡": "他在任內",
+        "我的朋友、紐約州國會女議員": "我的朋友、來自紐約州的國會女議員",
+        "頗受敬重的匈牙利總理": "匈牙利總理",
+        "的確是一位很有份量的領導人": "確實很有份量",
+        "出了新書": "最近出了新書",
+        "會透過 TrumpRx 推出產品": "將透過 TrumpRx 推出產品",
+        "一名來自海地的非法移民罪犯": "一名來自海地的非法移民罪犯",
+    }
+    for old, new in cleanup_replacements.items():
+        zh = zh.replace(old, new)
+
+    zh = re.sub(r"\b([A-Z][a-z]+ [A-Z][a-z]+) \(\1\)", r"\1", zh)
+    zh = re.sub(r"\s+([，。！？])", r"\1", zh)
+    zh = re.sub(r"([。！？])\s+", r"\1", zh)
+    zh = zh.strip()
+
     return zh
 
 
