@@ -224,6 +224,35 @@ body[data-theme="night"] {
   border-color: #cc9f3d;
   box-shadow: inset 0 0 0 2px #fff9de;
 }
+.hero-priority-metric {
+  display: grid;
+  gap: 8px;
+}
+.focus-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.focus-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 11px;
+  line-height: 1.4;
+  color: #3d3366;
+  background: rgba(255,255,255,.86);
+  border: 3px solid #8d86cb;
+  box-shadow: inset 0 0 0 2px #fff8dd;
+}
+.focus-pill b {
+  font-size: 10px;
+  color: #8f5b16;
+}
+.focus-pill.is-top {
+  background: linear-gradient(180deg, #ffe7b0 0%, #ffd36f 100%);
+  border-color: #c99122;
+}
 .battle-card {
   padding: 12px;
   min-width: 0;

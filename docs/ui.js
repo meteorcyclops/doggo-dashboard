@@ -190,53 +190,67 @@ function topUsMover(data) {
   return data?.usQuotes?.items?.[0] || null;
 }
 
-function computeTopFocus(data) {
+function computeFocusRanking(data) {
+  const ranking = [];
   const hotTrump = topImportantTrump(data);
   if (hotTrump) {
-    return {
+    ranking.push({
       key: 'trump',
       label: '川普重點快訊',
       detail: hotTrump.dogSummary || hotTrump.excerptZhTw || hotTrump.excerpt || '川普快訊',
       state: 'worried',
       mode: 'ALERT MODE',
-    };
+      score: 100,
+    });
   }
   const topUs = topUsMover(data);
-  if (topUs && Math.abs(Number(topUs.changePct) || 0) >= 2) {
-    return {
+  if (topUs) {
+    ranking.push({
       key: 'us-quotes',
       label: '美股快報',
       detail: topUs.dogSummary || `${topUs.symbol} ${formatChangePct(topUs.changePct)}`,
       state: 'work',
       mode: 'US MODE',
-    };
+      score: Math.abs(Number(topUs.changePct) || 0) >= 2 ? 80 : 45,
+    });
   }
   const topTw = topTwMover(data);
-  if (topTw && Math.abs(Number(topTw.changePct) || 0) >= 1.5) {
-    return {
+  if (topTw) {
+    ranking.push({
       key: 'quotes',
       label: '台股快報',
       detail: topTw.dogSummary || `${topTw.symbol} ${formatChangePct(topTw.changePct)}`,
       state: 'work',
       mode: 'MARKET MODE',
-    };
+      score: Math.abs(Number(topTw.changePct) || 0) >= 1.5 ? 70 : 40,
+    });
   }
   if (data?.feed?.items?.length) {
-    return {
+    ranking.push({
       key: 'feed',
       label: '新聞雷達',
       detail: '狗狗正在整理外部新聞，幫你快速抓情緒背景。',
       state: 'ok',
       mode: 'SCAN MODE',
-    };
+      score: 35,
+    });
   }
-  return {
-    key: 'doggo',
-    label: '狗狗主舞台',
-    detail: '狗狗正在整理今天值得先看的線索。',
-    state: 'idle',
-    mode: 'IDLE MODE',
-  };
+  if (!ranking.length) {
+    ranking.push({
+      key: 'doggo',
+      label: '狗狗主舞台',
+      detail: '狗狗正在整理今天值得先看的線索。',
+      state: 'idle',
+      mode: 'IDLE MODE',
+      score: 0,
+    });
+  }
+  ranking.sort((a, b) => b.score - a.score);
+  return ranking;
+}
+
+function computeTopFocus(data) {
+  return computeFocusRanking(data)[0];
 }
 
 function heroFocusLabel(data) {
@@ -933,6 +947,18 @@ function renderTasks(jobs) {
   });
 }
 
+function renderFocusPills(data) {
+  const root = document.getElementById('focus-pill-list');
+  if (!root) return;
+  const ranking = computeFocusRanking(data).slice(0, 3);
+  root.innerHTML = ranking.map((item, index) => `
+    <span class="focus-pill ${index === 0 ? 'is-top' : ''}">
+      <b>#${index + 1}</b>
+      <span>${escHtml(item.label)}</span>
+    </span>
+  `).join('');
+}
+
 function renderSummary(data) {
   const jobs = (data.jobs || []).filter((j) => j.enabled);
   const ready = jobs.filter((j) => mapStatus(j).cls === 'ok').length;
@@ -1004,6 +1030,7 @@ function renderSummary(data) {
   const weatherBadge = document.getElementById('weather-badge');
   if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
 
+  renderFocusPills(data);
   const summary = document.getElementById('summary-list');
   summary.innerHTML = `
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
