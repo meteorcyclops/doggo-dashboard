@@ -6,6 +6,7 @@ from __future__ import annotations
 import calendar
 import json
 import os
+import re
 import sys
 from datetime import datetime, time as dt_time, timezone
 from email.utils import parsedate_to_datetime
@@ -78,6 +79,7 @@ TRUMP_EXCERPT_MAX = 220
 REQUEST_TIMEOUT = 25
 USER_AGENT = "doggo-dashboard-build/1.0 (+https://github.com/meteorcyclops/doggo-dashboard)"
 TRUMP_TRANSLATE_MAX = 2800
+URL_RE = re.compile(r"https?://\S+")
 
 
 def _session() -> requests.Session:
@@ -492,6 +494,20 @@ def fetch_trump_truth() -> dict[str, Any]:
     return out
 
 
+def split_trailing_url(text: str) -> tuple[str, str]:
+    s = " ".join(str(text).split())
+    if not s:
+        return "", ""
+    matches = list(URL_RE.finditer(s))
+    if not matches:
+        return s, ""
+    last = matches[-1]
+    if last.end() != len(s):
+        return s, ""
+    body = s[: last.start()].rstrip(" ：:，,\n\t")
+    return body, last.group(0)
+
+
 def polish_tw_zh(text: str) -> str:
     zh = " ".join(str(text).split())
     replacements = {
@@ -577,6 +593,12 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
 
     for item in items:
         text = str(item.get("excerpt") or "").strip()
+        body, trailing_url = split_trailing_url(text)
+        if trailing_url and not item.get("linkUrl"):
+            item["linkUrl"] = trailing_url
+        if not body and trailing_url:
+            item["excerptZhTw"] = "這則主要是連結貼文，請直接點原文查看。"
+            continue
         if not text:
             item["excerptZhTw"] = ""
             continue
@@ -584,7 +606,7 @@ def translate_trump_truth(trump_truth: dict[str, Any]) -> dict[str, Any]:
             item["excerptZhTw"] = "這則主要是連結貼文，請直接點原文查看。"
             continue
         try:
-            raw = translator.translate(text[:TRUMP_TRANSLATE_MAX])
+            raw = translator.translate(body[:TRUMP_TRANSLATE_MAX] if body else text[:TRUMP_TRANSLATE_MAX])
             item["excerptZhTw"] = polish_tw_zh(raw)
         except Exception as exc:  # noqa: BLE001
             item["excerptZhTw"] = ""

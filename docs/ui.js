@@ -393,6 +393,7 @@ function renderTrumpTruth(trump) {
     const li = document.createElement('li');
     const span = document.createElement('span');
     const url = safeHttpUrl(item.url);
+    const linkUrl = safeHttpUrl(item.linkUrl || item.url);
     if (url) {
       const a = document.createElement('a');
       a.href = url;
@@ -409,6 +410,18 @@ function renderTrumpTruth(trump) {
       zh.className = 'trump-translation';
       zh.textContent = `繁中：${item.excerptZhTw}`;
       span.appendChild(zh);
+    }
+    if (linkUrl && linkUrl !== url) {
+      span.appendChild(document.createElement('br'));
+      const smallLink = document.createElement('small');
+      smallLink.className = 'trump-excerpt';
+      const link = document.createElement('a');
+      link.href = linkUrl;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+      link.textContent = '原文附帶連結 ↗';
+      smallLink.appendChild(link);
+      span.appendChild(smallLink);
     }
     span.appendChild(document.createElement('br'));
     const small = document.createElement('small');

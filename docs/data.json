@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T14:34:31Z",
+  "generatedAt": "2026-04-10T14:37:28Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T14:34:05Z",
+    "asOf": "2026-04-10T14:36:07Z",
     "items": [
       {
         "symbol": "2330",
@@ -1048,7 +1048,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T14:34:26Z",
+    "asOf": "2026-04-10T14:36:30Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1185,8 +1185,15 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T14:34:26Z",
+    "asOf": "2026-04-10T14:36:30Z",
     "items": [
+      {
+        "postedAtTw": "2026-04-10T22:32:00+08:00",
+        "excerpt": "Palantir Technologies (PLTR) has proven to have great war fighting capabilities and equipment. Just ask our enemies!!! President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37688",
+        "important": true,
+        "excerptZhTw": "Palantir Technologies (PLTR) 已被證明擁有強大的作戰能力和裝備。問問我們的敵人吧！DJT"
+      },
       {
         "postedAtTw": "2026-04-10T21:31:00+08:00",
         "excerpt": "WORLD’S MOST POWERFUL RESET!!! President DJT",
@@ -1198,19 +1205,22 @@
         "excerpt": "Trump upends China’s lucrative sanctioned oil import scheme after Iran, Venezuela interventions: https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran",
         "url": "https://www.trumpstruth.org/statuses/37686",
         "important": true,
-        "excerptZhTw": "在伊朗和委內瑞拉幹預後，川普打亂了中國那套很賺錢的制裁石油進口盤算：https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran"
+        "linkUrl": "https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran",
+        "excerptZhTw": "在伊朗和委內瑞拉幹預之後，川普推翻了中國利潤豐厚的受制裁石油進口計劃"
       },
       {
         "postedAtTw": "2026-04-10T13:14:00+08:00",
         "excerpt": "Two more major pharmaceutical companies to launch products through TrumpRx: https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx",
         "url": "https://www.trumpstruth.org/statuses/37684",
-        "excerptZhTw": "又有兩家大型製藥公司會透過 TrumpRx 推出產品：https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx"
+        "linkUrl": "https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx",
+        "excerptZhTw": "又有兩家大型製藥公司會透過 TrumpRx 推出產品"
       },
       {
         "postedAtTw": "2026-04-10T13:13:00+08:00",
         "excerpt": "With Trump at the joystick, moon mission launches patriotism ahead of America’s 250th: https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250",
         "url": "https://www.trumpstruth.org/statuses/37685",
-        "excerptZhTw": "在川普主導下，登月任務替美國 250 週年前的氣氛先暖身，也把愛國情緒再度炒熱：https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250"
+        "linkUrl": "https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250",
+        "excerptZhTw": "在川普主導下，登月任務替美國 250 週年前的氣氛先暖身激發愛國主義"
       },
       {
         "postedAtTw": "2026-04-10T07:49:00+08:00",
@@ -1228,7 +1238,7 @@
         "postedAtTw": "2026-04-10T07:34:00+08:00",
         "excerpt": "My friend, Congresswoman Elise Stefanik, of New York, has written a new book, \"POISONED IVIES: The Inside Account of the Academic and Moral Rot at America’s Elite Universities.\" There is nobody more qualified to speak o…",
         "url": "https://www.trumpstruth.org/statuses/37680",
-        "excerptZhTw": "我的朋友、紐約州國會女議員埃莉斯·斯特凡尼克（Elise Stefanik）出了新書，《有毒的藤蔓：美國精英大學學術和道德腐爛的內幕》。沒有誰比她更適合談這件事…"
+        "excerptZhTw": ""
       },
       {
         "postedAtTw": "2026-04-10T07:32:00+08:00",
@@ -1242,13 +1252,8 @@
         "url": "https://www.trumpstruth.org/statuses/37679",
         "important": true,
         "excerptZhTw": "伊朗在允許石油通過霍爾木茲海峽方面做得很差，有人會說這是不光彩的。那不是我們的協議！唐納德·J·川普總統"
-      },
-      {
-        "postedAtTw": "2026-04-10T05:43:00+08:00",
-        "excerpt": "President Donald J. Trump and Secretary of the Interior, Doug Burgum, are proud to be fixing the once beautiful Reflecting Pool between The Washington Monument and The Lincoln Memorial. We were told it was going to take…",
-        "url": "https://www.trumpstruth.org/statuses/37678",
-        "excerptZhTw": "唐納德·J·川普總統和內政部長道格·布爾古姆很自豪能推動整修華盛頓紀念碑和林肯紀念堂之間曾經美麗的倒影池。我們被告知這將需要..."
       }
-    ]
+    ],
+    "translationError": "('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
   }
 }
