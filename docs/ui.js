@@ -178,8 +178,12 @@ function heroDogStatusText(data, { jammed = 0, alerts = 0 } = {}) {
   return '今天整體還算平穩，狗狗先幫你把情報台維持在順順的節奏。';
 }
 
+function topImportantTrump(data) {
+  return data?.trumpTruth?.items?.find((item) => item.important) || null;
+}
+
 function heroFocusLabel(data) {
-  if (data?.trumpTruth?.items?.some((item) => item.important)) return '川普發言快訊';
+  if (topImportantTrump(data)) return '川普發言快訊';
   if (data?.feed?.items?.length) return '新聞雷達';
   if (data?.quotes?.items?.length) return '台股快報';
   return '狗狗主舞台';
@@ -197,11 +201,13 @@ function battleRhythmLabel(session, prov) {
 }
 
 function battleBroadcastDetail(data, focus) {
+  const hotTrump = topImportantTrump(data);
+  if (focus === '川普發言快訊' && hotTrump?.dogSummary) return hotTrump.dogSummary;
   if (focus === '川普發言快訊') return '狗狗正在播報高波動政治訊號與翻譯摘要。';
   if (focus === '新聞雷達') return '狗狗正在整理外部新聞，幫你快速抓情緒背景。';
   if (focus === '台股快報') return '狗狗正在盯盤面變化與主要股票快照。';
   if (focus === '8-bit 留言板') return '狗狗正在翻看牆上的便條紙和大家留下的心情。';
-  return data?.trumpTruth?.items?.some((item) => item.important)
+  return hotTrump
     ? '狗狗正在優先播報最值得先看的重點快訊。'
     : '狗狗正在整理今天值得先看的線索。';
 }
@@ -226,11 +232,12 @@ function dogGuideLine(target) {
 function taskBubbleText(data, jammed, alerts) {
   const label = data.dog?.label || '今天';
   const st = data.dog?.state || 'idle';
-  const topTrump = data?.trumpTruth?.items?.[0];
+  const topTrump = topImportantTrump(data) || data?.trumpTruth?.items?.[0];
   const topFeed = data?.feed?.items?.[0];
   const topQuote = data?.quotes?.items?.[0];
   if (alerts) return `狗狗快報：${label}，有項目需要留意，我先幫你把警報掛在前面。`;
   if (jammed) return `狗狗快報：${label}，追蹤小記裡有項目卡住，但主要資料台還在運作。`;
+  if (topTrump?.dogSummary) return `狗狗快報：${topTrump.dogSummary.replace(/^狗狗重點：/, '')}`;
   if (topTrump?.excerptZhTw) return `狗狗快報：川普區有新重點，${topTrump.excerptZhTw.slice(0, 52)}${topTrump.excerptZhTw.length > 52 ? '…' : ''}`;
   if (topFeed?.title) return `狗狗快報：新聞雷達剛抓到，${topFeed.title.slice(0, 44)}${topFeed.title.length > 44 ? '…' : ''}`;
   if (topQuote?.symbol) return `狗狗快報：${topQuote.symbol} ${formatChangePct(topQuote.changePct)}，目前是最前排的盤面訊號。`;
@@ -689,6 +696,18 @@ function animateBattleHud() {
 
 function buildBroadcastItems(data) {
   const items = [];
+  const hotTrump = topImportantTrump(data);
+  if (hotTrump) {
+    const hotText = hotTrump.excerptZhTw || hotTrump.excerpt || '川普重點快訊';
+    items.push({
+      focus: '川普發言快訊',
+      mode: 'ALERT MODE',
+      state: 'worried',
+      title: '川普重點快訊',
+      detail: (hotTrump.dogSummary || hotText).slice(0, 42) + ((hotTrump.dogSummary || hotText).length > 42 ? '…' : ''),
+      bubble: `狗狗快報：${(hotTrump.dogSummary || hotText).replace(/^狗狗重點：/, '').slice(0, 60)}${(hotTrump.dogSummary || hotText).length > 60 ? '…' : ''}`,
+    });
+  }
   for (const q of data?.quotes?.items || []) {
     items.push({
       focus: '台股快報',
@@ -726,8 +745,8 @@ function buildBroadcastItems(data) {
       mode: item.important ? 'ALERT MODE' : 'SCAN MODE',
       state: item.important ? 'worried' : 'ok',
       title: item.important ? '川普重點快訊' : '川普摘要',
-      detail: text.slice(0, 36) + (text.length > 36 ? '…' : ''),
-      bubble: `狗狗快報：${text.slice(0, 56)}${text.length > 56 ? '…' : ''}`,
+      detail: (item.dogSummary || text).slice(0, 36) + ((item.dogSummary || text).length > 36 ? '…' : ''),
+      bubble: `狗狗快報：${(item.dogSummary || text).replace(/^狗狗重點：/, '').slice(0, 56)}${(item.dogSummary || text).length > 56 ? '…' : ''}`,
     });
   }
   if (!items.length) {
@@ -822,6 +841,7 @@ function renderSummary(data) {
   const mood = dogMoodCN(currentDogState || data.dog?.state || 'idle');
   const heroDogText = heroDogStatusText(data, { jammed, alerts });
   const focus = heroFocusLabel(data);
+  const hotTrump = topImportantTrump(data);
   const prov = data.provenance || '—';
   const buildTrigger = buildTriggerLabel(data.buildTrigger);
 
@@ -860,9 +880,9 @@ function renderSummary(data) {
   const trumpRow = trumpSummaryRow(data.trumpTruth);
 
   document.getElementById('hero-session').textContent = session;
-  document.getElementById('hero-dog-state').textContent = heroDogText;
+  document.getElementById('hero-dog-state').textContent = hotTrump?.dogSummary || heroDogText;
   document.getElementById('hero-provenance').textContent = prov;
-  document.getElementById('hero-focus').textContent = focus;
+  document.getElementById('hero-focus').textContent = hotTrump?.important ? '川普重點快訊' : focus;
 
   const quoteBadge = document.getElementById('quote-badge');
   const feedBadge = document.getElementById('feed-badge');
