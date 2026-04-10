@@ -290,7 +290,7 @@ function renderQuotes(quotes) {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-mini-stat">現價</span> ${q.price != null ? q.price : '—'} <span class="quote-mini-stat">漲跌</span> ${formatChangePct(q.changePct)} <span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong>　<span class="quote-change-label">漲跌</span> <strong class="quote-change-value ${cls}">${formatChangePct(q.changePct)}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small></span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${formatChangePct(q.changePct)}</b></span>`;
     list.appendChild(li);
   });
 }
