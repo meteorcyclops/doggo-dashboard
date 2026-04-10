@@ -39,11 +39,11 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T06:48:04Z",
+  "generatedAt": "2026-04-10T14:34:31Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T06:47:36Z",
+    "asOf": "2026-04-10T14:34:05Z",
     "items": [
       {
         "symbol": "2330",
@@ -951,44 +951,44 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
-        "title": "北市汰換節能設備補助2.1億 蔣萬安承諾將持續補助",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399456",
-        "time": "Fri, 10 Apr 2026 14:29:51 +0800"
+        "title": "美伊週六停火談判 范斯警告：不要耍我們",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5400126",
+        "time": "Fri, 10 Apr 2026 22:19:54 +0800"
       },
       {
-        "title": "中鋼3月營收286.22億元、年減2.3％  Q2接單優於Q1",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399512",
-        "time": "Fri, 10 Apr 2026 14:27:27 +0800"
+        "title": "送油又親訪力挺盟邦古巴 俄副外長：莫斯科不會離開西半球",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5400118",
+        "time": "Fri, 10 Apr 2026 22:14:02 +0800"
       },
       {
-        "title": "網銀、APP登入異常 國泰世華：已啟動緊急處置",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399503",
-        "time": "Fri, 10 Apr 2026 14:26:25 +0800"
+        "title": "美汽油價格飆漲21.2％  推升3月CPI年增3.3％",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5400110",
+        "time": "Fri, 10 Apr 2026 22:12:53 +0800"
       },
       {
-        "title": "勞動人權、移工引進新制 工總憂成本增 盼修法前有3年調適期",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399461",
-        "time": "Fri, 10 Apr 2026 14:24:17 +0800"
+        "title": "白宮官員：馬克宏「懇求」川普出席G7峰會",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5399950",
+        "time": "Fri, 10 Apr 2026 22:07:11 +0800"
       },
       {
-        "title": "韓媒爆三星2奈米良率死穴未解 台積電有望通吃高通下一代AP訂單",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399448",
-        "time": "Fri, 10 Apr 2026 14:23:16 +0800"
+        "title": "「孤立主義」合德黑蘭胃口？范斯認為自己能在談判中發揮作用",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5400108",
+        "time": "Fri, 10 Apr 2026 22:06:06 +0800"
       },
       {
-        "title": "塑化報價大漲 台塑四寶3月營收大爆發Q1全數轉盈",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399452",
-        "time": "Fri, 10 Apr 2026 13:55:52 +0800"
+        "title": "歷經10年 兆豐銀紐約分行裁罰令終獲撤銷",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5400095",
+        "time": "Fri, 10 Apr 2026 21:44:14 +0800"
       },
       {
-        "title": "食物中毒頻傳 攤商未投保產品責任險恐受罰 兆豐保險祭低門檻方案",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399447",
-        "time": "Fri, 10 Apr 2026 13:53:21 +0800"
+        "title": "伊朗想強索荷姆茲「買路財」！英媒曝1殘酷現實",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5400049",
+        "time": "Fri, 10 Apr 2026 21:40:36 +0800"
       },
       {
-        "title": "史上最強！台積電3月與Q1營收雙雙創新高",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399442",
-        "time": "Fri, 10 Apr 2026 13:51:21 +0800"
+        "title": "回應梅蘭妮亞談話 艾普斯坦控訴者喊話司法部釋出剩餘檔案",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5400094",
+        "time": "Fri, 10 Apr 2026 21:38:00 +0800"
       }
     ]
   },
@@ -998,49 +998,49 @@
         "key": "shipai",
         "label": "石牌",
         "icon": "☀️",
-        "tempC": 28.1,
+        "tempC": 23.1,
         "rainChance": 0,
-        "weatherCode": 0,
-        "advice": "短袖或薄襯衫就夠，早晚可帶薄外套。",
-        "feel": "短袖可，早晚可帶薄外套。",
+        "weatherCode": 1,
+        "advice": "建議薄外套，體感比較穩。",
+        "feel": "薄外套剛好。",
         "next3h": {
           "rainPeak": 0,
-          "tempMin": 27.4,
-          "tempMax": 28.1
+          "tempMin": 22.3,
+          "tempMax": 23.5
         },
-        "asOf": "2026-04-10T14:45"
+        "asOf": "2026-04-10T22:30"
       },
       {
         "key": "zhonghe",
         "label": "中和",
         "icon": "☀️",
-        "tempC": 30.2,
+        "tempC": 22.8,
         "rainChance": 0,
         "weatherCode": 1,
-        "advice": "短袖就好，注意防曬和補水。",
-        "feel": "悶熱，注意補水。",
+        "advice": "建議薄外套，體感比較穩。",
+        "feel": "薄外套剛好。",
         "next3h": {
           "rainPeak": 0,
-          "tempMin": 29.4,
-          "tempMax": 30.4
+          "tempMin": 22.8,
+          "tempMax": 22.9
         },
-        "asOf": "2026-04-10T14:45"
+        "asOf": "2026-04-10T22:30"
       },
       {
         "key": "songshan",
         "label": "松山",
-        "icon": "☀️",
-        "tempC": 31.4,
+        "icon": "☁️",
+        "tempC": 23.9,
         "rainChance": 0,
-        "weatherCode": 1,
-        "advice": "短袖就好，注意防曬和補水。",
-        "feel": "悶熱，注意補水。",
+        "weatherCode": 2,
+        "advice": "建議薄外套，體感比較穩。",
+        "feel": "薄外套剛好。",
         "next3h": {
           "rainPeak": 0,
-          "tempMin": 30.8,
-          "tempMax": 31.4
+          "tempMin": 23.5,
+          "tempMax": 24.0
         },
-        "asOf": "2026-04-10T14:45"
+        "asOf": "2026-04-10T22:30"
       }
     ],
     "summary": "今天大致穩。",
@@ -1048,7 +1048,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-10T06:47:59Z",
+    "asOf": "2026-04-10T14:34:26Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1185,70 +1185,69 @@
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T06:47:59Z",
+    "asOf": "2026-04-10T14:34:26Z",
     "items": [
+      {
+        "postedAtTw": "2026-04-10T21:31:00+08:00",
+        "excerpt": "WORLD’S MOST POWERFUL RESET!!! President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37687",
+        "excerptZhTw": "史上最強重置！！！DJT"
+      },
       {
         "postedAtTw": "2026-04-10T13:15:00+08:00",
         "excerpt": "Trump upends China’s lucrative sanctioned oil import scheme after Iran, Venezuela interventions: https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran",
         "url": "https://www.trumpstruth.org/statuses/37686",
         "important": true,
-        "excerptZhTw": "在伊朗和委內瑞拉幹預後，川普顛覆了中國利潤豐厚的製裁石油進口計畫：https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran"
+        "excerptZhTw": "在伊朗和委內瑞拉幹預後，川普打亂了中國那套很賺錢的制裁石油進口盤算：https://justthenews.com/government/diplomacy/trump-upends-chinas-lucrative-sanctioned-oil-import-scheme-after-iran"
       },
       {
         "postedAtTw": "2026-04-10T13:14:00+08:00",
         "excerpt": "Two more major pharmaceutical companies to launch products through TrumpRx: https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx",
         "url": "https://www.trumpstruth.org/statuses/37684",
-        "excerptZhTw": "另外兩家主要製藥公司將透過 TrumpRx 推出產品：https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx"
+        "excerptZhTw": "又有兩家大型製藥公司會透過 TrumpRx 推出產品：https://justthenews.com/politics-policy/health/two-more-major-pharmaceutical-companies-launch-products-through-trumprx"
       },
       {
         "postedAtTw": "2026-04-10T13:13:00+08:00",
         "excerpt": "With Trump at the joystick, moon mission launches patriotism ahead of America’s 250th: https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250",
         "url": "https://www.trumpstruth.org/statuses/37685",
-        "excerptZhTw": "在川普的操縱桿下，登月任務在美國成立 250 週年之前激發了愛國主義：https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250"
+        "excerptZhTw": "在川普主導下，登月任務替美國 250 週年前的氣氛先暖身，也把愛國情緒再度炒熱：https://justthenews.com/government/white-house/trump-hard-launched-summer-patriotism-artemis-ii-return-and-upcoming-250"
       },
       {
         "postedAtTw": "2026-04-10T07:49:00+08:00",
         "excerpt": "An Illegal Alien Criminal from Haiti, who was released into our Country by the WORST President in History, Crooked Joe Biden, and the Radical Democrats in Congress, just beat an innocent woman to death with a hammer at…",
         "url": "https://www.trumpstruth.org/statuses/37682",
-        "excerptZhTw": "一名來自海地的非法外籍罪犯，被歷史上最糟糕的總統、狡猾的喬·拜登和國會中的激進民主黨人釋放到我國，他剛剛用錘子將一名無辜婦女打死…"
+        "excerptZhTw": "一名來自海地的非法移民罪犯，被史上最糟的總統喬·拜登和國會裡的激進民主黨人放進美國，他剛剛拿鐵鎚活活打死一名無辜女子…"
       },
       {
         "postedAtTw": "2026-04-10T07:45:00+08:00",
         "excerpt": "Highly Respected Prime Minister of Hungary, Viktor Orbán, is a truly strong and powerful Leader, with a proven track record of delivering phenomenal results. He fights tirelessly for, and loves, his Great Country and Pe…",
         "url": "https://www.trumpstruth.org/statuses/37683",
-        "excerptZhTw": "備受尊敬的匈牙利總理維克多·歐爾班是一位真正強大而有力的領導人，擁有驚人成果的良好記錄。他為他偉大的國家和人民不懈奮鬥並熱愛…"
+        "excerptZhTw": "頗受敬重的匈牙利總理維克多·歐爾班是一位很有份量的領導人，過去交出的成績也很亮眼。他一直在為自己的國家和人民拚命，也是真的很愛他的國家…"
       },
       {
         "postedAtTw": "2026-04-10T07:34:00+08:00",
         "excerpt": "My friend, Congresswoman Elise Stefanik, of New York, has written a new book, \"POISONED IVIES: The Inside Account of the Academic and Moral Rot at America’s Elite Universities.\" There is nobody more qualified to speak o…",
         "url": "https://www.trumpstruth.org/statuses/37680",
-        "excerptZhTw": "我的朋友、紐約州國會女議員埃莉斯·斯特凡尼克（Elise Stefanik）寫了一本新書，《有毒的藤蔓：美國精英大學學術和道德腐爛的內幕》。沒有人更有資格發言…"
+        "excerptZhTw": "我的朋友、紐約州國會女議員埃莉斯·斯特凡尼克（Elise Stefanik）出了新書，《有毒的藤蔓：美國精英大學學術和道德腐爛的內幕》。沒有誰比她更適合談這件事…"
       },
       {
         "postedAtTw": "2026-04-10T07:32:00+08:00",
         "excerpt": "I am pleased to nominate Benjamin Flowers to serve as Judge on the United States Court of Appeals for the Sixth Circuit in Ohio. Ben is a Highly Respected attorney who served as the Solicitor General of Ohio, where he r…",
         "url": "https://www.trumpstruth.org/statuses/37681",
-        "excerptZhTw": "我很高興提名本傑明·弗勞爾斯 (Benjamin Flowers) 擔任俄亥俄州美國第六巡迴上訴法院法官。本是一位備受尊敬的律師，曾擔任俄亥俄州副檢察長，在那裡他…"
+        "excerptZhTw": "我很高興提名本傑明·弗勞爾斯 (Benjamin Flowers) 擔任俄亥俄州美國第六巡迴上訴法院法官。本是一位頗受敬重的律師，曾擔任俄亥俄州副檢察長，在那裡他…"
       },
       {
         "postedAtTw": "2026-04-10T06:29:00+08:00",
         "excerpt": "Iran is doing a very poor job, dishonorable some would say, of allowing Oil to go through the Strait of Hormuz. That is not the agreement we have! President DONALD J. TRUMP",
         "url": "https://www.trumpstruth.org/statuses/37679",
         "important": true,
-        "excerptZhTw": "伊朗在允許石油通過霍爾木茲海峽方面做得非常糟糕，有些人會說這是不光彩的。那不是我們的協議！唐納德·J·特朗普總統"
+        "excerptZhTw": "伊朗在允許石油通過霍爾木茲海峽方面做得很差，有人會說這是不光彩的。那不是我們的協議！唐納德·J·川普總統"
       },
       {
         "postedAtTw": "2026-04-10T05:43:00+08:00",
         "excerpt": "President Donald J. Trump and Secretary of the Interior, Doug Burgum, are proud to be fixing the once beautiful Reflecting Pool between The Washington Monument and The Lincoln Memorial. We were told it was going to take…",
         "url": "https://www.trumpstruth.org/statuses/37678",
-        "excerptZhTw": "唐納德·J·特朗普總統和內政部長道格·布爾古姆很自豪能夠修復華盛頓紀念碑和林肯紀念堂之間曾經美麗的倒影池。我們被告知這將需要..."
-      },
-      {
-        "postedAtTw": "2026-04-10T05:28:00+08:00",
-        "excerpt": "The Wall Street Journal, one of the worst and most inaccurate “Editorial Boards” in the World, stated that I “declared premature victory in Iran.” Actually, it is a Victory, and there’s nothing “premature” about it! Bec…",
-        "url": "https://www.trumpstruth.org/statuses/37677",
-        "important": true,
-        "excerptZhTw": "世界上最糟糕、最不準確的「編輯委員會」之一《華爾街日報》稱，我「宣佈在伊朗取得了過早的勝利」。事實上，這是一場勝利，並沒有什麼「過早」的事情！貝克…"
+        "excerptZhTw": "唐納德·J·川普總統和內政部長道格·布爾古姆很自豪能推動整修華盛頓紀念碑和林肯紀念堂之間曾經美麗的倒影池。我們被告知這將需要..."
       }
     ]
   }
