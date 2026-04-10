@@ -414,7 +414,8 @@ function renderWeather(weather) {
   const commute = document.getElementById('weather-commute');
   if (!list) return;
   list.innerHTML = '';
-  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : '石牌 / 中和 / 松山 即時整理';
+  const latestAsOf = weather?.items?.map((item) => item.asOf).filter(Boolean).sort().slice(-1)[0];
+  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : `石牌 / 中和 / 松山 即時整理 · 更新 ${formatShortDateTime(latestAsOf)}`;
   if (summary) summary.textContent = weather?.summary || '狗狗正在看今天要不要帶傘。';
   if (commute) commute.textContent = weather?.commuteWatch || '女友今天移動路線的提醒整理中。';
   const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf });
@@ -424,7 +425,8 @@ function renderWeather(weather) {
   }
   weather.items.forEach((item) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${item.icon || '🌤️'} ${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.advice || ''}</small></span><b class="ok">天氣</b>`;
+    const next = item.next3h || {};
+    li.innerHTML = `<span>${item.icon || '🌤️'} ${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.feel || item.advice || ''}<br>接下來 3 小時：最高降雨 ${next.rainPeak != null ? `${Math.round(next.rainPeak)}%` : '—'} · ${next.tempMin != null && next.tempMax != null ? `${Math.round(next.tempMin)}°-${Math.round(next.tempMax)}°` : '溫度整理中'}</small></span><b class="ok">天氣</b>`;
     list.appendChild(li);
   });
   pulseChildren('#weather-list > li');

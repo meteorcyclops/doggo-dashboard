@@ -263,10 +263,10 @@ def weather_summary(items: list[dict[str, Any]]) -> str:
         return "今天先看天空臉色，天氣資料還沒整理好。"
     max_rain = max((item.get('rainChance') or 0) for item in items)
     if max_rain >= 60:
-        return "今天至少有一區降雨偏高，出門建議帶傘。"
+        return "出門建議帶傘。"
     if max_rain >= 30:
-        return "今天局部有點不穩，帶輕便雨具會比較安心。"
-    return "今天大致穩定，多數時段可輕裝出門。"
+        return "可能遇到零星雨。"
+    return "今天大致穩。"
 
 
 def commute_watch(items: list[dict[str, Any]]) -> str:
@@ -284,6 +284,24 @@ def commute_watch(items: list[dict[str, Any]]) -> str:
     return "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
 
 
+def weather_feel_text(temp: float | None, rain: float | None) -> str:
+    if temp is None:
+        return "帶件薄外套，先看天空臉色。"
+    if rain is not None and rain >= 60:
+        if temp >= 26:
+            return "短袖可，帶傘。"
+        if temp >= 20:
+            return "薄外套剛好，記得帶傘。"
+        return "外套加雨具，今天偏濕涼。"
+    if temp >= 30:
+        return "悶熱，注意補水。"
+    if temp >= 24:
+        return "短袖可，早晚可帶薄外套。"
+    if temp >= 18:
+        return "薄外套剛好。"
+    return "建議外套。"
+
+
 def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -293,14 +311,19 @@ def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dic
                 "https://api.open-meteo.com/v1/forecast"
                 f"?latitude={spot['lat']}&longitude={spot['lon']}"
                 "&current=temperature_2m,weather_code,precipitation_probability"
+                "&hourly=precipitation_probability,temperature_2m"
+                "&forecast_hours=3"
                 "&timezone=Asia%2FTaipei"
             )
             r = session.get(url, timeout=REQUEST_TIMEOUT)
             r.raise_for_status()
             data = r.json()
             current = data.get('current', {})
+            hourly = data.get('hourly', {}) or {}
             temp = current.get('temperature_2m')
             rain = current.get('precipitation_probability')
+            next_rain = hourly.get('precipitation_probability', [])[:3]
+            next_temp = hourly.get('temperature_2m', [])[:3]
             code = current.get('weather_code')
             items.append({
                 'key': spot['key'],
@@ -310,6 +333,12 @@ def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dic
                 'rainChance': int(round(float(rain))) if rain is not None else None,
                 'weatherCode': code,
                 'advice': weather_outfit_advice(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
+                'feel': weather_feel_text(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
+                'next3h': {
+                    'rainPeak': max(next_rain) if next_rain else rain,
+                    'tempMin': min(next_temp) if next_temp else temp,
+                    'tempMax': max(next_temp) if next_temp else temp,
+                },
                 'asOf': current.get('time'),
             })
         except Exception as exc:  # noqa: BLE001
