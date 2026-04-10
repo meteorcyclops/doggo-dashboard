@@ -501,8 +501,6 @@ function renderLayoutOptions() {
     });
   });
 }
-  });
-}
 
 function loadLocalPreferences() {
   try {
