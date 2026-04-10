@@ -669,6 +669,7 @@ async function loadData(opts = {}) {
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
+      const buildTrigger = buildTriggerLabel(data.buildTrigger);
       hint.textContent = `已載入資料 · 本地 ${localT} · 更新來源 ${buildTrigger} · 最後建置 ${fresh}`;
     }
   } catch (err) {
