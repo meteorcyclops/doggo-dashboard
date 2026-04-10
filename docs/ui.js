@@ -17,6 +17,15 @@ function timeAgo(ms) {
   return `${Math.floor(hours / 24)} 天前`;
 }
 
+function freshnessLabel(iso) {
+  if (!iso) return { text: '無紀錄', cls: 'warn' };
+  const ts = new Date(iso).getTime();
+  const diffMin = Math.max(0, Math.floor((Date.now() - ts) / 60000));
+  if (diffMin <= 5) return { text: `${timeAgo(ts)} · 新鮮`, cls: 'ok' };
+  if (diffMin <= 15) return { text: `${timeAgo(ts)} · 稍舊`, cls: 'warn' };
+  return { text: `${timeAgo(ts)} · 可能過期`, cls: 'danger' };
+}
+
 function mapStatus(job) {
   const status = job.state?.lastStatus || 'unknown';
   if (status === 'ok') return { badge: 'OK', cls: 'ok', desc: job.desc || '狀態穩定' };
@@ -527,6 +536,7 @@ function renderSummary(data) {
   const genAt = data.generatedAt
     ? new Date(data.generatedAt).toLocaleString('zh-TW', { hour12: false })
     : '—';
+  const freshness = freshnessLabel(data.generatedAt);
   const quoteAsOf = data.quotes?.asOf
     ? new Date(data.quotes.asOf).toLocaleString('zh-TW', { hour12: false })
     : '—';
@@ -554,6 +564,7 @@ function renderSummary(data) {
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
     <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
+    <li><span>資料新鮮度</span><b class="${freshness.cls}">${escHtml(freshness.text)}</b></li>
   `;
 }
 
@@ -597,7 +608,8 @@ async function loadData(opts = {}) {
     staggerFeedLists(silent);
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false });
-      hint.textContent = `已載入資料 · 本地 ${localT} · 報價與摘要於建置時更新`;
+      const fresh = freshnessLabel(data.generatedAt).text;
+      hint.textContent = `已載入資料 · 本地 ${localT} · 最後建置 ${fresh}`;
     }
   } catch (err) {
     if (hint) hint.textContent = `資料讀取失敗：${err.message}`;
