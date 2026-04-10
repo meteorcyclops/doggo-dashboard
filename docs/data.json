@@ -39,14 +39,14 @@
       }
     }
   ],
-  "generatedAt": "2026-04-10T02:52:41Z",
+  "generatedAt": "2026-04-10T03:00:53Z",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-10T02:52:16Z",
+    "asOf": "2026-04-10T03:00:27Z",
     "items": [
       {
         "symbol": "2330",
-        "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
+        "name": "台積電",
         "price": 1980.0,
         "change": 25.0,
         "changePct": 1.28,
@@ -64,7 +64,7 @@
       },
       {
         "symbol": "2317",
-        "name": "HON HAI PRECISION INDUSTRY",
+        "name": "鴻海",
         "price": 201.5,
         "change": 1.5,
         "changePct": 0.75,
@@ -82,7 +82,7 @@
       },
       {
         "symbol": "2454",
-        "name": "MEDIATEK INC",
+        "name": "聯發科",
         "price": 1570.0,
         "change": -5.0,
         "changePct": -0.32,
@@ -100,7 +100,7 @@
       },
       {
         "symbol": "2412",
-        "name": "CHUNGHWA TELECOM",
+        "name": "中華電",
         "price": 135.0,
         "change": 0.0,
         "changePct": 0.0,
@@ -118,7 +118,7 @@
       },
       {
         "symbol": "6505",
-        "name": "FORMOSA PETROCHEMICAL CORPORATI",
+        "name": "台塑化",
         "price": 51.7,
         "change": -1.0,
         "changePct": -1.9,
@@ -136,10 +136,10 @@
       },
       {
         "symbol": "2308",
-        "name": "DELTA ELECTRONIC",
-        "price": 1725.0,
-        "change": 80.0,
-        "changePct": 4.86,
+        "name": "台達電",
+        "price": 1730.0,
+        "change": 85.0,
+        "changePct": 5.17,
         "prevClose": 1645.0,
         "dayHigh": 1735.0,
         "dayLow": 1675.0,
@@ -148,16 +148,16 @@
           1515.0,
           1665.0,
           1645.0,
-          1725.0
+          1730.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2303",
-        "name": "UNITED MICRO ELECTRONICS",
-        "price": 62.7,
-        "change": 2.7,
-        "changePct": 4.5,
+        "name": "聯電",
+        "price": 62.6,
+        "change": 2.6,
+        "changePct": 4.33,
         "prevClose": 60.0,
         "dayHigh": 63.5,
         "dayLow": 59.3,
@@ -166,31 +166,31 @@
           58.3,
           60.3,
           60.0,
-          62.7
+          62.6
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2881",
-        "name": "FUBON FINANCIAL HLDG CO LTD",
-        "price": 87.6,
-        "change": -0.9,
-        "changePct": -1.02,
+        "name": "富邦金",
+        "price": 87.5,
+        "change": -1.0,
+        "changePct": -1.13,
         "prevClose": 88.5,
         "dayHigh": 88.2,
-        "dayLow": 87.5,
+        "dayLow": 87.4,
         "series": [
           87.8,
           87.7,
           89.2,
           88.5,
-          87.6
+          87.5
         ],
         "pattern": "range"
       },
       {
         "symbol": "2882",
-        "name": "CATHAY FINANCIAL HLDG CO",
+        "name": "國泰金",
         "price": 72.6,
         "change": -1.0,
         "changePct": -1.36,
@@ -208,10 +208,10 @@
       },
       {
         "symbol": "1303",
-        "name": "NAN YA PLASTIC",
-        "price": 81.6,
-        "change": -3.6,
-        "changePct": -4.23,
+        "name": "南亞",
+        "price": 81.8,
+        "change": -3.4,
+        "changePct": -3.99,
         "prevClose": 85.2,
         "dayHigh": 87.2,
         "dayLow": 81.2,
@@ -220,34 +220,34 @@
           80.5,
           85.1,
           85.2,
-          81.6
+          81.8
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "1301",
-        "name": "FORMOSA PLASTIC",
-        "price": 46.55,
-        "change": -0.85,
-        "changePct": -1.79,
+        "name": "台塑",
+        "price": 46.5,
+        "change": -0.9,
+        "changePct": -1.9,
         "prevClose": 47.4,
         "dayHigh": 47.9,
-        "dayLow": 46.45,
+        "dayLow": 46.4,
         "series": [
           45.9,
           47.5,
           47.2,
           47.4,
-          46.55
+          46.5
         ],
         "pattern": "volatile"
       },
       {
         "symbol": "2002",
-        "name": "CHINA STEEL CORP",
-        "price": 20.15,
-        "change": -0.05,
-        "changePct": -0.25,
+        "name": "中鋼",
+        "price": 20.1,
+        "change": -0.1,
+        "changePct": -0.5,
         "prevClose": 20.2,
         "dayHigh": 20.55,
         "dayLow": 20.05,
@@ -256,13 +256,13 @@
           19.5,
           19.95,
           20.2,
-          20.15
+          20.1
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2886",
-        "name": "MEGA FINANCIAL HOLDING CO",
+        "name": "兆豐金",
         "price": 39.75,
         "change": 0.0,
         "changePct": 0.0,
@@ -280,10 +280,10 @@
       },
       {
         "symbol": "2891",
-        "name": "CTBC FINANCIAL HOLDINGS COMPANY",
-        "price": 53.9,
-        "change": -0.9,
-        "changePct": -1.64,
+        "name": "中信金",
+        "price": 53.8,
+        "change": -1.0,
+        "changePct": -1.82,
         "prevClose": 54.8,
         "dayHigh": 54.4,
         "dayLow": 53.6,
@@ -292,13 +292,13 @@
           55.8,
           56.5,
           54.8,
-          53.9
+          53.8
         ],
-        "pattern": "range"
+        "pattern": "downtrend"
       },
       {
         "symbol": "1216",
-        "name": "UNI-PRESIDENT ENTERPRISES CORP",
+        "name": "統一",
         "price": 72.0,
         "change": 0.0,
         "changePct": 0.0,
@@ -316,10 +316,10 @@
       },
       {
         "symbol": "2382",
-        "name": "QUANTA COMPUTER",
-        "price": 326.5,
-        "change": 13.5,
-        "changePct": 4.31,
+        "name": "廣達",
+        "price": 325.5,
+        "change": 12.5,
+        "changePct": 3.99,
         "prevClose": 313.0,
         "dayHigh": 327.5,
         "dayLow": 312.0,
@@ -328,13 +328,13 @@
           289.0,
           307.5,
           313.0,
-          326.5
+          325.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2884",
-        "name": "E SUN FINANCIAL HOLDINGS",
+        "name": "玉山金",
         "price": 32.4,
         "change": -0.2,
         "changePct": -0.61,
@@ -352,10 +352,10 @@
       },
       {
         "symbol": "2885",
-        "name": "YUANTA FINANCIAL HOLDING CO. LT",
-        "price": 48.05,
-        "change": 0.1,
-        "changePct": 0.21,
+        "name": "元大金",
+        "price": 47.95,
+        "change": 0.0,
+        "changePct": 0.0,
         "prevClose": 47.95,
         "dayHigh": 48.35,
         "dayLow": 47.85,
@@ -364,13 +364,13 @@
           46.5,
           47.1,
           47.95,
-          48.05
+          47.95
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "3711",
-        "name": "ASE TECHNOLOGY HOLDING CO LTD",
+        "name": "日月光投控",
         "price": 388.0,
         "change": -4.0,
         "changePct": -1.02,
@@ -388,25 +388,25 @@
       },
       {
         "symbol": "2880",
-        "name": "HUA NAN FINANCIAL HOLDINGS CO",
-        "price": 34.5,
-        "change": -0.1,
-        "changePct": -0.29,
+        "name": "華南金",
+        "price": 34.45,
+        "change": -0.15,
+        "changePct": -0.43,
         "prevClose": 34.6,
         "dayHigh": 34.85,
-        "dayLow": 34.45,
+        "dayLow": 34.4,
         "series": [
           33.85,
           34.0,
           33.95,
           34.6,
-          34.5
+          34.45
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "5880",
-        "name": "TAIWAN COOPERATIVE FINANCIAL HL",
+        "name": "合庫金",
         "price": 23.95,
         "change": -0.1,
         "changePct": -0.42,
@@ -424,7 +424,7 @@
       },
       {
         "symbol": "3045",
-        "name": "TAIWAN MOBILE CO",
+        "name": "台灣大",
         "price": 110.0,
         "change": 0.0,
         "changePct": 0.0,
@@ -442,10 +442,10 @@
       },
       {
         "symbol": "2883",
-        "name": "KGI FINANCIAL HOLDING CO LTD",
-        "price": 21.35,
-        "change": 0.05,
-        "changePct": 0.23,
+        "name": "凱基金",
+        "price": 21.4,
+        "change": 0.1,
+        "changePct": 0.47,
         "prevClose": 21.3,
         "dayHigh": 21.4,
         "dayLow": 21.25,
@@ -454,16 +454,16 @@
           20.55,
           21.35,
           21.3,
-          21.35
+          21.4
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2207",
-        "name": "HOTAI MOTOR CO",
-        "price": 510.0,
-        "change": 12.5,
-        "changePct": 2.51,
+        "name": "和泰車",
+        "price": 509.0,
+        "change": 11.5,
+        "changePct": 2.31,
         "prevClose": 497.5,
         "dayHigh": 511.0,
         "dayLow": 498.0,
@@ -472,16 +472,16 @@
           483.5,
           495.5,
           497.5,
-          510.0
+          509.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2912",
-        "name": "PRESIDENT CHAIN STORE CORP",
-        "price": 228.0,
-        "change": -3.0,
-        "changePct": -1.3,
+        "name": "統一超",
+        "price": 228.5,
+        "change": -2.5,
+        "changePct": -1.08,
         "prevClose": 231.0,
         "dayHigh": 231.0,
         "dayLow": 228.0,
@@ -490,16 +490,16 @@
           231.0,
           229.0,
           231.0,
-          228.0
+          228.5
         ],
         "pattern": "range"
       },
       {
         "symbol": "3008",
-        "name": "LARGAN PRECISION CO",
-        "price": 2315.0,
-        "change": 35.0,
-        "changePct": 1.54,
+        "name": "大立光",
+        "price": 2310.0,
+        "change": 30.0,
+        "changePct": 1.32,
         "prevClose": 2280.0,
         "dayHigh": 2325.0,
         "dayLow": 2285.0,
@@ -508,16 +508,16 @@
           2170.0,
           2280.0,
           2280.0,
-          2315.0
+          2310.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "4904",
-        "name": "FAR EASTONE TELECOMMUNICATIONS",
-        "price": 95.2,
-        "change": -0.1,
-        "changePct": -0.1,
+        "name": "遠傳",
+        "price": 95.1,
+        "change": -0.2,
+        "changePct": -0.21,
         "prevClose": 95.3,
         "dayHigh": 95.3,
         "dayLow": 94.1,
@@ -526,16 +526,16 @@
           93.3,
           93.3,
           95.3,
-          95.2
+          95.1
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "5871",
-        "name": "CHAILEASE HOLDING COMPANY LIMIT",
-        "price": 108.0,
-        "change": -0.5,
-        "changePct": -0.46,
+        "name": "中租-KY",
+        "price": 108.5,
+        "change": 0.0,
+        "changePct": 0.0,
         "prevClose": 108.5,
         "dayHigh": 109.5,
         "dayLow": 107.5,
@@ -544,16 +544,16 @@
           108.5,
           109.5,
           108.5,
-          108.0
+          108.5
         ],
         "pattern": "range"
       },
       {
         "symbol": "6415",
-        "name": "SILERGY CORP",
-        "price": 280.0,
-        "change": -2.0,
-        "changePct": -0.71,
+        "name": "矽力*-KY",
+        "price": 279.0,
+        "change": -3.0,
+        "changePct": -1.06,
         "prevClose": 282.0,
         "dayHigh": 294.5,
         "dayLow": 278.5,
@@ -562,13 +562,13 @@
           281.5,
           299.5,
           282.0,
-          280.0
+          279.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "3034",
-        "name": "NOVATEK MICROELECTRONICS",
+        "name": "聯詠",
         "price": 397.5,
         "change": -2.0,
         "changePct": -0.5,
@@ -586,31 +586,31 @@
       },
       {
         "symbol": "2892",
-        "name": "FIRST FINANCIAL HOLDING CO LTD",
-        "price": 28.8,
-        "change": -0.3,
-        "changePct": -1.03,
+        "name": "第一金",
+        "price": 28.85,
+        "change": -0.25,
+        "changePct": -0.86,
         "prevClose": 29.1,
         "dayHigh": 29.1,
-        "dayLow": 28.8,
+        "dayLow": 28.75,
         "series": [
           28.4,
           28.6,
           28.8,
           29.1,
-          28.8
+          28.85
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "1326",
-        "name": "FORMOSA CHEMICAL & FIBRE CO",
+        "name": "台化",
         "price": 45.1,
         "change": -0.5,
         "changePct": -1.1,
         "prevClose": 45.6,
         "dayHigh": 46.2,
-        "dayLow": 45.05,
+        "dayLow": 45.0,
         "series": [
           44.95,
           45.6,
@@ -622,10 +622,10 @@
       },
       {
         "symbol": "2603",
-        "name": "EVERGREEN MARINE CORP(TAIWAN)",
-        "price": 203.0,
-        "change": 0.0,
-        "changePct": 0.0,
+        "name": "長榮",
+        "price": 204.0,
+        "change": 1.0,
+        "changePct": 0.49,
         "prevClose": 203.0,
         "dayHigh": 204.0,
         "dayLow": 201.5,
@@ -634,16 +634,16 @@
           203.0,
           202.0,
           203.0,
-          203.0
+          204.0
         ],
         "pattern": "range"
       },
       {
         "symbol": "1101",
-        "name": "TCC GROUP HOLDINGS CO LTD",
-        "price": 25.55,
-        "change": 0.45,
-        "changePct": 1.79,
+        "name": "台泥",
+        "price": 25.6,
+        "change": 0.5,
+        "changePct": 1.99,
         "prevClose": 25.1,
         "dayHigh": 26.4,
         "dayLow": 25.3,
@@ -652,16 +652,16 @@
           24.0,
           25.4,
           25.1,
-          25.55
+          25.6
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2887",
-        "name": "TS FINANCIAL HOLDING CO LTD",
-        "price": 24.5,
-        "change": -0.15,
-        "changePct": -0.61,
+        "name": "台新金",
+        "price": 24.6,
+        "change": -0.05,
+        "changePct": -0.2,
         "prevClose": 24.65,
         "dayHigh": 24.65,
         "dayLow": 24.45,
@@ -670,16 +670,16 @@
           24.35,
           24.7,
           24.65,
-          24.5
+          24.6
         ],
         "pattern": "range"
       },
       {
         "symbol": "2327",
-        "name": "YAGEO CORP",
-        "price": 288.0,
-        "change": 6.5,
-        "changePct": 2.31,
+        "name": "國巨",
+        "price": 288.5,
+        "change": 7.0,
+        "changePct": 2.49,
         "prevClose": 281.5,
         "dayHigh": 292.0,
         "dayLow": 286.5,
@@ -688,16 +688,16 @@
           256.0,
           271.5,
           281.5,
-          288.0
+          288.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2357",
-        "name": "ASUSTEK COMPUTER INC",
-        "price": 578.0,
-        "change": 10.0,
-        "changePct": 1.76,
+        "name": "華碩",
+        "price": 577.0,
+        "change": 9.0,
+        "changePct": 1.58,
         "prevClose": 568.0,
         "dayHigh": 584.0,
         "dayLow": 576.0,
@@ -706,13 +706,13 @@
           550.0,
           562.0,
           568.0,
-          578.0
+          577.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2379",
-        "name": "REALTEK SEMICONDUCTOR CORP",
+        "name": "瑞昱",
         "price": 510.0,
         "change": -2.0,
         "changePct": -0.39,
@@ -730,10 +730,10 @@
       },
       {
         "symbol": "4938",
-        "name": "PEGATRON CORPORATION",
-        "price": 80.5,
-        "change": 0.5,
-        "changePct": 0.62,
+        "name": "和碩",
+        "price": 80.7,
+        "change": 0.7,
+        "changePct": 0.87,
         "prevClose": 80.0,
         "dayHigh": 81.0,
         "dayLow": 79.6,
@@ -742,16 +742,16 @@
           77.9,
           79.6,
           80.0,
-          80.5
+          80.7
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2408",
-        "name": "NANYA TECHNOLOGY CORPORATION",
-        "price": 212.0,
-        "change": 7.0,
-        "changePct": 3.41,
+        "name": "南亞科",
+        "price": 212.5,
+        "change": 7.5,
+        "changePct": 3.66,
         "prevClose": 205.0,
         "dayHigh": 220.0,
         "dayLow": 209.0,
@@ -760,13 +760,13 @@
           206.0,
           223.0,
           205.0,
-          212.0
+          212.5
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "1590",
-        "name": "AIRTAC INTERNATIONAL GROUP",
+        "name": "亞德客-KY",
         "price": 1110.0,
         "change": 35.0,
         "changePct": 3.26,
@@ -784,10 +784,10 @@
       },
       {
         "symbol": "3037",
-        "name": "UNIMICRON TECHNOLOGY",
-        "price": 631.0,
-        "change": 6.0,
-        "changePct": 0.96,
+        "name": "欣興",
+        "price": 636.0,
+        "change": 11.0,
+        "changePct": 1.76,
         "prevClose": 625.0,
         "dayHigh": 660.0,
         "dayLow": 620.0,
@@ -796,16 +796,16 @@
           564.0,
           620.0,
           625.0,
-          631.0
+          636.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2356",
-        "name": "INVENTEC CORP",
-        "price": 44.4,
-        "change": 0.6,
-        "changePct": 1.37,
+        "name": "英業達",
+        "price": 44.35,
+        "change": 0.55,
+        "changePct": 1.26,
         "prevClose": 43.8,
         "dayHigh": 44.75,
         "dayLow": 43.9,
@@ -814,13 +814,13 @@
           40.85,
           42.65,
           43.8,
-          44.4
+          44.35
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "2801",
-        "name": "CHANG HWA COMMERCIAL BANK LTD",
+        "name": "彰銀",
         "price": 21.05,
         "change": 0.05,
         "changePct": 0.24,
@@ -838,7 +838,7 @@
       },
       {
         "symbol": "2609",
-        "name": "YANG MING MARINE TRANSPORT CORP",
+        "name": "陽明",
         "price": 51.1,
         "change": -0.2,
         "changePct": -0.39,
@@ -856,10 +856,10 @@
       },
       {
         "symbol": "2615",
-        "name": "WAN HAI LINES",
-        "price": 78.0,
-        "change": -0.3,
-        "changePct": -0.38,
+        "name": "萬海",
+        "price": 77.9,
+        "change": -0.4,
+        "changePct": -0.51,
         "prevClose": 78.3,
         "dayHigh": 78.6,
         "dayLow": 77.6,
@@ -868,16 +868,16 @@
           79.4,
           78.8,
           78.3,
-          78.0
+          77.9
         ],
         "pattern": "range"
       },
       {
         "symbol": "8046",
-        "name": "NAN YA PRINTED CIRCUIT BOARD CO",
-        "price": 656.0,
-        "change": -13.0,
-        "changePct": -1.94,
+        "name": "南電",
+        "price": 664.0,
+        "change": -5.0,
+        "changePct": -0.75,
         "prevClose": 669.0,
         "dayHigh": 685.0,
         "dayLow": 646.0,
@@ -886,13 +886,13 @@
           624.0,
           637.0,
           669.0,
-          656.0
+          664.0
         ],
         "pattern": "uptrend"
       },
       {
         "symbol": "0050",
-        "name": "YUANTA SECURITIES INV TRUST CO ",
+        "name": "元大台灣50",
         "price": 80.3,
         "change": 1.1,
         "changePct": 1.39,
@@ -909,7 +909,7 @@
       },
       {
         "symbol": "0056",
-        "name": "YUANTA SECURITIES INV TRUST CO ",
+        "name": "元大高股息",
         "price": 39.49,
         "change": 0.47,
         "changePct": 1.2,
@@ -926,10 +926,10 @@
       },
       {
         "symbol": "2606",
-        "name": "U-MING MARINE TRANSPORT CORP",
-        "price": 61.0,
-        "change": 0.2,
-        "changePct": 0.33,
+        "name": "裕民",
+        "price": 61.1,
+        "change": 0.3,
+        "changePct": 0.49,
         "prevClose": 60.8,
         "dayHigh": 61.7,
         "dayLow": 61.0,
@@ -938,7 +938,7 @@
           59.6,
           60.7,
           60.8,
-          61.0
+          61.1
         ],
         "pattern": "uptrend"
       }
@@ -947,6 +947,16 @@
   "feed": {
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
+      {
+        "title": "因應伊朗戰爭衝擊 日本5月起加碼釋出20天石油儲備",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5399187",
+        "time": "Fri, 10 Apr 2026 10:54:11 +0800"
+      },
+      {
+        "title": "財富自由》投資大師選股-價值型選股專家",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5399215",
+        "time": "Fri, 10 Apr 2026 10:53:02 +0800"
+      },
       {
         "title": "首批印度移工將來台？ 民眾憂治安提案「立即中止」單日破3000人覆議直逼成案門檻",
         "url": "https://ec.ltn.com.tw/article/breakingnews/5399201",
@@ -976,26 +986,16 @@
         "title": "古巴總統接受美電視專訪 表態不辭職籲美國對話",
         "url": "https://news.ltn.com.tw/news/world/breakingnews/5399152",
         "time": "Fri, 10 Apr 2026 10:21:18 +0800"
-      },
-      {
-        "title": "焦點股》建通：台灣廠助攻3月營收創高 帶量大漲",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399178",
-        "time": "Fri, 10 Apr 2026 10:20:16 +0800"
-      },
-      {
-        "title": "家樂福插旗嘉義縣朴子 新店開幕設大創迪卡儂專區",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5399164",
-        "time": "Fri, 10 Apr 2026 10:18:55 +0800"
       }
     ]
   },
   "dog": {
-    "state": "excited",
-    "label": "活力滿滿盯盤中"
+    "state": "bone",
+    "label": "行情不錯，開心晃晃"
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-10T02:52:37Z",
+    "asOf": "2026-04-10T03:00:48Z",
     "items": [
       {
         "postedAtTw": "2026-04-10T07:49:00+08:00",
@@ -1039,7 +1039,7 @@
         "excerpt": "The Wall Street Journal, one of the worst and most inaccurate “Editorial Boards” in the World, stated that I “declared premature victory in Iran.” Actually, it is a Victory, and there’s nothing “premature” about it! Bec…",
         "url": "https://www.trumpstruth.org/statuses/37677",
         "important": true,
-        "excerptZhTw": "世界上最糟糕、最不準確的「編輯委員會」之一《華爾街日報》稱，我「宣佈在伊朗取得了過早的勝利」。事實上，這是一場勝利，並沒有什麼「過早」的事情！贝克…"
+        "excerptZhTw": "世界上最糟糕、最不準確的「編輯委員會」之一《華爾街日報》稱，我「宣佈在伊朗取得了過早的勝利」。事實上，這是一場勝利，並沒有什麼「過早」的事情！貝克…"
       },
       {
         "postedAtTw": "2026-04-10T05:08:00+08:00",
