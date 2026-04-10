@@ -182,11 +182,65 @@ function topImportantTrump(data) {
   return data?.trumpTruth?.items?.find((item) => item.important) || null;
 }
 
+function topTwMover(data) {
+  return data?.quotes?.items?.[0] || null;
+}
+
+function topUsMover(data) {
+  return data?.usQuotes?.items?.[0] || null;
+}
+
+function computeTopFocus(data) {
+  const hotTrump = topImportantTrump(data);
+  if (hotTrump) {
+    return {
+      key: 'trump',
+      label: '川普重點快訊',
+      detail: hotTrump.dogSummary || hotTrump.excerptZhTw || hotTrump.excerpt || '川普快訊',
+      state: 'worried',
+      mode: 'ALERT MODE',
+    };
+  }
+  const topUs = topUsMover(data);
+  if (topUs && Math.abs(Number(topUs.changePct) || 0) >= 2) {
+    return {
+      key: 'us-quotes',
+      label: '美股快報',
+      detail: topUs.dogSummary || `${topUs.symbol} ${formatChangePct(topUs.changePct)}`,
+      state: 'work',
+      mode: 'US MODE',
+    };
+  }
+  const topTw = topTwMover(data);
+  if (topTw && Math.abs(Number(topTw.changePct) || 0) >= 1.5) {
+    return {
+      key: 'quotes',
+      label: '台股快報',
+      detail: topTw.dogSummary || `${topTw.symbol} ${formatChangePct(topTw.changePct)}`,
+      state: 'work',
+      mode: 'MARKET MODE',
+    };
+  }
+  if (data?.feed?.items?.length) {
+    return {
+      key: 'feed',
+      label: '新聞雷達',
+      detail: '狗狗正在整理外部新聞，幫你快速抓情緒背景。',
+      state: 'ok',
+      mode: 'SCAN MODE',
+    };
+  }
+  return {
+    key: 'doggo',
+    label: '狗狗主舞台',
+    detail: '狗狗正在整理今天值得先看的線索。',
+    state: 'idle',
+    mode: 'IDLE MODE',
+  };
+}
+
 function heroFocusLabel(data) {
-  if (topImportantTrump(data)) return '川普發言快訊';
-  if (data?.feed?.items?.length) return '新聞雷達';
-  if (data?.quotes?.items?.length) return '台股快報';
-  return '狗狗主舞台';
+  return computeTopFocus(data).label;
 }
 
 function battleModeLabel(data) {
@@ -201,6 +255,8 @@ function battleRhythmLabel(session, prov) {
 }
 
 function battleBroadcastDetail(data, focus) {
+  const topFocus = computeTopFocus(data);
+  if (focus === topFocus.label) return topFocus.detail;
   const hotTrump = topImportantTrump(data);
   if (focus === '川普發言快訊' && hotTrump?.dogSummary) return hotTrump.dogSummary;
   if (focus === '川普發言快訊') return '狗狗正在播報高波動政治訊號與翻譯摘要。';
@@ -208,9 +264,7 @@ function battleBroadcastDetail(data, focus) {
   if (focus === '台股快報') return '狗狗正在盯盤面變化與主要股票快照。';
   if (focus === '美股快報') return '狗狗正在看今晚美股誰最有動靜。';
   if (focus === '8-bit 留言板') return '狗狗正在翻看牆上的便條紙和大家留下的心情。';
-  return hotTrump
-    ? '狗狗正在優先播報最值得先看的重點快訊。'
-    : '狗狗正在整理今天值得先看的線索。';
+  return topFocus.detail;
 }
 
 function dogGuideLine(target) {
@@ -738,18 +792,18 @@ function animateBattleHud() {
 
 function buildBroadcastItems(data) {
   const items = [];
-  const hotTrump = topImportantTrump(data);
-  if (hotTrump) {
-    const hotText = hotTrump.excerptZhTw || hotTrump.excerpt || '川普重點快訊';
+  const topFocus = computeTopFocus(data);
+  if (topFocus?.key !== 'doggo') {
     items.push({
-      focus: '川普發言快訊',
-      mode: 'ALERT MODE',
-      state: 'worried',
-      title: '川普重點快訊',
-      detail: (hotTrump.dogSummary || hotText).slice(0, 42) + ((hotTrump.dogSummary || hotText).length > 42 ? '…' : ''),
-      bubble: `狗狗快報：${(hotTrump.dogSummary || hotText).replace(/^狗狗重點：/, '').slice(0, 60)}${(hotTrump.dogSummary || hotText).length > 60 ? '…' : ''}`,
+      focus: topFocus.label,
+      mode: topFocus.mode,
+      state: topFocus.state,
+      title: topFocus.label,
+      detail: topFocus.detail.slice(0, 42) + (topFocus.detail.length > 42 ? '…' : ''),
+      bubble: `狗狗快報：${topFocus.detail.replace(/^狗狗重點：/, '').slice(0, 60)}${topFocus.detail.length > 60 ? '…' : ''}`,
     });
   }
+  const hotTrump = topImportantTrump(data);
   for (const q of data?.quotes?.items || []) {
     items.push({
       focus: '台股快報',
@@ -892,7 +946,8 @@ function renderSummary(data) {
   const dogLabel = data.dog?.label || '今日';
   const mood = dogMoodCN(currentDogState || data.dog?.state || 'idle');
   const heroDogText = heroDogStatusText(data, { jammed, alerts });
-  const focus = heroFocusLabel(data);
+  const topFocus = computeTopFocus(data);
+  const focus = topFocus.label;
   const hotTrump = topImportantTrump(data);
   const prov = data.provenance || '—';
   const buildTrigger = buildTriggerLabel(data.buildTrigger);
@@ -932,9 +987,9 @@ function renderSummary(data) {
   const trumpRow = trumpSummaryRow(data.trumpTruth);
 
   document.getElementById('hero-session').textContent = session;
-  document.getElementById('hero-dog-state').textContent = hotTrump?.dogSummary || heroDogText;
+  document.getElementById('hero-dog-state').textContent = topFocus.detail || hotTrump?.dogSummary || heroDogText;
   document.getElementById('hero-provenance').textContent = prov;
-  document.getElementById('hero-focus').textContent = hotTrump?.important ? '川普重點快訊' : focus;
+  document.getElementById('hero-focus').textContent = focus;
 
   const quoteBadge = document.getElementById('quote-badge');
   const feedBadge = document.getElementById('feed-badge');
