@@ -1104,7 +1104,7 @@ body[data-theme="night"] .frame {
 }
 .bottom-panels {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(220px, 0.6fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(220px, 0.5fr);
   gap: 12px;
   margin-top: 12px;
   align-items: start;
@@ -1114,6 +1114,9 @@ body[data-theme="night"] .frame {
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+}
+.player-box[data-card-id="squad"][hidden] {
+  display: none;
 }
 .player-box,
 .command-box,

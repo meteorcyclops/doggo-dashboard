@@ -6,7 +6,7 @@ const profileId = guestbookCfg.profileId || 'default';
 const supabase = guestbookCfg.supabaseUrl && guestbookCfg.supabaseAnonKey
   ? createClient(guestbookCfg.supabaseUrl, guestbookCfg.supabaseAnonKey)
   : null;
-const defaultVisibleCards = ['quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
+const defaultVisibleCards = ['squad', 'quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
 const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
@@ -480,6 +480,7 @@ function renderLayoutOptions() {
   const root = document.getElementById('layout-card-options');
   if (!root) return;
   const labels = {
+    squad: '狗狗小隊',
     quotes: '台股快報',
     weather: '生活天氣提醒',
     feed: '新聞雷達',
