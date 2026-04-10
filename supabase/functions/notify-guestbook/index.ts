@@ -22,8 +22,8 @@ Deno.serve(async (req) => {
       return new Response('missing NOTIFY_EMAIL_TO or NOTIFY_EMAIL_FROM', { status: 500, headers: corsHeaders })
     }
 
-    const subject = 'Doggo Dashboard 有新留言'
-    const text = `狗狗留言板有新便條紙\n\n來自：${nickname}\n內容：${message}${createdAt ? `\n時間：${createdAt}` : ''}`
+    const subject = `${nickname} 在 Doggo Dashboard 留言`
+    const text = `${message}${createdAt ? `\n\n時間：${createdAt}` : ''}`
 
     const resp = await fetch('https://api.resend.com/emails', {
       method: 'POST',
