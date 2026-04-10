@@ -609,6 +609,37 @@ body[data-theme="night"] .grass {
   background: linear-gradient(180deg, #d7ffe2 0%, #99ecb7 100%);
   border-color: #4b9d67;
 }
+.weather-panel {
+  order: -1;
+}
+.weather-head-actions {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.weather-toggle-btn {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+.weather-summary,
+.weather-commute {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--card-text);
+  border: 3px solid #8d86cb;
+  background: rgba(255,255,255,.72);
+}
+.weather-commute {
+  border-color: #d39a57;
+  background: linear-gradient(180deg, #fff8de 0%, #ffe8b6 100%);
+}
+.weather-panel-collapsed #weather-list,
+.weather-panel-collapsed #weather-summary,
+.weather-panel-collapsed #weather-commute {
+  display: none;
+}
 .hp-wrap {
   display: flex;
   align-items: center;

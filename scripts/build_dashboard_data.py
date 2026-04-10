@@ -226,6 +226,20 @@ def fetch_feed(urls: list[str], session: requests.Session) -> dict[str, Any]:
     return out
 
 
+def weather_icon(weather_code: int | None, rain: float | None) -> str:
+    if rain is not None and rain >= 60:
+        return "☔"
+    if weather_code in {0, 1}:
+        return "☀️"
+    if weather_code in {2, 3, 45, 48}:
+        return "☁️"
+    if weather_code in {51, 53, 55, 61, 63, 65, 80, 81, 82}:
+        return "🌧️"
+    if weather_code in {71, 73, 75, 85, 86}:
+        return "❄️"
+    return "🌤️"
+
+
 def weather_outfit_advice(temp: float | None, rain: float | None) -> str:
     if temp is None:
         return "帶件薄外套，先看天空臉色。"
@@ -242,6 +256,32 @@ def weather_outfit_advice(temp: float | None, rain: float | None) -> str:
     if temp >= 18:
         return "建議薄外套，體感比較穩。"
     return "建議外套，早晚會偏涼。"
+
+
+def weather_summary(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return "今天先看天空臉色，天氣資料還沒整理好。"
+    max_rain = max((item.get('rainChance') or 0) for item in items)
+    if max_rain >= 60:
+        return "今天至少有一區降雨偏高，出門建議帶傘。"
+    if max_rain >= 30:
+        return "今天局部有點不穩，帶輕便雨具會比較安心。"
+    return "今天大致穩定，多數時段可輕裝出門。"
+
+
+def commute_watch(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return "女友今天移動路線的天氣提醒還沒整理好。"
+    route = [item for item in items if item.get('key') in {'zhonghe', 'songshan'}]
+    if not route:
+        return "中和到松山這段目前沒有特別需要注意的區域。"
+    focus = max(route, key=lambda item: item.get('rainChance') or 0)
+    rain = focus.get('rainChance') or 0
+    if rain >= 60:
+        return f"女友今天在 {focus['label']} 這段比較需要注意，下雨機率偏高。"
+    if rain >= 30:
+        return f"女友今天移動到 {focus['label']} 一帶時，可能會遇到零星降雨。"
+    return "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
 
 
 def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dict[str, Any]:
@@ -261,18 +301,24 @@ def fetch_weather(spots: list[dict[str, Any]], session: requests.Session) -> dic
             current = data.get('current', {})
             temp = current.get('temperature_2m')
             rain = current.get('precipitation_probability')
+            code = current.get('weather_code')
             items.append({
                 'key': spot['key'],
                 'label': spot['label'],
+                'icon': weather_icon(code, float(rain) if rain is not None else None),
                 'tempC': round(float(temp), 1) if temp is not None else None,
                 'rainChance': int(round(float(rain))) if rain is not None else None,
-                'weatherCode': current.get('weather_code'),
+                'weatherCode': code,
                 'advice': weather_outfit_advice(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
                 'asOf': current.get('time'),
             })
         except Exception as exc:  # noqa: BLE001
             errors.append(f"{spot['label']}: {exc}")
-    out: dict[str, Any] = {'items': items}
+    out: dict[str, Any] = {
+        'items': items,
+        'summary': weather_summary(items),
+        'commuteWatch': commute_watch(items),
+    }
     if errors:
         out['error'] = '; '.join(errors[:3])
     return out

@@ -410,9 +410,13 @@ function renderTrumpTruth(trump) {
 function renderWeather(weather) {
   const list = document.getElementById('weather-list');
   const meta = document.getElementById('weather-meta');
+  const summary = document.getElementById('weather-summary');
+  const commute = document.getElementById('weather-commute');
   if (!list) return;
   list.innerHTML = '';
   if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : '石牌 / 中和 / 松山 即時整理';
+  if (summary) summary.textContent = weather?.summary || '狗狗正在看今天要不要帶傘。';
+  if (commute) commute.textContent = weather?.commuteWatch || '女友今天移動路線的提醒整理中。';
   const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf });
   if (state) {
     renderStateCard(list, meta, state, '生活天氣提醒暫時沒有完整資料');
@@ -420,7 +424,7 @@ function renderWeather(weather) {
   }
   weather.items.forEach((item) => {
     const li = document.createElement('li');
-    li.innerHTML = `<span>${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.advice || ''}</small></span><b class="ok">天氣</b>`;
+    li.innerHTML = `<span>${item.icon || '🌤️'} ${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.advice || ''}</small></span><b class="ok">天氣</b>`;
     list.appendChild(li);
   });
   pulseChildren('#weather-list > li');
@@ -773,6 +777,12 @@ function bindActions() {
   document.getElementById('quote-expand-btn')?.addEventListener('click', () => {
     quotesExpanded = !quotesExpanded;
     if (currentData?.quotes) renderQuotes(currentData.quotes);
+  });
+  document.getElementById('weather-toggle-btn')?.addEventListener('click', () => {
+    const panel = document.getElementById('weather-panel');
+    const btn = document.getElementById('weather-toggle-btn');
+    const collapsed = panel?.classList.toggle('weather-panel-collapsed');
+    if (btn) btn.textContent = collapsed ? '展開天氣卡' : '收起天氣卡';
   });
   document.getElementById('theme-copy-btn')?.addEventListener('click', async () => {
     const hint = document.getElementById('action-hint');
