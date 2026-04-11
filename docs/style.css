@@ -45,22 +45,22 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #f7f8f8;
-  --muted: #8f98a3;
-  --soft-text: #a8b0ba;
-  --card-text: #f3f4f6;
-  --card-muted: #9ea7b3;
-  --card-link: #7aa2ff;
-  --card-border-soft: #272d38;
-  --panel-bg: rgba(18, 20, 24, .96);
-  --panel-bg-strong: rgba(14, 16, 19, .985);
-  --panel-overlay: rgba(255, 255, 255, .015);
-  --status-ok-bg: rgba(24, 73, 48, .34);
-  --status-ok-fg: #9fe0b8;
-  --status-warn-bg: rgba(97, 68, 22, .34);
-  --status-warn-fg: #e7cb8f;
-  --status-danger-bg: rgba(95, 38, 53, .34);
-  --status-danger-fg: #e7b2c0;
+  --ink: #ffffff;
+  --muted: #b2bcc8;
+  --soft-text: #c5ced8;
+  --card-text: #ffffff;
+  --card-muted: #c0cad6;
+  --card-link: #9ec1ff;
+  --card-border-soft: #313949;
+  --panel-bg: rgba(17, 20, 26, .98);
+  --panel-bg-strong: rgba(13, 16, 22, .99);
+  --panel-overlay: rgba(255, 255, 255, .02);
+  --status-ok-bg: rgba(24, 73, 48, .4);
+  --status-ok-fg: #b8f0cb;
+  --status-warn-bg: rgba(97, 68, 22, .4);
+  --status-warn-fg: #f0d49a;
+  --status-danger-bg: rgba(95, 38, 53, .4);
+  --status-danger-fg: #efbfcc;
   background: #0f1115;
 }
 .frame {
@@ -1337,7 +1337,7 @@ body[data-theme="night"] .intel-kicker,
 body[data-theme="night"] .hero-metric span,
 body[data-theme="night"] .guestbook-status,
 body[data-theme="night"] .guestbook-form label {
-  color: #98a1ad;
+  color: #c0cad6;
 }
 body[data-theme="night"] .headline-list a,
 body[data-theme="night"] .task-list a {
@@ -1348,13 +1348,13 @@ body[data-theme="night"] .task-list small.trump-dog-summary,
 body[data-theme="night"] .quote-price-value,
 body[data-theme="night"] .guestbook-note-text,
 body[data-theme="night"] .guestbook-note-name {
-  color: #edf2ff;
+  color: #ffffff;
 }
 body[data-theme="night"] .candy {
   background: #13171d;
 }
 body[data-theme="night"] .game-kicker {
-  color: #cbd5e1;
+  color: #e2e8f0;
   background: #171b22;
   border-color: #2c3440;
   box-shadow: none;
@@ -1381,7 +1381,7 @@ body[data-theme="night"] .theme-toggle:hover small,
 body[data-theme="night"] .theme-toggle:focus-visible span,
 body[data-theme="night"] .theme-toggle:focus-visible b,
 body[data-theme="night"] .theme-toggle:focus-visible small {
-  color: #f3f5f7;
+  color: #ffffff;
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {

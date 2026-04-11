@@ -30,8 +30,8 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #f7f8f8;
-  --muted: #949daa;
+  --ink: #ffffff;
+  --muted: #b8c2cf;
   background: #0f1115;
 }
 .frame {
@@ -406,15 +406,15 @@ body[data-theme="night"] .hint,
 body[data-theme="night"] .stat-pill span,
 body[data-theme="night"] .summary-list span,
 body[data-theme="night"] .task-list span {
-  color: #99a3af;
+  color: #c5ced8;
 }
 body[data-theme="night"] .candy {
-  background: linear-gradient(180deg, #6e5bb1 0%, #52448f 100%);
+  background: #13171d;
 }
 body[data-theme="night"] .game-title,
 body[data-theme="night"] .game-sub {
-  color: #fff7ff;
-  text-shadow: 3px 3px 0 #35285f;
+  color: #ffffff;
+  text-shadow: none;
 }
 body[data-theme="night"] .stat-pill {
   background: #171b22;
