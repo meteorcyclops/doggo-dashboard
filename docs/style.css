@@ -45,25 +45,23 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #f3f5f7;
-  --muted: #9ea7b3;
-  --soft-text: #b6bfca;
-  --card-text: #f3f5f7;
-  --card-muted: #aeb7c3;
-  --card-link: #8fb4ff;
-  --card-border-soft: #2e3643;
-  --panel-bg: rgba(17, 20, 26, .96);
-  --panel-bg-strong: rgba(12, 15, 20, .985);
-  --panel-overlay: rgba(255, 255, 255, .02);
-  --status-ok-bg: rgba(29, 78, 52, .42);
-  --status-ok-fg: #b8f3cb;
-  --status-warn-bg: rgba(108, 72, 20, .42);
-  --status-warn-fg: #f8dfa3;
-  --status-danger-bg: rgba(103, 35, 53, .42);
-  --status-danger-fg: #f3c0cf;
-  background:
-    radial-gradient(circle at top, rgba(99, 91, 255, .08), transparent 34%),
-    linear-gradient(180deg, #0f1115 0%, #12161d 46%, #0b0d12 100%);
+  --ink: #f7f8f8;
+  --muted: #8f98a3;
+  --soft-text: #a8b0ba;
+  --card-text: #f3f4f6;
+  --card-muted: #9ea7b3;
+  --card-link: #7aa2ff;
+  --card-border-soft: #272d38;
+  --panel-bg: rgba(18, 20, 24, .96);
+  --panel-bg-strong: rgba(14, 16, 19, .985);
+  --panel-overlay: rgba(255, 255, 255, .015);
+  --status-ok-bg: rgba(24, 73, 48, .34);
+  --status-ok-fg: #9fe0b8;
+  --status-warn-bg: rgba(97, 68, 22, .34);
+  --status-warn-fg: #e7cb8f;
+  --status-danger-bg: rgba(95, 38, 53, .34);
+  --status-danger-fg: #e7b2c0;
+  background: #0f1115;
 }
 .frame {
   border: 3px solid #9bb4d8;
@@ -1289,10 +1287,10 @@ body[data-theme="night"] .dialog,
 body[data-theme="night"] .intel-panel,
 body[data-theme="night"] .side-card,
 body[data-theme="night"] .utility-strip {
-  background: linear-gradient(180deg, rgba(24, 28, 35, .985) 0%, rgba(17, 20, 26, .995) 100%);
+  background: #161a20;
   color: var(--card-text);
-  border-color: #343d4d;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03), 0 10px 24px rgba(0, 0, 0, .28);
+  border-color: #2a313d;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
 }
 body[data-theme="night"] .enemy-name,
 body[data-theme="night"] .player-name,
@@ -1339,7 +1337,7 @@ body[data-theme="night"] .intel-kicker,
 body[data-theme="night"] .hero-metric span,
 body[data-theme="night"] .guestbook-status,
 body[data-theme="night"] .guestbook-form label {
-  color: #bac3ce;
+  color: #98a1ad;
 }
 body[data-theme="night"] .headline-list a,
 body[data-theme="night"] .task-list a {
@@ -1353,29 +1351,29 @@ body[data-theme="night"] .guestbook-note-name {
   color: #edf2ff;
 }
 body[data-theme="night"] .candy {
-  background: linear-gradient(180deg, rgba(28, 33, 42, .96) 0%, rgba(18, 22, 29, .985) 100%);
+  background: #13171d;
 }
 body[data-theme="night"] .game-kicker {
-  color: #dbe7ff;
-  background: linear-gradient(180deg, #1d2430 0%, #151a22 100%);
-  border-color: #3d4757;
+  color: #cbd5e1;
+  background: #171b22;
+  border-color: #2c3440;
   box-shadow: none;
 }
 body[data-theme="night"] .game-title,
 body[data-theme="night"] .game-sub {
-  color: #f3f5f7;
+  color: #f7f8f8;
   text-shadow: none;
 }
 body[data-theme="night"] .stat-pill {
-  background: linear-gradient(180deg, rgba(26, 31, 39, .985) 0%, rgba(18, 22, 29, .995) 100%);
-  border-color: #3a4454;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03), 0 8px 18px rgba(0, 0, 0, .22);
+  background: #171b22;
+  border-color: #2d3440;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .02);
 }
 body[data-theme="night"] .theme-toggle:hover,
 body[data-theme="night"] .theme-toggle:focus-visible {
-  background: #232a35;
-  border-color: #475365;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 6px 0 #10141b;
+  background: #1c2129;
+  border-color: #35404e;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
 }
 body[data-theme="night"] .theme-toggle:hover span,
 body[data-theme="night"] .theme-toggle:hover b,
@@ -1387,9 +1385,9 @@ body[data-theme="night"] .theme-toggle:focus-visible small {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(20, 24, 31, .98);
+  background: #14181f;
   border-color: var(--card-border-soft);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .025);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .015);
 }
 body[data-theme="night"] .intel-panel .task-list li,
 body[data-theme="night"] .intel-panel .summary-list li,
@@ -1404,19 +1402,19 @@ body[data-theme="night"] .guestbook-password-input {
 body[data-theme="night"] .guestbook-form input,
 body[data-theme="night"] .guestbook-form textarea,
 body[data-theme="night"] .guestbook-password-input {
-  background: rgba(14, 17, 23, .98);
-  border-color: #394456;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  background: #11151b;
+  border-color: #2e3743;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #1f2631 0%, #161b23 100%);
-  border-color: #465365;
-  color: #f3f5f7;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 4px 0 #0e1218;
+  background: #1a1f27;
+  border-color: #344050;
+  color: #f3f4f6;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
 body[data-theme="night"] .frame {
-  border-color: #313947;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 12px 30px rgba(0, 0, 0, .3);
+  border-color: #252c36;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
 }
 .dialog {
   left: 22px;
