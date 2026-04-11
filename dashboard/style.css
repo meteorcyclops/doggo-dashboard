@@ -30,9 +30,11 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #eef0ff;
-  --muted: #bcc5ef;
-  background: linear-gradient(180deg, #1a1e48 0%, #20295d 45%, #151630 100%);
+  --ink: #f3f6ff;
+  --muted: #c7cfea;
+  background:
+    radial-gradient(circle at top, rgba(123, 173, 255, .14), transparent 38%),
+    linear-gradient(180deg, #141a30 0%, #1a2240 46%, #101426 100%);
 }
 .frame {
   border: 4px solid #5d5aa2;
@@ -381,10 +383,10 @@ body[data-theme="night"] .enemy-bubble,
 body[data-theme="night"] .player-box,
 body[data-theme="night"] .command-box,
 body[data-theme="night"] .dialog {
-  background: #fcfbff;
-  color: #241f46;
-  border-color: #6d66b4;
-  box-shadow: inset 0 0 0 2px #ffffff, 0 6px 0 #938dd1;
+  background: linear-gradient(180deg, rgba(24, 31, 50, .985) 0%, rgba(14, 19, 34, .995) 100%);
+  color: #f4f7ff;
+  border-color: #697db5;
+  box-shadow: inset 0 0 0 1px rgba(175, 188, 234, .08), 0 6px 0 #131a30;
 }
 body[data-theme="night"] .enemy-name,
 body[data-theme="night"] .player-name,
@@ -397,7 +399,7 @@ body[data-theme="night"] .stat-pill b,
 body[data-theme="night"] .summary-list b,
 body[data-theme="night"] .task-list b,
 body[data-theme="night"] .cmd-btn {
-  color: #241f46;
+  color: #f4f7ff;
 }
 body[data-theme="night"] .hp-wrap span,
 body[data-theme="night"] .meta-grid span,
@@ -406,7 +408,7 @@ body[data-theme="night"] .hint,
 body[data-theme="night"] .stat-pill span,
 body[data-theme="night"] .summary-list span,
 body[data-theme="night"] .task-list span {
-  color: #514b7d;
+  color: #c6d0e8;
 }
 body[data-theme="night"] .candy {
   background: linear-gradient(180deg, #6e5bb1 0%, #52448f 100%);
@@ -417,21 +419,24 @@ body[data-theme="night"] .game-sub {
   text-shadow: 3px 3px 0 #35285f;
 }
 body[data-theme="night"] .stat-pill {
-  background: rgba(240, 244, 255, .96);
+  background: linear-gradient(180deg, rgba(26, 33, 53, .985) 0%, rgba(16, 22, 38, .995) 100%);
+  border-color: #6f82b9;
+  box-shadow: inset 0 0 0 1px rgba(177, 190, 236, .08), 0 4px 0 #131a30;
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(252, 250, 255, .98);
-  border-color: #8a84cc;
+  background: rgba(20, 25, 42, .98);
+  border-color: #6b79a9;
 }
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #fff6bf 0%, #ffd76d 100%);
-  border-color: #8a76b9;
-  box-shadow: inset 0 0 0 2px #fffdf1, 0 4px 0 #b08d3d;
+  background: linear-gradient(180deg, #31486f 0%, #1d2d4a 100%);
+  border-color: #7f98cd;
+  color: #f4f7ff;
+  box-shadow: inset 0 0 0 1px rgba(226, 234, 255, .08), 0 4px 0 #11192b;
 }
 body[data-theme="night"] .frame {
-  border-color: #454089;
-  box-shadow: inset 0 0 0 2px #dddfff, 0 6px 0 #2e2d60;
+  border-color: #596d9f;
+  box-shadow: inset 0 0 0 1px rgba(170,184,232,.08), 0 6px 0 #12182c;
 }
 .dialog {
   left: 22px;

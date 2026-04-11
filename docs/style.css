@@ -45,23 +45,25 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #e6ecff;
-  --muted: #b2bddf;
-  --soft-text: #c9d5ea;
-  --card-text: #edf2ff;
-  --card-muted: #b5c0e4;
-  --card-link: #b7c9ff;
-  --card-border-soft: #4d568a;
-  --panel-bg: rgba(10, 16, 30, .96);
-  --panel-bg-strong: rgba(8, 13, 24, .985);
-  --panel-overlay: rgba(88, 240, 255, .035);
-  --status-ok-bg: rgba(41, 83, 58, .45);
-  --status-ok-fg: #bdf3cb;
-  --status-warn-bg: rgba(110, 82, 30, .45);
-  --status-warn-fg: #ffe29a;
-  --status-danger-bg: rgba(108, 39, 63, .45);
-  --status-danger-fg: #ffbfd0;
-  background: linear-gradient(180deg, #090b17 0%, #0d1124 42%, #06070f 100%);
+  --ink: #f2f6ff;
+  --muted: #c5cfe7;
+  --soft-text: #d8e1f2;
+  --card-text: #f5f8ff;
+  --card-muted: #c0cae3;
+  --card-link: #c8d8ff;
+  --card-border-soft: #6673a5;
+  --panel-bg: rgba(16, 22, 37, .96);
+  --panel-bg-strong: rgba(12, 17, 30, .985);
+  --panel-overlay: rgba(123, 173, 255, .05);
+  --status-ok-bg: rgba(43, 91, 65, .5);
+  --status-ok-fg: #cbf6d8;
+  --status-warn-bg: rgba(123, 92, 33, .5);
+  --status-warn-fg: #ffe6aa;
+  --status-danger-bg: rgba(119, 47, 73, .5);
+  --status-danger-fg: #ffc8d7;
+  background:
+    radial-gradient(circle at top, rgba(109, 158, 255, .14), transparent 38%),
+    linear-gradient(180deg, #101522 0%, #151c31 46%, #0b0f1a 100%);
 }
 .frame {
   border: 3px solid #9bb4d8;
@@ -1287,10 +1289,10 @@ body[data-theme="night"] .dialog,
 body[data-theme="night"] .intel-panel,
 body[data-theme="night"] .side-card,
 body[data-theme="night"] .utility-strip {
-  background: linear-gradient(180deg, rgba(16, 22, 40, .98) 0%, rgba(10, 14, 28, .99) 100%);
+  background: linear-gradient(180deg, rgba(22, 29, 47, .985) 0%, rgba(13, 18, 31, .995) 100%);
   color: var(--card-text);
-  border-color: #4a5f8f;
-  box-shadow: inset 0 0 0 1px rgba(113,127,186,.08), 0 0 10px rgba(88,240,255,.04);
+  border-color: #5f6f9e;
+  box-shadow: inset 0 0 0 1px rgba(162, 176, 227, .08), 0 8px 22px rgba(5, 8, 18, .28);
 }
 body[data-theme="night"] .enemy-name,
 body[data-theme="night"] .player-name,
@@ -1337,7 +1339,7 @@ body[data-theme="night"] .intel-kicker,
 body[data-theme="night"] .hero-metric span,
 body[data-theme="night"] .guestbook-status,
 body[data-theme="night"] .guestbook-form label {
-  color: #c4cdef;
+  color: #d3dbf0;
 }
 body[data-theme="night"] .headline-list a,
 body[data-theme="night"] .task-list a {
@@ -1365,8 +1367,9 @@ body[data-theme="night"] .game-sub {
   text-shadow: 0 0 8px rgba(126, 200, 255, .12);
 }
 body[data-theme="night"] .stat-pill {
-  background: linear-gradient(180deg, rgba(16, 22, 40, .98) 0%, rgba(10, 14, 28, .99) 100%);
-  border-color: #5872a6;
+  background: linear-gradient(180deg, rgba(24, 31, 50, .985) 0%, rgba(15, 20, 35, .995) 100%);
+  border-color: #6c7fb5;
+  box-shadow: inset 0 0 0 1px rgba(170, 183, 228, .08), 0 6px 16px rgba(5, 8, 18, .22);
 }
 body[data-theme="night"] .theme-toggle:hover,
 body[data-theme="night"] .theme-toggle:focus-visible {
@@ -1384,8 +1387,9 @@ body[data-theme="night"] .theme-toggle:focus-visible small {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(15, 19, 35, .96);
+  background: rgba(19, 24, 40, .98);
   border-color: var(--card-border-soft);
+  box-shadow: inset 0 0 0 1px rgba(160, 173, 221, .04);
 }
 body[data-theme="night"] .intel-panel .task-list li,
 body[data-theme="night"] .intel-panel .summary-list li,
@@ -1400,18 +1404,19 @@ body[data-theme="night"] .guestbook-password-input {
 body[data-theme="night"] .guestbook-form input,
 body[data-theme="night"] .guestbook-form textarea,
 body[data-theme="night"] .guestbook-password-input {
-  border-color: #5c6799;
+  background: rgba(15, 20, 35, .98);
+  border-color: #6a78ac;
   box-shadow: inset 0 0 0 2px rgba(154,167,226,.08);
 }
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #24385d 0%, #16243f 100%);
-  border-color: #6a88bb;
-  color: #edf3ff;
-  box-shadow: none;
+  background: linear-gradient(180deg, #31486f 0%, #1d2d4a 100%);
+  border-color: #7f98cd;
+  color: #f4f7ff;
+  box-shadow: inset 0 0 0 1px rgba(226, 234, 255, .08), 0 4px 0 #11192b;
 }
 body[data-theme="night"] .frame {
-  border-color: #425987;
-  box-shadow: inset 0 0 0 1px rgba(130,144,204,.08), 0 0 12px rgba(88,240,255,.04);
+  border-color: #596d9f;
+  box-shadow: inset 0 0 0 1px rgba(170,184,232,.08), 0 10px 28px rgba(5, 8, 18, .3);
 }
 .dialog {
   left: 22px;
