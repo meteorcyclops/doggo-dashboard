@@ -45,25 +45,25 @@ body {
   transition: background .2s ease, color .2s ease;
 }
 body[data-theme="night"] {
-  --ink: #f2f6ff;
-  --muted: #c5cfe7;
-  --soft-text: #d8e1f2;
-  --card-text: #f5f8ff;
-  --card-muted: #c0cae3;
-  --card-link: #c8d8ff;
-  --card-border-soft: #6673a5;
-  --panel-bg: rgba(16, 22, 37, .96);
-  --panel-bg-strong: rgba(12, 17, 30, .985);
-  --panel-overlay: rgba(123, 173, 255, .05);
-  --status-ok-bg: rgba(43, 91, 65, .5);
-  --status-ok-fg: #cbf6d8;
-  --status-warn-bg: rgba(123, 92, 33, .5);
-  --status-warn-fg: #ffe6aa;
-  --status-danger-bg: rgba(119, 47, 73, .5);
-  --status-danger-fg: #ffc8d7;
+  --ink: #f3f5f7;
+  --muted: #9ea7b3;
+  --soft-text: #b6bfca;
+  --card-text: #f3f5f7;
+  --card-muted: #aeb7c3;
+  --card-link: #8fb4ff;
+  --card-border-soft: #2e3643;
+  --panel-bg: rgba(17, 20, 26, .96);
+  --panel-bg-strong: rgba(12, 15, 20, .985);
+  --panel-overlay: rgba(255, 255, 255, .02);
+  --status-ok-bg: rgba(29, 78, 52, .42);
+  --status-ok-fg: #b8f3cb;
+  --status-warn-bg: rgba(108, 72, 20, .42);
+  --status-warn-fg: #f8dfa3;
+  --status-danger-bg: rgba(103, 35, 53, .42);
+  --status-danger-fg: #f3c0cf;
   background:
-    radial-gradient(circle at top, rgba(109, 158, 255, .14), transparent 38%),
-    linear-gradient(180deg, #101522 0%, #151c31 46%, #0b0f1a 100%);
+    radial-gradient(circle at top, rgba(99, 91, 255, .08), transparent 34%),
+    linear-gradient(180deg, #0f1115 0%, #12161d 46%, #0b0d12 100%);
 }
 .frame {
   border: 3px solid #9bb4d8;
@@ -1289,10 +1289,10 @@ body[data-theme="night"] .dialog,
 body[data-theme="night"] .intel-panel,
 body[data-theme="night"] .side-card,
 body[data-theme="night"] .utility-strip {
-  background: linear-gradient(180deg, rgba(22, 29, 47, .985) 0%, rgba(13, 18, 31, .995) 100%);
+  background: linear-gradient(180deg, rgba(24, 28, 35, .985) 0%, rgba(17, 20, 26, .995) 100%);
   color: var(--card-text);
-  border-color: #5f6f9e;
-  box-shadow: inset 0 0 0 1px rgba(162, 176, 227, .08), 0 8px 22px rgba(5, 8, 18, .28);
+  border-color: #343d4d;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03), 0 10px 24px rgba(0, 0, 0, .28);
 }
 body[data-theme="night"] .enemy-name,
 body[data-theme="night"] .player-name,
@@ -1339,7 +1339,7 @@ body[data-theme="night"] .intel-kicker,
 body[data-theme="night"] .hero-metric span,
 body[data-theme="night"] .guestbook-status,
 body[data-theme="night"] .guestbook-form label {
-  color: #d3dbf0;
+  color: #bac3ce;
 }
 body[data-theme="night"] .headline-list a,
 body[data-theme="night"] .task-list a {
@@ -1353,29 +1353,29 @@ body[data-theme="night"] .guestbook-note-name {
   color: #edf2ff;
 }
 body[data-theme="night"] .candy {
-  background: linear-gradient(180deg, rgba(20, 28, 52, .96) 0%, rgba(10, 16, 31, .98) 100%);
+  background: linear-gradient(180deg, rgba(28, 33, 42, .96) 0%, rgba(18, 22, 29, .985) 100%);
 }
 body[data-theme="night"] .game-kicker {
-  color: #eaf2ff;
-  background: linear-gradient(180deg, #24385d 0%, #16243f 100%);
-  border-color: #5f7fb4;
+  color: #dbe7ff;
+  background: linear-gradient(180deg, #1d2430 0%, #151a22 100%);
+  border-color: #3d4757;
   box-shadow: none;
 }
 body[data-theme="night"] .game-title,
 body[data-theme="night"] .game-sub {
-  color: #e4ebff;
-  text-shadow: 0 0 8px rgba(126, 200, 255, .12);
+  color: #f3f5f7;
+  text-shadow: none;
 }
 body[data-theme="night"] .stat-pill {
-  background: linear-gradient(180deg, rgba(24, 31, 50, .985) 0%, rgba(15, 20, 35, .995) 100%);
-  border-color: #6c7fb5;
-  box-shadow: inset 0 0 0 1px rgba(170, 183, 228, .08), 0 6px 16px rgba(5, 8, 18, .22);
+  background: linear-gradient(180deg, rgba(26, 31, 39, .985) 0%, rgba(18, 22, 29, .995) 100%);
+  border-color: #3a4454;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .03), 0 8px 18px rgba(0, 0, 0, .22);
 }
 body[data-theme="night"] .theme-toggle:hover,
 body[data-theme="night"] .theme-toggle:focus-visible {
-  background: #2a3357;
-  border-color: #5b6aa6;
-  box-shadow: inset 0 0 0 2px rgba(148,165,230,.14), 0 6px 0 #161d36;
+  background: #232a35;
+  border-color: #475365;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 6px 0 #10141b;
 }
 body[data-theme="night"] .theme-toggle:hover span,
 body[data-theme="night"] .theme-toggle:hover b,
@@ -1383,13 +1383,13 @@ body[data-theme="night"] .theme-toggle:hover small,
 body[data-theme="night"] .theme-toggle:focus-visible span,
 body[data-theme="night"] .theme-toggle:focus-visible b,
 body[data-theme="night"] .theme-toggle:focus-visible small {
-  color: #dfe7ff;
+  color: #f3f5f7;
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(19, 24, 40, .98);
+  background: rgba(20, 24, 31, .98);
   border-color: var(--card-border-soft);
-  box-shadow: inset 0 0 0 1px rgba(160, 173, 221, .04);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .025);
 }
 body[data-theme="night"] .intel-panel .task-list li,
 body[data-theme="night"] .intel-panel .summary-list li,
@@ -1404,19 +1404,19 @@ body[data-theme="night"] .guestbook-password-input {
 body[data-theme="night"] .guestbook-form input,
 body[data-theme="night"] .guestbook-form textarea,
 body[data-theme="night"] .guestbook-password-input {
-  background: rgba(15, 20, 35, .98);
-  border-color: #6a78ac;
-  box-shadow: inset 0 0 0 2px rgba(154,167,226,.08);
+  background: rgba(14, 17, 23, .98);
+  border-color: #394456;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
 }
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #31486f 0%, #1d2d4a 100%);
-  border-color: #7f98cd;
-  color: #f4f7ff;
-  box-shadow: inset 0 0 0 1px rgba(226, 234, 255, .08), 0 4px 0 #11192b;
+  background: linear-gradient(180deg, #1f2631 0%, #161b23 100%);
+  border-color: #465365;
+  color: #f3f5f7;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.04), 0 4px 0 #0e1218;
 }
 body[data-theme="night"] .frame {
-  border-color: #596d9f;
-  box-shadow: inset 0 0 0 1px rgba(170,184,232,.08), 0 10px 28px rgba(5, 8, 18, .3);
+  border-color: #313947;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03), 0 12px 30px rgba(0, 0, 0, .3);
 }
 .dialog {
   left: 22px;
