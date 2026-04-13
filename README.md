@@ -75,9 +75,39 @@ python3 -m http.server 4173 --bind 127.0.0.1
 
 ## 部署流程
 
+### GitHub Pages（原本方式）
+
 - Push 至 `master`，且變更包含 `docs/**`、`scripts/**`、`requirements.txt`、`README.md` 或 workflow 本身時觸發部署。
 - 另設 **UTC** 排程 `0 1,7,13,19 * * *`（每日四次）重新建置並部署，讓公開頁有機會更新報價與新聞（仍受來源與 Actions 排程影響）。
 - 也可在 Actions 分頁手動 **Run workflow**。
+
+### VPS（目前 `dog.koxuan.com` 使用方式）
+
+目前 `dog.koxuan.com` 已改由 VPS 上的 Caddy 直接提供靜態檔，站點目錄為：
+
+```text
+/srv/www/dog.koxuan.com/current
+```
+
+本機可用以下腳本部署：
+
+```bash
+./scripts/deploy_dog_dashboard.sh
+```
+
+這個腳本會做：
+- 將 `docs/` rsync 到 VPS
+- 修正遠端檔案權限
+- 驗證 Caddy 設定
+- reload Caddy
+- 驗證 `https://dog.koxuan.com`
+
+可覆寫的環境變數：
+- `LOCAL_DOCS_DIR`
+- `REMOTE_HOST`
+- `REMOTE_DIR`
+- `REMOTE_CADDYFILE`
+- `SITE_DOMAIN`
 
 ## 安全說明
 
