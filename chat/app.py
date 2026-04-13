@@ -2,17 +2,14 @@ from __future__ import annotations
 
 import os
 import secrets
-import sqlite3
 import time
-from pathlib import Path
+from datetime import datetime, timezone
 from typing import Any
+from urllib import error, parse, request as urllib_request
 
-from flask import Flask, abort, g, jsonify, redirect, render_template, request, session, url_for
+from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 
-BASE = Path(__file__).resolve().parent
-DATA_DIR = BASE / 'data'
-DB_PATH = DATA_DIR / 'chat.db'
 ADMIN_TOKEN = os.environ.get('CHAT_ADMIN_TOKEN', '')
 SECRET_KEY = os.environ.get('CHAT_SECRET_KEY', '')
 DEFAULT_ROOM_SLUG = os.environ.get('CHAT_DEFAULT_ROOM', 'lobby')
@@ -23,6 +20,9 @@ SESSION_COOKIE_NAME = os.environ.get('CHAT_SESSION_COOKIE_NAME', 'koxuan_chat_se
 SESSION_COOKIE_SECURE = os.environ.get('CHAT_SESSION_COOKIE_SECURE', 'true').lower() in {'1', 'true', 'yes', 'on'}
 SESSION_COOKIE_SAMESITE = os.environ.get('CHAT_SESSION_COOKIE_SAMESITE', 'Lax')
 PERMANENT_SESSION_LIFETIME_SECONDS = int(os.environ.get('CHAT_SESSION_TTL_SECONDS', str(60 * 60 * 24 * 7)))
+SUPABASE_URL = os.environ.get('CHAT_SUPABASE_URL', '').rstrip('/')
+SUPABASE_SERVICE_ROLE_KEY = os.environ.get('CHAT_SUPABASE_SERVICE_ROLE_KEY', '')
+SUPABASE_SCHEMA = os.environ.get('CHAT_SUPABASE_SCHEMA', 'public')
 
 ANIMALS = ['Fox', 'Otter', 'Moth', 'Panda', 'Corgi', 'Cat', 'Wolf', 'Lynx', 'Seal', 'Raven']
 COLORS = ['Amber', 'Mint', 'Indigo', 'Coral', 'Sky', 'Lemon', 'Rose', 'Pearl', 'Moss', 'Lilac']
@@ -41,82 +41,57 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 if not SECRET_KEY:
     raise RuntimeError('CHAT_SECRET_KEY is required in production.')
-
 if not ADMIN_TOKEN:
     raise RuntimeError('CHAT_ADMIN_TOKEN is required in production.')
+if not SUPABASE_URL:
+    raise RuntimeError('CHAT_SUPABASE_URL is required for Supabase-backed chat.')
+if not SUPABASE_SERVICE_ROLE_KEY:
+    raise RuntimeError('CHAT_SUPABASE_SERVICE_ROLE_KEY is required for Supabase-backed chat.')
 
 
-def get_db() -> sqlite3.Connection:
-    if 'db' not in g:
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
-        conn = sqlite3.connect(DB_PATH)
-        conn.row_factory = sqlite3.Row
-        g.db = conn
-    return g.db
+class SupabaseError(RuntimeError):
+    pass
 
 
-@app.teardown_appcontext
-def close_db(_: Any) -> None:
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+def supabase_request(method: str, path: str, *, query: dict[str, Any] | None = None, json_body: dict[str, Any] | list[dict[str, Any]] | None = None, prefer: str | None = None) -> Any:
+    url = f"{SUPABASE_URL}/rest/v1/{path.lstrip('/')}"
+    if query:
+        url = f"{url}?{parse.urlencode(query, doseq=True)}"
+
+    headers = {
+        'apikey': SUPABASE_SERVICE_ROLE_KEY,
+        'Authorization': f'Bearer {SUPABASE_SERVICE_ROLE_KEY}',
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Accept-Profile': SUPABASE_SCHEMA,
+        'Content-Profile': SUPABASE_SCHEMA,
+    }
+    if prefer:
+        headers['Prefer'] = prefer
+
+    data = None
+    if json_body is not None:
+        import json
+        data = json.dumps(json_body).encode('utf-8')
+
+    req = urllib_request.Request(url, method=method.upper(), headers=headers, data=data)
+    try:
+        with urllib_request.urlopen(req, timeout=20) as resp:
+            raw = resp.read().decode('utf-8')
+            if not raw:
+                return None
+            import json
+            return json.loads(raw)
+    except error.HTTPError as exc:
+        detail = exc.read().decode('utf-8', errors='ignore')
+        raise SupabaseError(f'Supabase HTTP {exc.code}: {detail}') from exc
+    except error.URLError as exc:
+        raise SupabaseError(f'Supabase connection failed: {exc}') from exc
 
 
-def init_db() -> None:
-    db = get_db()
-    db.executescript(
-        '''
-        CREATE TABLE IF NOT EXISTS rooms (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            slug TEXT NOT NULL UNIQUE,
-            title TEXT NOT NULL,
-            description TEXT NOT NULL DEFAULT '',
-            created_at INTEGER NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS invites (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            token TEXT NOT NULL UNIQUE,
-            room_id INTEGER NOT NULL,
-            label TEXT,
-            max_uses INTEGER,
-            use_count INTEGER NOT NULL DEFAULT 0,
-            expires_at INTEGER,
-            revoked INTEGER NOT NULL DEFAULT 0,
-            created_at INTEGER NOT NULL,
-            FOREIGN KEY(room_id) REFERENCES rooms(id)
-        );
-        CREATE TABLE IF NOT EXISTS messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            room_id INTEGER NOT NULL,
-            nickname TEXT NOT NULL,
-            body TEXT NOT NULL,
-            created_at INTEGER NOT NULL,
-            deleted INTEGER NOT NULL DEFAULT 0,
-            FOREIGN KEY(room_id) REFERENCES rooms(id)
-        );
-        CREATE TABLE IF NOT EXISTS rate_limits (
-            session_id TEXT PRIMARY KEY,
-            last_post_at INTEGER NOT NULL
-        );
-        CREATE INDEX IF NOT EXISTS idx_messages_room_created_at ON messages(room_id, created_at);
-        CREATE INDEX IF NOT EXISTS idx_invites_room_id ON invites(room_id);
-        '''
-    )
-    db.commit()
-    ensure_default_room(db)
-    db.commit()
-
-
-def ensure_default_room(db: sqlite3.Connection) -> sqlite3.Row:
-    row = db.execute('SELECT * FROM rooms WHERE slug = ?', (DEFAULT_ROOM_SLUG,)).fetchone()
-    if row:
-        return row
-    now = int(time.time())
-    db.execute(
-        'INSERT INTO rooms (slug, title, description, created_at) VALUES (?, ?, ?, ?)',
-        (DEFAULT_ROOM_SLUG, '匿名小圈圈聊天室', '用邀請連結進入，匿名但不裸奔。', now),
-    )
-    return db.execute('SELECT * FROM rooms WHERE slug = ?', (DEFAULT_ROOM_SLUG,)).fetchone()
+def fetch_one(path: str, query: dict[str, Any]) -> dict[str, Any] | None:
+    rows = supabase_request('GET', path, query={**query, 'limit': 1}) or []
+    return rows[0] if rows else None
 
 
 def ensure_nickname() -> str:
@@ -132,57 +107,93 @@ def ensure_session_id() -> str:
     return session['chat_session_id']
 
 
-def current_room() -> sqlite3.Row | None:
+def current_room() -> dict[str, Any] | None:
     room_id = session.get('chat_room_id')
     if not room_id:
         return None
-    return get_db().execute('SELECT * FROM rooms WHERE id = ?', (room_id,)).fetchone()
+    return fetch_one('chat_rooms', {'id': f'eq.{room_id}'})
 
 
-def require_access() -> sqlite3.Row:
+def require_access() -> dict[str, Any]:
     room = current_room()
     if room is None:
         abort(403)
     return room
 
 
-def invite_status(invite: sqlite3.Row) -> str | None:
-    now = int(time.time())
-    if int(invite['revoked'] or 0):
+def parse_timestamp(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    return datetime.fromisoformat(value.replace('Z', '+00:00'))
+
+
+def invite_status(invite: dict[str, Any]) -> str | None:
+    now = datetime.now(timezone.utc)
+    if invite.get('revoked'):
         return '這個邀請連結已停用。'
-    expires_at = invite['expires_at']
-    if expires_at and now > int(expires_at):
+    expires_at = parse_timestamp(invite.get('expires_at'))
+    if expires_at and now > expires_at:
         return '這個邀請連結已過期。'
-    max_uses = invite['max_uses']
-    if max_uses is not None and int(invite['use_count']) >= int(max_uses):
+    max_uses = invite.get('max_uses')
+    use_count = int(invite.get('use_count') or 0)
+    if max_uses is not None and use_count >= int(max_uses):
         return '這個邀請連結已達使用上限。'
     return None
 
 
-def create_invite(room_id: int, label: str = 'default', max_uses: int | None = None, expires_at: int | None = None) -> str:
-    db = get_db()
+def create_invite(room_id: str, label: str = 'default', max_uses: int | None = None) -> str:
     token = secrets.token_urlsafe(24)
-    now = int(time.time())
-    db.execute(
-        'INSERT INTO invites (token, room_id, label, max_uses, expires_at, created_at) VALUES (?, ?, ?, ?, ?, ?)',
-        (token, room_id, label, max_uses, expires_at, now),
-    )
-    db.commit()
+    payload = {
+        'token': token,
+        'room_id': room_id,
+        'label': label,
+        'max_uses': max_uses,
+    }
+    supabase_request('POST', 'chat_invites', json_body=payload, prefer='return=minimal')
     return token
 
 
+def ensure_default_room() -> dict[str, Any]:
+    room = fetch_one('chat_rooms', {'slug': f'eq.{DEFAULT_ROOM_SLUG}'})
+    if room:
+        return room
+    payload = {
+        'slug': DEFAULT_ROOM_SLUG,
+        'title': '匿名小圈圈聊天室',
+        'description': '用邀請連結進入，匿名但不裸奔。',
+    }
+    supabase_request('POST', 'chat_rooms', json_body=payload, prefer='return=representation')
+    room = fetch_one('chat_rooms', {'slug': f'eq.{DEFAULT_ROOM_SLUG}'})
+    if room is None:
+        raise SupabaseError('Failed to create default room.')
+    return room
+
+
 def ensure_bootstrap_invite() -> None:
-    db = get_db()
-    room = ensure_default_room(db)
-    existing = db.execute('SELECT COUNT(*) AS count FROM invites WHERE room_id = ?', (room['id'],)).fetchone()
-    if int(existing['count']) == 0:
-        create_invite(room['id'], label='bootstrap', max_uses=None, expires_at=None)
+    room = ensure_default_room()
+    existing = supabase_request('GET', 'chat_invites', query={'room_id': f"eq.{room['id']}", 'select': 'id', 'limit': 1}) or []
+    if not existing:
+        create_invite(room['id'], label='bootstrap')
 
 
 def require_admin_token() -> None:
     token = request.headers.get('X-Admin-Token', '') or request.args.get('token', '')
     if token != ADMIN_TOKEN:
         abort(401)
+
+
+def increment_invite_use_count(invite: dict[str, Any]) -> None:
+    next_count = int(invite.get('use_count') or 0) + 1
+    supabase_request('PATCH', 'chat_invites', query={'id': f"eq.{invite['id']}"}, json_body={'use_count': next_count}, prefer='return=minimal')
+
+
+def upsert_rate_limit(session_id: str) -> None:
+    supabase_request(
+        'POST',
+        'chat_rate_limits',
+        json_body={'session_id': session_id, 'last_post_at': datetime.now(timezone.utc).isoformat()},
+        prefer='resolution=merge-duplicates,return=minimal',
+    )
 
 
 @app.after_request
@@ -212,11 +223,7 @@ def enter() -> Any:
         invite_token = (request.form.get('token') or '').strip()
 
     if invite_token:
-        db = get_db()
-        invite = db.execute(
-            'SELECT invites.*, rooms.slug, rooms.title, rooms.description FROM invites JOIN rooms ON rooms.id = invites.room_id WHERE token = ?',
-            (invite_token,),
-        ).fetchone()
+        invite = fetch_one('chat_invites', {'token': f'eq.{invite_token}'})
         if invite is None:
             error = '找不到這個邀請連結。'
         else:
@@ -224,15 +231,18 @@ def enter() -> Any:
             if blocked_reason:
                 error = blocked_reason
             else:
-                db.execute('UPDATE invites SET use_count = use_count + 1 WHERE id = ?', (invite['id'],))
-                db.commit()
-                session.clear()
-                session['chat_authorized'] = True
-                session['chat_room_id'] = int(invite['room_id'])
-                session['chat_invite_token'] = invite_token
-                ensure_nickname()
-                ensure_session_id()
-                return redirect('/')
+                room = fetch_one('chat_rooms', {'id': f"eq.{invite['room_id']}"})
+                if room is None:
+                    error = '邀請對應的聊天室不存在。'
+                else:
+                    increment_invite_use_count(invite)
+                    session.clear()
+                    session['chat_authorized'] = True
+                    session['chat_room_id'] = room['id']
+                    session['chat_invite_token'] = invite_token
+                    ensure_nickname()
+                    ensure_session_id()
+                    return redirect('/')
 
     return render_template('enter.html', error=error, invite_token=invite_token)
 
@@ -252,19 +262,24 @@ def me() -> Any:
 @app.route('/api/messages')
 def list_messages() -> Any:
     room = require_access()
-    db = get_db()
-    rows = db.execute(
-        'SELECT id, nickname, body, created_at FROM messages WHERE room_id = ? AND deleted = 0 ORDER BY id DESC LIMIT ?',
-        (room['id'], MAX_MESSAGES),
-    ).fetchall()
-    items = [dict(row) for row in reversed(rows)]
+    rows = supabase_request(
+        'GET',
+        'chat_messages',
+        query={
+            'room_id': f"eq.{room['id']}",
+            'deleted': 'eq.false',
+            'select': 'id,nickname,body,created_at',
+            'order': 'created_at.desc',
+            'limit': MAX_MESSAGES,
+        },
+    ) or []
+    items = list(reversed(rows))
     return jsonify({'items': items, 'rateLimitSeconds': RATE_LIMIT_SECONDS, 'maxMessageLength': MAX_MESSAGE_LENGTH})
 
 
 @app.route('/api/messages', methods=['POST'])
 def create_message() -> Any:
     room = require_access()
-    db = get_db()
     payload = request.get_json(silent=True) or {}
     body = (payload.get('body') or '').strip()
     if not body:
@@ -273,42 +288,44 @@ def create_message() -> Any:
         return jsonify({'error': f'訊息不能超過 {MAX_MESSAGE_LENGTH} 字。'}), 400
 
     session_id = ensure_session_id()
-    now = int(time.time())
-    row = db.execute('SELECT last_post_at FROM rate_limits WHERE session_id = ?', (session_id,)).fetchone()
-    if row and now - int(row['last_post_at']) < RATE_LIMIT_SECONDS:
-        return jsonify({'error': f'發言太快了，請 {RATE_LIMIT_SECONDS} 秒後再試。'}), 429
+    now = datetime.now(timezone.utc)
+    row = fetch_one('chat_rate_limits', {'session_id': f'eq.{session_id}'})
+    if row:
+        last_post_at = parse_timestamp(row.get('last_post_at'))
+        if last_post_at and now.timestamp() - last_post_at.timestamp() < RATE_LIMIT_SECONDS:
+            return jsonify({'error': f'發言太快了，請 {RATE_LIMIT_SECONDS} 秒後再試。'}), 429
 
     nickname = ensure_nickname()
-    db.execute(
-        'INSERT INTO messages (room_id, nickname, body, created_at) VALUES (?, ?, ?, ?)',
-        (room['id'], nickname, body, now),
+    supabase_request(
+        'POST',
+        'chat_messages',
+        json_body={'room_id': room['id'], 'nickname': nickname, 'body': body},
+        prefer='return=minimal',
     )
-    db.execute(
-        'INSERT INTO rate_limits (session_id, last_post_at) VALUES (?, ?) ON CONFLICT(session_id) DO UPDATE SET last_post_at=excluded.last_post_at',
-        (session_id, now),
-    )
-    db.commit()
+    upsert_rate_limit(session_id)
     return jsonify({'ok': True})
 
 
-@app.route('/api/messages/<int:message_id>', methods=['DELETE'])
-def delete_message(message_id: int) -> Any:
+@app.route('/api/messages/<message_id>', methods=['DELETE'])
+def delete_message(message_id: str) -> Any:
     require_admin_token()
-    db = get_db()
-    db.execute('UPDATE messages SET deleted = 1 WHERE id = ?', (message_id,))
-    db.commit()
+    supabase_request('PATCH', 'chat_messages', query={'id': f'eq.{message_id}'}, json_body={'deleted': True}, prefer='return=minimal')
     return jsonify({'ok': True})
 
 
 @app.route('/admin')
 def admin() -> Any:
     require_admin_token()
-    db = get_db()
-    room = ensure_default_room(db)
-    invites = db.execute(
-        'SELECT token, label, max_uses, use_count, expires_at, revoked, created_at FROM invites WHERE room_id = ? ORDER BY id DESC',
-        (room['id'],),
-    ).fetchall()
+    room = ensure_default_room()
+    invites = supabase_request(
+        'GET',
+        'chat_invites',
+        query={
+            'room_id': f"eq.{room['id']}",
+            'select': 'id,token,label,max_uses,use_count,expires_at,revoked,created_at',
+            'order': 'created_at.desc',
+        },
+    ) or []
     base = request.host_url.rstrip('/')
     invite_items = []
     for invite in invites:
@@ -333,8 +350,7 @@ def admin_create_invite() -> Any:
     if max_uses is not None and max_uses <= 0:
         return jsonify({'error': 'max_uses 必須大於 0'}), 400
 
-    db = get_db()
-    room = ensure_default_room(db)
+    room = ensure_default_room()
     invite_token = create_invite(room['id'], label=label, max_uses=max_uses)
     base = request.host_url.rstrip('/')
     return jsonify({'ok': True, 'token': invite_token, 'url': f"{base}{url_for('enter')}?invite={invite_token}"})
@@ -342,13 +358,12 @@ def admin_create_invite() -> Any:
 
 @app.route('/healthz')
 def healthz() -> Any:
-    db = get_db()
-    db.execute('SELECT 1').fetchone()
-    return jsonify({'ok': True, 'room': DEFAULT_ROOM_SLUG})
+    room = ensure_default_room()
+    return jsonify({'ok': True, 'room': room['slug'], 'backend': 'supabase'})
 
 
 with app.app_context():
-    init_db()
+    ensure_default_room()
     ensure_bootstrap_invite()
 
 
