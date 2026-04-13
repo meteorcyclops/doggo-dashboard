@@ -33,7 +33,7 @@ jobs:
           VPS_DEPLOY_HOST: ${{ secrets.VPS_DEPLOY_HOST }}
           VPS_DEPLOY_USER: ${{ secrets.VPS_DEPLOY_USER }}
         run: |
-          rsync -av --delete \
+          rsync -rlvz --delete --omit-dir-times --no-perms --no-owner --no-group \
             --exclude '.DS_Store' \
             ./docs/ "${VPS_DEPLOY_USER}@${VPS_DEPLOY_HOST}:/srv/www/dog.koxuan.com/current/"
 
