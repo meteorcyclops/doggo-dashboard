@@ -28,23 +28,7 @@ SUPABASE_SCHEMA = os.environ.get('CHAT_SUPABASE_SCHEMA', 'public')
 SUPABASE_STORAGE_BUCKET = os.environ.get('CHAT_SUPABASE_STORAGE_BUCKET', 'chat-uploads')
 MAX_UPLOAD_BYTES = int(os.environ.get('CHAT_MAX_UPLOAD_BYTES', str(20 * 1024 * 1024)))
 
-ANIMALS = [
-    '🦊 Fox',
-    '🦦 Otter',
-    '🦋 Moth',
-    '🐼 Panda',
-    '🐶 Corgi',
-    '🐱 Cat',
-    '🐺 Wolf',
-    '🐈 Lynx',
-    '🦭 Seal',
-    '🐦 Raven',
-    '🐰 Bunny',
-    '🦝 Raccoon',
-    '🦔 Hedgehog',
-    '🐸 Frog',
-]
-MOODS = ['Spark', 'Misty', 'Sunny', 'Pebble', 'Moon', 'Berry', 'Clover', 'Dawn', 'Pudding', 'Velvet']
+ANIMALS = ['🦊', '🦦', '🦋', '🐼', '🐶', '🐱', '🐺', '🐈', '🦭', '🐦', '🐰', '🦝', '🦔', '🐸']
 
 app = Flask(__name__)
 app.config.update(
@@ -117,7 +101,7 @@ def fetch_one(path: str, query: dict[str, Any]) -> dict[str, Any] | None:
 
 def ensure_nickname() -> str:
     if 'nickname' not in session:
-        session['nickname'] = f"{secrets.choice(MOODS)} {secrets.choice(ANIMALS)}"
+        session['nickname'] = secrets.choice(ANIMALS)
     return session['nickname']
 
 
