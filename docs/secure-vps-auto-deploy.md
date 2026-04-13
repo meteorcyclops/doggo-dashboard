@@ -81,6 +81,7 @@ caddy validate + reload
 
 - `VPS_DEPLOY_USER`
   - 例如：`dogdeploy`
+  - 注意不要打錯成 `dogdepl` 之類的截斷字串
 
 - `VPS_DEPLOY_KEY`
   - deploy 專用 SSH private key
