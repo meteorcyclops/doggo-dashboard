@@ -202,9 +202,6 @@ def upsert_rate_limit(session_id: str) -> None:
 
 
 def ensure_bucket_public() -> None:
-    buckets = supabase_request('GET', 'storage/v1/bucket', extra_headers={'Accept': 'application/json'}) or []
-    if any(bucket.get('name') == SUPABASE_STORAGE_BUCKET for bucket in buckets):
-        return
     req = urllib_request.Request(
         f'{SUPABASE_URL}/storage/v1/bucket',
         method='POST',
@@ -220,7 +217,7 @@ def ensure_bucket_public() -> None:
             return
     except error.HTTPError as exc:
         detail = exc.read().decode('utf-8', errors='ignore')
-        if 'already exists' in detail:
+        if 'already exists' in detail or 'duplicate key value' in detail:
             return
         raise SupabaseError(f'Supabase storage bucket create failed: {detail}') from exc
 
