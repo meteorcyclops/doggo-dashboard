@@ -1,0 +1,34 @@
+name: Deploy travel.koxuan.com to GitHub Pages
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'travel/nagoya-hokuriku-osaka-2026-05-21-30/**'
+      - '.github/workflows/deploy-travel-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: travel-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Upload travel site artifact
+        uses: actions/upload-pages-artifact@v4.0.0
+        with:
+          path: travel/nagoya-hokuriku-osaka-2026-05-21-30
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
