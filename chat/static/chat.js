@@ -19,7 +19,9 @@ async function loadMessages() {
     const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
     if (hasImage) {
       el.innerHTML = `
-        <img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" />
+        <div class="msg-photo-frame">
+          <img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" />
+        </div>
         <div class="msg-photo-caption">
           <div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>
           ${textHtml}
