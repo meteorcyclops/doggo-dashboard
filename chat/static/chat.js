@@ -1,27 +1,16 @@
 const ADMIN_TOKEN = window.CHAT_ADMIN_MODE ? (window.CHAT_ADMIN_TOKEN || '') : '';
+let lastMessagesSignature = '';
+let isLoadingMessages = false;
 
-async function loadMessages() {
-  const res = await fetch('/api/messages');
-  if (res.status === 403) {
-    location.href = '/enter';
-    return;
-  }
-  const data = await res.json();
-  const root = document.getElementById('messages');
-  const hint = document.getElementById('hint');
-  if (hint && data.rateLimitSeconds) {
-    hint.textContent = `匿名顯示，發言冷卻 ${data.rateLimitSeconds} 秒，單則最多 ${data.maxMessageLength} 字，圖片上限 ${data.maxUploadMb}MB。`;
-  }
-  root.innerHTML = '';
-  for (const item of data.items || []) {
-    const el = document.createElement('article');
-    const hasImage = Boolean(item.image_url);
-    el.className = hasImage ? 'msg msg-photo' : 'msg';
-    const t = formatMessageTime(item.created_at);
-    const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
-    if (hasImage) {
-      const deleteButton = ADMIN_TOKEN ? `<button class="msg-delete" type="button" aria-label="刪除圖片訊息" title="刪除圖片訊息" data-delete-id="${escapeAttribute(item.id)}">✕</button>` : '';
-      el.innerHTML = `
+function buildMessageHtml(item) {
+  const hasImage = Boolean(item.image_url);
+  const t = formatMessageTime(item.created_at);
+  const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
+  if (hasImage) {
+    const deleteButton = ADMIN_TOKEN ? `<button class="msg-delete" type="button" aria-label="刪除圖片訊息" title="刪除圖片訊息" data-delete-id="${escapeAttribute(item.id)}">✕</button>` : '';
+    return {
+      className: 'msg msg-photo',
+      html: `
         <div class="msg-photo-frame">
           <img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" data-fullscreen-src="${escapeAttribute(item.image_url)}" />
           ${deleteButton}
@@ -29,16 +18,24 @@ async function loadMessages() {
         <div class="msg-photo-caption">
           <div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>
           ${textHtml}
-        </div>`;
-    } else {
-      el.innerHTML = `<div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>${textHtml}`;
-    }
-    root.appendChild(el);
+        </div>`,
+    };
   }
+  return {
+    className: 'msg',
+    html: `<div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>${textHtml}`,
+  };
+}
+
+function bindMessageEvents(root) {
   root.querySelectorAll('[data-fullscreen-src]').forEach((img) => {
+    if (img.dataset.boundLightbox === 'true') return;
+    img.dataset.boundLightbox = 'true';
     img.addEventListener('click', () => openLightbox(img.dataset.fullscreenSrc));
   });
   root.querySelectorAll('[data-delete-id]').forEach((btn) => {
+    if (btn.dataset.boundDelete === 'true') return;
+    btn.dataset.boundDelete = 'true';
     btn.addEventListener('click', async () => {
       if (!confirm('要刪掉這張圖片訊息嗎？')) return;
       const id = btn.dataset.deleteId;
@@ -51,9 +48,52 @@ async function loadMessages() {
         alert(data.error || '刪除失敗');
         return;
       }
-      loadMessages();
+      lastMessagesSignature = '';
+      loadMessages({ forceRender: true });
     });
   });
+}
+
+function renderMessages(root, items) {
+  const fragment = document.createDocumentFragment();
+  for (const item of items || []) {
+    const el = document.createElement('article');
+    const rendered = buildMessageHtml(item);
+    el.className = rendered.className;
+    el.dataset.messageId = item.id;
+    el.innerHTML = rendered.html;
+    fragment.appendChild(el);
+  }
+  root.replaceChildren(fragment);
+  bindMessageEvents(root);
+}
+
+async function loadMessages(options = {}) {
+  if (isLoadingMessages) return;
+  isLoadingMessages = true;
+  try {
+    const res = await fetch('/api/messages', { cache: 'no-store' });
+    if (res.status === 403) {
+      location.href = '/enter';
+      return;
+    }
+    const data = await res.json();
+    const root = document.getElementById('messages');
+    const hint = document.getElementById('hint');
+    if (hint && data.rateLimitSeconds) {
+      hint.textContent = `匿名顯示，發言冷卻 ${data.rateLimitSeconds} 秒，單則最多 ${data.maxMessageLength} 字，圖片上限 ${data.maxUploadMb}MB。`;
+    }
+    const items = data.items || [];
+    const signature = JSON.stringify(items.map((item) => [item.id, item.body || '', item.image_url || '', item.created_at || '']));
+    if (!options.forceRender && signature === lastMessagesSignature) {
+      bindMessageEvents(root);
+      return;
+    }
+    renderMessages(root, items);
+    lastMessagesSignature = signature;
+  } finally {
+    isLoadingMessages = false;
+  }
 }
 
 function formatMessageTime(value) {
@@ -135,8 +175,9 @@ document.getElementById('composer')?.addEventListener('submit', async (e) => {
   body.value = '';
   if (imageInput) imageInput.value = '';
   updatePreview(null);
-  loadMessages();
+  lastMessagesSignature = '';
+  loadMessages({ forceRender: true });
 });
 
-loadMessages();
-setInterval(loadMessages, 5000);
+loadMessages({ forceRender: true });
+setInterval(() => loadMessages(), 5000);
