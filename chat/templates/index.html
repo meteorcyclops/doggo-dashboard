@@ -12,16 +12,23 @@
         <div class="topbar">
           <div>
             <div class="kicker">PRIVATE CIRCLE</div>
-            <h1>匿名小圈圈聊天室</h1>
+            <h1>{{ room['title'] }}</h1>
+            <p class="sub">{{ room['description'] }}</p>
             <p class="sub">你現在的匿名暱稱是 <b id="nickname">{{ nickname }}</b></p>
           </div>
-          <button id="refreshBtn" class="secondary">刷新</button>
+          <div class="top-actions">
+            <button id="refreshBtn" class="secondary">刷新</button>
+            <form method="post" action="/logout">
+              <button type="submit" class="ghost">離開</button>
+            </form>
+          </div>
         </div>
+        <div class="notice">邀請制匿名聊天室，已啟用基本限流與字數限制。</div>
         <div id="messages" class="messages"></div>
         <form id="composer" class="composer">
-          <textarea id="body" maxlength="400" placeholder="輸入訊息..." required></textarea>
+          <textarea id="body" maxlength="{{ max_message_length }}" placeholder="輸入訊息..." required></textarea>
           <div class="composer-row">
-            <small>匿名顯示，基本限流已啟用。</small>
+            <small id="hint">匿名顯示，請溫柔使用。</small>
             <button type="submit">送出</button>
           </div>
         </form>
