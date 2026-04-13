@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chat.koxuan.com admin</title>
+    <link rel="stylesheet" href="/static/chat.css" />
+  </head>
+  <body>
+    <main class="shell admin-shell">
+      <section class="card">
+        <div class="kicker">ADMIN</div>
+        <h1>{{ room['title'] }}</h1>
+        <p class="sub">目前先做單房間邀請制 MVP。你可以從這裡產生新的 invite link，或直接以管理模式進聊天室。</p>
+        <form id="inviteForm" class="form inline-form">
+          <input type="text" name="label" placeholder="label，例如 friends" />
+          <input type="number" name="max_uses" min="1" placeholder="使用次數上限，可留空" />
+          <button type="submit">產生邀請連結</button>
+        </form>
+        <div id="newInvite" class="new-invite"></div>
+        <div class="tips">
+          <div>管理模式聊天入口</div>
+          <div class="mono" id="adminChatLink">{{ request.host_url.rstrip('/') }}/enter?token={{ request.args.get('token', '') }}</div>
+          <div class="invite-actions">
+            <button type="button" class="secondary" id="copyAdminChatLink">複製管理模式入口</button>
+            <a class="button-link ghost" href="{{ request.host_url.rstrip('/') }}/enter?token={{ request.args.get('token', '') }}" target="_blank" rel="noreferrer">打開</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>現有邀請</h2>
+        <div class="invite-list">
+          {% for invite in invites %}
+          <article class="invite-item">
+            <div class="invite-head">
+              <div>
+                <div><b>{{ invite['label'] or 'manual' }}</b></div>
+                <div class="sub">uses: {{ invite['use_count'] }}{% if invite['max_uses'] %}/{{ invite['max_uses'] }}{% endif %}</div>
+              </div>
+              <div class="invite-actions">
+                <button type="button" class="secondary copy-btn" data-url="{{ invite['url'] }}">複製</button>
+                <a class="button-link ghost" href="{{ invite['url'] }}" target="_blank" rel="noreferrer">打開</a>
+                <a class="button-link" href="{{ invite['url'] }}&token={{ request.args.get('token', '') }}" target="_blank" rel="noreferrer">管理模式打開</a>
+              </div>
+            </div>
+            <div class="mono invite-url">{{ invite['url'] }}</div>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+    <script>
+      const adminToken = new URLSearchParams(location.search).get('token') || '';
+      document.getElementById('inviteForm')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fd = new FormData(e.currentTarget);
+        const res = await fetch('/admin/invites', {
+          method: 'POST',
+          headers: { 'X-Admin-Token': adminToken },
+          body: fd,
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || '建立邀請失敗');
+          return;
+        }
+        const adminUrl = `${data.url}&token=${encodeURIComponent(adminToken)}`;
+        document.getElementById('newInvite').innerHTML = `
+          <div class="success invite-success">
+            <div>新邀請已建立</div>
+            <div class="mono invite-url">${data.url}</div>
+            <div class="invite-actions">
+              <button type="button" class="secondary" id="copyNewInvite">複製連結</button>
+              <a class="button-link ghost" href="${data.url}" target="_blank" rel="noreferrer">打開</a>
+              <a class="button-link" href="${adminUrl}" target="_blank" rel="noreferrer">管理模式打開</a>
+            </div>
+          </div>`;
+        document.getElementById('copyNewInvite')?.addEventListener('click', async () => {
+          await navigator.clipboard.writeText(data.url);
+          document.getElementById('copyNewInvite').textContent = '已複製';
+        });
+      });
+
+      document.getElementById('copyAdminChatLink')?.addEventListener('click', async () => {
+        const text = document.getElementById('adminChatLink')?.textContent || '';
+        await navigator.clipboard.writeText(text);
+      });
+
+      document.querySelectorAll('.copy-btn').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          const url = btn.dataset.url || '';
+          await navigator.clipboard.writeText(url);
+          const old = btn.textContent;
+          btn.textContent = '已複製';
+          setTimeout(() => (btn.textContent = old), 1200);
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -20,7 +20,7 @@ async function loadMessages() {
     const t = formatMessageTime(item.created_at);
     const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
     if (hasImage) {
-      const deleteButton = ADMIN_TOKEN ? `<button class="msg-delete" type="button" data-delete-id="${escapeAttribute(item.id)}">⋯</button>` : '';
+      const deleteButton = ADMIN_TOKEN ? `<button class="msg-delete" type="button" aria-label="刪除圖片訊息" title="刪除圖片訊息" data-delete-id="${escapeAttribute(item.id)}">✕</button>` : '';
       el.innerHTML = `
         <div class="msg-photo-frame">
           <img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" data-fullscreen-src="${escapeAttribute(item.image_url)}" />
