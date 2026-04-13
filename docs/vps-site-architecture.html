@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VPS Site Architecture | Koxuan</title>
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+      .arch-shell {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px;
+      }
+      .arch-page {
+        display: grid;
+        gap: 14px;
+      }
+      .arch-hero {
+        padding: 18px;
+        display: grid;
+        gap: 10px;
+      }
+      .arch-kicker {
+        display: inline-block;
+        width: fit-content;
+        padding: 4px 10px;
+        font-size: 11px;
+        letter-spacing: .14em;
+        color: #06111f;
+        background: linear-gradient(180deg, #58f0ff 0%, #7ec8ff 100%);
+        border: 3px solid #2d77b7;
+      }
+      .arch-title {
+        margin: 0;
+        font-size: clamp(28px, 5vw, 44px);
+        line-height: 1.08;
+      }
+      .arch-sub {
+        margin: 0;
+        color: var(--soft-text);
+        line-height: 1.8;
+      }
+      .arch-grid {
+        display: grid;
+        grid-template-columns: 1.15fr .85fr;
+        gap: 14px;
+        align-items: start;
+      }
+      .arch-card {
+        padding: 16px;
+        display: grid;
+        gap: 12px;
+      }
+      .arch-card h2,
+      .arch-card h3 {
+        margin: 0;
+      }
+      .arch-card p,
+      .arch-card li {
+        line-height: 1.75;
+        color: var(--card-text);
+      }
+      .arch-pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .arch-pill {
+        padding: 7px 10px;
+        border: 2px solid #a9bfdf;
+        background: linear-gradient(180deg, rgba(255,255,255,.98) 0%, rgba(241,247,255,.98) 100%);
+        font-size: 12px;
+      }
+      .diagram {
+        overflow: auto;
+        padding: 14px;
+        background: linear-gradient(180deg, rgba(247,250,255,.98) 0%, rgba(240,246,255,.98) 100%);
+      }
+      .diagram pre {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--card-text);
+        white-space: pre;
+      }
+      .arch-list {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        gap: 8px;
+      }
+      .arch-mini {
+        font-size: 13px;
+        color: var(--card-muted);
+      }
+      .arch-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .status-good,
+      .status-watch {
+        padding: 12px;
+      }
+      .status-good {
+        background: var(--status-ok-bg);
+        color: var(--status-ok-fg);
+        border: 2px solid rgba(19,103,70,.18);
+      }
+      .status-watch {
+        background: var(--status-warn-bg);
+        color: var(--status-warn-fg);
+        border: 2px solid rgba(138,91,6,.18);
+      }
+      .arch-steps {
+        counter-reset: step;
+        display: grid;
+        gap: 10px;
+      }
+      .arch-step {
+        padding: 12px;
+        position: relative;
+        padding-left: 54px;
+      }
+      .arch-step::before {
+        counter-increment: step;
+        content: counter(step);
+        position: absolute;
+        left: 14px;
+        top: 12px;
+        width: 26px;
+        height: 26px;
+        display: grid;
+        place-items: center;
+        border: 2px solid #8aa7d5;
+        background: #fff;
+        font-weight: 700;
+      }
+      .arch-footer {
+        padding: 16px;
+        line-height: 1.8;
+      }
+      @media (max-width: 960px) {
+        .arch-grid,
+        .arch-columns {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="arch-shell">
+      <div class="arch-page">
+        <header class="arch-hero frame candy">
+          <span class="arch-kicker">VPS SITE BLUEPRINT</span>
+          <h1 class="arch-title">Koxuan 的網站應該怎麼放到 VPS 上</h1>
+          <p class="arch-sub">
+            這一頁是把你現在的實際狀況、未來想擴充多站點的方向，還有我建議的設計方式，整理成比較直覺的視覺版說明。
+          </p>
+          <div class="arch-pill-row">
+            <span class="arch-pill">目前：GitHub Pages + VPS 反代入口</span>
+            <span class="arch-pill">目標：VPS 成為多站點入口</span>
+            <span class="arch-pill">核心：Caddy 統一管理</span>
+          </div>
+        </header>
+
+        <section class="arch-grid">
+          <article class="arch-card frame white-panel">
+            <h2>現在的實際架構</h2>
+            <p class="arch-mini">目前你的 dashboard 還在 GitHub Pages，VPS 主要是在幫 bot.koxuan.com 做反向代理。</p>
+            <div class="diagram frame white-panel">
+<pre>Internet
+   |
+   |  dog.koxuan.com  -> GitHub Pages
+   |  bot.koxuan.com  -> VPS (139.59.122.96)
+   |
+   +------------------------------+
+                                  |
+                           +------v------+
+                           |   Caddy     |
+                           |  on VPS     |
+                           +------+------+
+                                  |
+                                  | reverse proxy
+                                  v
+                         100.74.22.60:18889
+                         (Tailscale/private service)</pre>
+            </div>
+            <ul class="arch-list">
+              <li><b>dog.koxuan.com</b> 現在還是 GitHub 靜態站</li>
+              <li><b>bot.koxuan.com</b> 目前走 VPS，再轉發到 Tailscale 私網服務</li>
+              <li>VPS 現在比較像公開入口，而不是純網站主機</li>
+            </ul>
+          </article>
+
+          <article class="arch-card frame white-panel">
+            <h2>我看到的 VPS 現況</h2>
+            <div class="status-good frame white-panel">
+              <b>基礎不差</b><br />
+              Ubuntu 24.04、UFW 開啟、只放行 22/80/443、Fail2ban 有開、Caddy 正常、Tailscale 正常。
+            </div>
+            <div class="status-watch frame white-panel">
+              <b>仍要注意</b><br />
+              SSH 目前允許 root 直接登入，雖然已禁用密碼登入，但長期來說還是建議再收斂。
+            </div>
+            <ul class="arch-list">
+              <li>適合當你未來多站點的入口主機</li>
+              <li>不適合每個服務自己亂開 port 對外</li>
+              <li>最好的做法是所有外部流量都先進 Caddy</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="arch-grid">
+          <article class="arch-card frame white-panel">
+            <h2>我建議的未來架構</h2>
+            <p class="arch-mini">把這台 VPS 變成你的網站入口主機，所有站都走 subdomain，靜態站跟動態服務分流管理。</p>
+            <div class="diagram frame white-panel">
+<pre>Internet
+   |
+   |-- dog.koxuan.com ----> VPS :80/:443
+   |-- bot.koxuan.com ----> VPS :80/:443
+   |-- lab.koxuan.com ----> VPS :80/:443
+   |-- api.koxuan.com ----> VPS :80/:443
+   |
+   v
++------------------------------------------------+
+| VPS 139.59.122.96                              |
+|                                                |
+|  Caddy (唯一公開入口)                          |
+|                                                |
+|  路由規則：                                     |
+|  - dog.koxuan.com -> 靜態網站                  |
+|  - bot.koxuan.com -> reverse proxy             |
+|  - lab.koxuan.com -> 靜態網站 / 測試站         |
+|  - api.koxuan.com -> 後端服務                  |
++----------------------+-------------------------+
+                       |
+        +--------------+--------------+
+        |                             |
+        v                             v
+  /srv/www/...                  127.0.0.1 / Tailscale / Docker
+  靜態網站目錄                    動態服務 / 私網服務 / API</pre>
+            </div>
+          </article>
+
+          <article class="arch-card frame white-panel">
+            <h2>這種設計的核心邏輯</h2>
+            <ul class="arch-list">
+              <li><b>Caddy 是唯一公開入口</b>，TLS 與 hostname 都交給它</li>
+              <li><b>靜態站</b> 直接由 VPS 讀檔提供</li>
+              <li><b>動態站</b> 用 reverse proxy 指到本機服務、Docker 或 Tailscale</li>
+              <li><b>每站一個 subdomain</b>，未來加網站不需要重做架構</li>
+            </ul>
+            <div class="arch-pill-row">
+              <span class="arch-pill">乾淨</span>
+              <span class="arch-pill">可擴充</span>
+              <span class="arch-pill">好維護</span>
+              <span class="arch-pill">安全面較好控</span>
+            </div>
+          </article>
+        </section>
+
+        <section class="arch-card frame white-panel">
+          <h2>你現在最適合的實際落地版本</h2>
+          <div class="diagram frame white-panel">
+<pre>                              GitHub repo
+                         (doggo-dashboard source)
+                                      |
+                                      | deploy static files
+                                      v
+                   /srv/www/dog.koxuan.com/current
+                                      |
+Internet                              |
+   |                                  |
+   | dog.koxuan.com                   |
+   | bot.koxuan.com                   |
+   v                                  v
++-----------------------------------------------------------+
+| VPS: 139.59.122.96                                        |
+|                                                           |
+|  Caddy                                                    |
+|  ├─ dog.koxuan.com -> static files                        |
+|  |                    /srv/www/dog.koxuan.com/current     |
+|  |                                                        |
+|  └─ bot.koxuan.com -> reverse_proxy 100.74.22.60:18889    |
+|                                                           |
+|  UFW: allow 22 / 80 / 443                                |
+|  Fail2ban: sshd                                           |
+|  Tailscale: enabled                                       |
++-----------------------------------------------------------+</pre>
+          </div>
+          <div class="arch-columns">
+            <div class="arch-card frame white-panel">
+              <h3>靜態站怎麼放</h3>
+              <div class="diagram frame white-panel"><pre>/srv/www/
+  dog.koxuan.com/
+    current/
+      index.html
+      style.css
+      ui.js
+      data.json</pre></div>
+            </div>
+            <div class="arch-card frame white-panel">
+              <h3>Caddy 概念</h3>
+              <div class="diagram frame white-panel"><pre>dog.koxuan.com {
+    root * /srv/www/dog.koxuan.com/current
+    file_server
+}
+
+bot.koxuan.com {
+    reverse_proxy 100.74.22.60:18889
+}</pre></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="arch-card frame white-panel">
+          <h2>我建議的分階段做法</h2>
+          <div class="arch-steps">
+            <div class="arch-step frame white-panel">
+              <b>保留 bot.koxuan.com 現況</b><br />
+              先不要動已經在跑的反代服務，避免影響現有入口。
+            </div>
+            <div class="arch-step frame white-panel">
+              <b>新增 dog.koxuan.com 到 VPS</b><br />
+              把 dashboard 靜態檔部署到 VPS，讓 Caddy 直接 serve。
+            </div>
+            <div class="arch-step frame white-panel">
+              <b>整理部署流程</b><br />
+              後續再做 deploy script、自動同步、rollback 與備份。
+            </div>
+            <div class="arch-step frame white-panel">
+              <b>之後再做安全收斂</b><br />
+              例如非 root 部署、SSH root login 收緊、站點管理規範化。
+            </div>
+          </div>
+        </section>
+
+        <footer class="arch-footer frame candy">
+          <b>一句話總結</b><br />
+          這台 VPS 最適合被設計成你的 <b>網站入口主機</b>。<br />
+          靜態站直接由 Caddy 提供，動態服務走 reverse proxy，每個網站各自一個 subdomain，之後你要加更多站才不會亂掉。
+        </footer>
+      </div>
+    </div>
+  </body>
+</html>
