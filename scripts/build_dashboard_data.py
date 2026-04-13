@@ -307,17 +307,28 @@ def weather_summary(items: list[dict[str, Any]]) -> str:
 
 def commute_watch(items: list[dict[str, Any]]) -> str:
     if not items:
-        return "女友今天移動路線的天氣提醒還沒整理好。"
-    route = [item for item in items if item.get('key') in {'zhonghe', 'songshan'}]
-    if not route:
-        return "中和到松山這段目前沒有特別需要注意的區域。"
-    focus = max(route, key=lambda item: item.get('rainChance') or 0)
-    rain = focus.get('rainChance') or 0
-    if rain >= 60:
-        return f"女友今天在 {focus['label']} 這段比較需要注意，下雨機率偏高。"
-    if rain >= 30:
-        return f"女友今天移動到 {focus['label']} 一帶時，可能會遇到零星降雨。"
-    return "中和到松山這段目前看起來還算穩，先不用太擔心下雨。"
+        return "三地天氣提醒還沒整理好。"
+    enriched = []
+    for item in items:
+        rain = float(item.get('rainChance') or 0)
+        temp = item.get('tempC')
+        enriched.append({
+            'label': item.get('label') or '未知地點',
+            'rain': rain,
+            'temp': float(temp) if temp is not None else None,
+        })
+    rainiest = max(enriched, key=lambda item: item['rain'])
+    hottest = max(enriched, key=lambda item: item['temp'] if item['temp'] is not None else float('-inf'))
+    coolest = min(enriched, key=lambda item: item['temp'] if item['temp'] is not None else float('inf'))
+    wet_spots = [item['label'] for item in enriched if item['rain'] >= 30]
+    if rainiest['rain'] >= 60:
+        return f"三地裡最需要注意的是 {rainiest['label']}，降雨機率偏高；出門建議優先防這一區。"
+    if wet_spots:
+        spots = '、'.join(wet_spots)
+        return f"三地裡 {spots} 比較可能遇到零星降雨，其它區域目前還算穩。"
+    if hottest['temp'] is not None and coolest['temp'] is not None and hottest['label'] != coolest['label'] and (hottest['temp'] - coolest['temp']) >= 3:
+        return f"今天三地降雨都不高，但 {hottest['label']} 到 {coolest['label']} 有明顯溫差，穿搭可以抓分層。"
+    return "目前石牌、中和、松山三地都算穩，先不用太擔心下雨。"
 
 
 def weather_feel_text(temp: float | None, rain: float | None) -> str:

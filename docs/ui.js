@@ -1,11 +1,12 @@
 import { createDogController } from './dog-controller.js';
 import { profileId, supabase } from './supabase-client.js';
 const defaultVisibleCards = ['squad', 'quotes', 'us-quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
+const defaultCollapsedCards = ['quotes', 'us-quotes', 'feed', 'flight', 'trump', 'guestbook'];
 const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
   card_order: [...defaultVisibleCards],
-  collapsed_cards: ['weather'],
+  collapsed_cards: [...defaultCollapsedCards],
   flight_origin: 'TPE',
   flight_regions: ['日本', '韓國', '東南亞'],
 };
@@ -600,7 +601,7 @@ function applyCardVisibility() {
 }
 
 function applyCollapsedCards() {
-  const collapsed = new Set(dashboardPreferences.collapsed_cards || []);
+  const collapsed = new Set(dashboardPreferences.collapsed_cards || defaultCollapsedCards);
   document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
     const cardId = btn.dataset.cardCollapseToggle;
     const card = document.querySelector(`[data-card-id="${cardId}"]`);
@@ -609,8 +610,6 @@ function applyCollapsedCards() {
     card.classList.toggle('intel-panel-collapsed', isCollapsed);
     btn.textContent = isCollapsed ? '展開' : '收起';
   });
-  const weatherPanel = document.getElementById('weather-panel');
-  weatherPanel?.classList.remove('weather-panel-collapsed');
 }
 
 function renderLayoutOptions() {
@@ -705,6 +704,8 @@ async function loadPreferences() {
   }
   dashboardPreferences.visible_cards = normalizePreferenceList(dashboardPreferences.visible_cards);
   dashboardPreferences.card_order = normalizePreferenceList(dashboardPreferences.card_order);
+  const collapsed = Array.isArray(dashboardPreferences.collapsed_cards) ? dashboardPreferences.collapsed_cards : defaultCollapsedCards;
+  dashboardPreferences.collapsed_cards = collapsed.filter((id, index, arr) => defaultVisibleCards.includes(id) && arr.indexOf(id) === index);
   applyCardVisibility();
   applyCollapsedCards();
   renderLayoutOptions();
