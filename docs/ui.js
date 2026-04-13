@@ -575,12 +575,12 @@ function renderWeather(weather) {
   if (!list) return;
   list.innerHTML = '';
   const latestAsOf = weather?.items?.map((item) => item.asOf).filter(Boolean).sort().slice(-1)[0];
-  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : `石牌 / 中和 / 松山 即時整理 · 更新 ${formatShortDateTime(latestAsOf)}`;
-  if (summary) summary.textContent = weather?.summary || '狗狗正在看今天要不要帶傘。';
-  if (commute) commute.textContent = weather?.commuteWatch || '女友今天移動路線的提醒整理中。';
+  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : `石牌 / 中和 / 松山 三地整理 · 更新 ${formatShortDateTime(latestAsOf)}`;
+  if (summary) summary.textContent = weather?.summary || '狗狗正在整理三地今天的天氣重點。';
+  if (commute) commute.textContent = weather?.commuteWatch || '三地提醒整理中。';
   const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf });
   if (state) {
-    renderStateCard(list, meta, state, '生活天氣提醒暫時沒有完整資料');
+    renderStateCard(list, meta, state, '三地天氣智慧摘要暫時沒有完整資料');
     return;
   }
   weather.items.forEach((item) => {
