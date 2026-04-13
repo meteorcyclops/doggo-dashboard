@@ -1,0 +1,53 @@
+name: Deploy travel.koxuan.com to VPS
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'travel/**'
+      - 'scripts/deploy_travel_site.sh'
+      - 'docs/travel-koxuan-deploy.md'
+      - '.github/workflows/deploy-travel-vps.yml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s' "${{ secrets.VPS_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.VPS_DEPLOY_HOST }}" >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes -o BatchMode=yes "${{ secrets.VPS_DEPLOY_USER }}@${{ secrets.VPS_DEPLOY_HOST }}" 'echo SSH_OK'
+
+      - name: Sync travel site to VPS
+        shell: bash
+        env:
+          VPS_DEPLOY_HOST: ${{ secrets.VPS_DEPLOY_HOST }}
+          VPS_DEPLOY_USER: ${{ secrets.VPS_DEPLOY_USER }}
+        run: |
+          rsync -rlvz --delete --omit-dir-times --no-perms --no-owner --no-group \
+            --exclude '.DS_Store' \
+            ./travel/nagoya-hokuriku-osaka-2026-05-21-30/ "${VPS_DEPLOY_USER}@${VPS_DEPLOY_HOST}:/srv/www/travel.koxuan.com/current/"
+
+      - name: Finalize deploy on VPS
+        shell: bash
+        env:
+          VPS_DEPLOY_HOST: ${{ secrets.VPS_DEPLOY_HOST }}
+          VPS_DEPLOY_USER: ${{ secrets.VPS_DEPLOY_USER }}
+        run: |
+          ssh "${VPS_DEPLOY_USER}@${VPS_DEPLOY_HOST}" '
+            set -e
+            find /srv/www/travel.koxuan.com/current -type d -exec chmod 755 {} \;
+            find /srv/www/travel.koxuan.com/current -type f -exec chmod 644 {} \;
+            sudo /usr/bin/caddy validate --config /etc/caddy/Caddyfile
+            sudo /usr/bin/systemctl reload caddy
+            curl -I https://travel.koxuan.com
+          '

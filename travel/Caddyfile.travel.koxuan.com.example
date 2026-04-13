@@ -1,0 +1,16 @@
+travel.koxuan.com {
+    encode gzip zstd
+    root * /srv/www/travel.koxuan.com/current
+    file_server
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "SAMEORIGIN"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+
+    log {
+        output file /var/log/caddy/travel.koxuan.com.log
+        format console
+    }
+}
