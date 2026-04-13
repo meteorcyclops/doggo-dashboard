@@ -12,11 +12,13 @@
 
 ## 先做什麼
 
-先把 schema 套到 Supabase：
+先把 schema 套到 Supabase，建議直接用 migration 版本：
+
+- `supabase/migrations/20260413142500_chat_schema.sql`
+
+如果你只是想先手動貼到 SQL editor，也可以用：
 
 - `supabase/chat_schema.sql`
-
-如果你已經有 Supabase 專案，可以直接在 SQL editor 執行。
 
 ## 必要環境變數
 
@@ -77,11 +79,18 @@ curl http://127.0.0.1:8787/healthz
 - 不能送到前端
 - 不要 commit 到 repo
 
+## 部署檔
+
+我另外補了可直接拿去改的範本：
+
+- `chat/nginx.chat.koxuan.com.conf.example`
+- `chat/chat.service.example`
+- `scripts/deploy_chat.sh`
+
 ## 下一步建議
 
 接下來最值得做的會是：
 
-- 把 `chat_schema.sql` 納入正式 migration 流程
 - 改成 Supabase Realtime，減少前端輪詢
 - 補 invite revoke / expiry UI
 - 補 moderation / audit log
