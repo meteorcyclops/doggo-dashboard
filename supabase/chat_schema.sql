@@ -27,9 +27,15 @@ create table if not exists public.chat_messages (
   id uuid primary key default gen_random_uuid(),
   room_id uuid not null references public.chat_rooms(id) on delete cascade,
   nickname text not null,
-  body text not null check (char_length(body) between 1 and 400),
+  body text not null default '' check (char_length(body) <= 400),
+  image_url text,
+  image_path text,
   created_at timestamptz not null default now(),
-  deleted boolean not null default false
+  deleted boolean not null default false,
+  constraint chat_messages_content_check check (
+    char_length(body) between 1 and 400
+    or image_url is not null
+  )
 );
 
 create index if not exists idx_chat_messages_room_created_at on public.chat_messages(room_id, created_at desc);
@@ -62,7 +68,10 @@ using (true);
 create policy "chat_messages_insert_all"
 on public.chat_messages
 for insert
-with check (char_length(body) between 1 and 400);
+with check (
+  (char_length(body) between 1 and 400)
+  or image_url is not null
+);
 
 create policy "chat_rate_limits_select_all"
 on public.chat_rate_limits

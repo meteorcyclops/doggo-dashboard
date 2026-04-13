@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import mimetypes
 import os
 import secrets
 import time
@@ -17,15 +19,32 @@ RATE_LIMIT_SECONDS = int(os.environ.get('CHAT_RATE_LIMIT_SECONDS', '8'))
 MAX_MESSAGE_LENGTH = int(os.environ.get('CHAT_MAX_MESSAGE_LENGTH', '400'))
 MAX_MESSAGES = int(os.environ.get('CHAT_MAX_MESSAGES', '120'))
 SESSION_COOKIE_NAME = os.environ.get('CHAT_SESSION_COOKIE_NAME', 'koxuan_chat_session')
-SESSION_COOKIE_SECURE = os.environ.get('CHAT_SESSION_COOKIE_SECURE', 'true').lower() in {'1', 'true', 'yes', 'on'}
+SESSION_COOKIE_SECURE = os.environ.get('CHAT_SESSION_COOKIE_SECURE', 'false').lower() in {'1', 'true', 'yes', 'on'}
 SESSION_COOKIE_SAMESITE = os.environ.get('CHAT_SESSION_COOKIE_SAMESITE', 'Lax')
 PERMANENT_SESSION_LIFETIME_SECONDS = int(os.environ.get('CHAT_SESSION_TTL_SECONDS', str(60 * 60 * 24 * 7)))
 SUPABASE_URL = os.environ.get('CHAT_SUPABASE_URL', '').rstrip('/')
 SUPABASE_SERVICE_ROLE_KEY = os.environ.get('CHAT_SUPABASE_SERVICE_ROLE_KEY', '')
 SUPABASE_SCHEMA = os.environ.get('CHAT_SUPABASE_SCHEMA', 'public')
+SUPABASE_STORAGE_BUCKET = os.environ.get('CHAT_SUPABASE_STORAGE_BUCKET', 'chat-uploads')
+MAX_UPLOAD_BYTES = int(os.environ.get('CHAT_MAX_UPLOAD_BYTES', str(20 * 1024 * 1024)))
 
-ANIMALS = ['Fox', 'Otter', 'Moth', 'Panda', 'Corgi', 'Cat', 'Wolf', 'Lynx', 'Seal', 'Raven']
-COLORS = ['Amber', 'Mint', 'Indigo', 'Coral', 'Sky', 'Lemon', 'Rose', 'Pearl', 'Moss', 'Lilac']
+ANIMALS = [
+    '🦊 Fox',
+    '🦦 Otter',
+    '🦋 Moth',
+    '🐼 Panda',
+    '🐶 Corgi',
+    '🐱 Cat',
+    '🐺 Wolf',
+    '🐈 Lynx',
+    '🦭 Seal',
+    '🐦 Raven',
+    '🐰 Bunny',
+    '🦝 Raccoon',
+    '🦔 Hedgehog',
+    '🐸 Frog',
+]
+MOODS = ['Spark', 'Misty', 'Sunny', 'Pebble', 'Moon', 'Berry', 'Clover', 'Dawn', 'Pudding', 'Velvet']
 
 app = Flask(__name__)
 app.config.update(
@@ -35,9 +54,9 @@ app.config.update(
     SESSION_COOKIE_SECURE=SESSION_COOKIE_SECURE,
     SESSION_COOKIE_SAMESITE=SESSION_COOKIE_SAMESITE,
     PERMANENT_SESSION_LIFETIME=PERMANENT_SESSION_LIFETIME_SECONDS,
+    MAX_CONTENT_LENGTH=MAX_UPLOAD_BYTES,
 )
 app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
-
 
 if not SECRET_KEY:
     raise RuntimeError('CHAT_SECRET_KEY is required in production.')
@@ -53,7 +72,7 @@ class SupabaseError(RuntimeError):
     pass
 
 
-def supabase_request(method: str, path: str, *, query: dict[str, Any] | None = None, json_body: dict[str, Any] | list[dict[str, Any]] | None = None, prefer: str | None = None) -> Any:
+def supabase_request(method: str, path: str, *, query: dict[str, Any] | None = None, json_body: dict[str, Any] | list[dict[str, Any]] | None = None, data: bytes | None = None, extra_headers: dict[str, str] | None = None, prefer: str | None = None) -> Any:
     url = f"{SUPABASE_URL}/rest/v1/{path.lstrip('/')}"
     if query:
         url = f"{url}?{parse.urlencode(query, doseq=True)}"
@@ -68,19 +87,21 @@ def supabase_request(method: str, path: str, *, query: dict[str, Any] | None = N
     }
     if prefer:
         headers['Prefer'] = prefer
+    if extra_headers:
+        headers.update(extra_headers)
 
-    data = None
+    body = data
     if json_body is not None:
-        import json
-        data = json.dumps(json_body).encode('utf-8')
+        body = json.dumps(json_body).encode('utf-8')
 
-    req = urllib_request.Request(url, method=method.upper(), headers=headers, data=data)
+    req = urllib_request.Request(url, method=method.upper(), headers=headers, data=body)
     try:
-        with urllib_request.urlopen(req, timeout=20) as resp:
-            raw = resp.read().decode('utf-8')
-            if not raw:
+        with urllib_request.urlopen(req, timeout=30) as resp:
+            raw = resp.read().decode('utf-8') if resp.headers.get('Content-Type', '').startswith('application/json') else resp.read()
+            if raw in (b'', ''):
                 return None
-            import json
+            if isinstance(raw, bytes):
+                return raw
             return json.loads(raw)
     except error.HTTPError as exc:
         detail = exc.read().decode('utf-8', errors='ignore')
@@ -96,7 +117,7 @@ def fetch_one(path: str, query: dict[str, Any]) -> dict[str, Any] | None:
 
 def ensure_nickname() -> str:
     if 'nickname' not in session:
-        session['nickname'] = f"{secrets.choice(COLORS)} {secrets.choice(ANIMALS)}"
+        session['nickname'] = f"{secrets.choice(MOODS)} {secrets.choice(ANIMALS)}"
     return session['nickname']
 
 
@@ -196,6 +217,63 @@ def upsert_rate_limit(session_id: str) -> None:
     )
 
 
+def ensure_bucket_public() -> None:
+    buckets = supabase_request('GET', 'storage/v1/bucket', extra_headers={'Accept': 'application/json'}) or []
+    if any(bucket.get('name') == SUPABASE_STORAGE_BUCKET for bucket in buckets):
+        return
+    req = urllib_request.Request(
+        f'{SUPABASE_URL}/storage/v1/bucket',
+        method='POST',
+        headers={
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': f'Bearer {SUPABASE_SERVICE_ROLE_KEY}',
+            'Content-Type': 'application/json',
+        },
+        data=json.dumps({'id': SUPABASE_STORAGE_BUCKET, 'name': SUPABASE_STORAGE_BUCKET, 'public': True}).encode('utf-8'),
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=30):
+            return
+    except error.HTTPError as exc:
+        detail = exc.read().decode('utf-8', errors='ignore')
+        if 'already exists' in detail:
+            return
+        raise SupabaseError(f'Supabase storage bucket create failed: {detail}') from exc
+
+
+def upload_image(file_storage: Any, room_id: str) -> tuple[str, str]:
+    content = file_storage.read()
+    file_storage.stream.seek(0)
+    if not content:
+        raise ValueError('圖片內容是空的。')
+    if len(content) > MAX_UPLOAD_BYTES:
+        raise ValueError(f'圖片不能超過 {MAX_UPLOAD_BYTES // (1024 * 1024)}MB。')
+
+    mime_type = file_storage.mimetype or mimetypes.guess_type(file_storage.filename or '')[0] or 'application/octet-stream'
+    ext = mimetypes.guess_extension(mime_type) or '.bin'
+    image_path = f'{room_id}/{int(time.time())}-{secrets.token_urlsafe(8)}{ext}'
+    req = urllib_request.Request(
+        f'{SUPABASE_URL}/storage/v1/object/{SUPABASE_STORAGE_BUCKET}/{image_path}',
+        method='POST',
+        headers={
+            'apikey': SUPABASE_SERVICE_ROLE_KEY,
+            'Authorization': f'Bearer {SUPABASE_SERVICE_ROLE_KEY}',
+            'Content-Type': mime_type,
+            'x-upsert': 'false',
+        },
+        data=content,
+    )
+    try:
+        with urllib_request.urlopen(req, timeout=60):
+            pass
+    except error.HTTPError as exc:
+        detail = exc.read().decode('utf-8', errors='ignore')
+        raise SupabaseError(f'Supabase storage upload failed: {detail}') from exc
+
+    public_url = f'{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_STORAGE_BUCKET}/{image_path}'
+    return public_url, image_path
+
+
 @app.after_request
 def apply_security_headers(response: Any) -> Any:
     response.headers['X-Content-Type-Options'] = 'nosniff'
@@ -211,7 +289,13 @@ def index() -> Any:
     if room:
         ensure_nickname()
         ensure_session_id()
-        return render_template('index.html', nickname=session['nickname'], room=room, max_message_length=MAX_MESSAGE_LENGTH)
+        return render_template(
+            'index.html',
+            nickname=session['nickname'],
+            room=room,
+            max_message_length=MAX_MESSAGE_LENGTH,
+            max_upload_mb=max(1, MAX_UPLOAD_BYTES // (1024 * 1024)),
+        )
     return redirect('/enter')
 
 
@@ -268,24 +352,46 @@ def list_messages() -> Any:
         query={
             'room_id': f"eq.{room['id']}",
             'deleted': 'eq.false',
-            'select': 'id,nickname,body,created_at',
+            'select': 'id,nickname,body,image_url,created_at',
             'order': 'created_at.desc',
             'limit': MAX_MESSAGES,
         },
     ) or []
     items = list(reversed(rows))
-    return jsonify({'items': items, 'rateLimitSeconds': RATE_LIMIT_SECONDS, 'maxMessageLength': MAX_MESSAGE_LENGTH})
+    return jsonify({
+        'items': items,
+        'rateLimitSeconds': RATE_LIMIT_SECONDS,
+        'maxMessageLength': MAX_MESSAGE_LENGTH,
+        'maxUploadMb': max(1, MAX_UPLOAD_BYTES // (1024 * 1024)),
+    })
 
 
 @app.route('/api/messages', methods=['POST'])
 def create_message() -> Any:
     room = require_access()
-    payload = request.get_json(silent=True) or {}
-    body = (payload.get('body') or '').strip()
-    if not body:
-        return jsonify({'error': '訊息不能是空的。'}), 400
+    body = ''
+    image_url = None
+    image_path = None
+
+    if request.content_type and request.content_type.startswith('multipart/form-data'):
+        body = (request.form.get('body') or '').strip()
+        image_file = request.files.get('image')
+    else:
+        payload = request.get_json(silent=True) or {}
+        body = (payload.get('body') or '').strip()
+        image_file = None
+
     if len(body) > MAX_MESSAGE_LENGTH:
         return jsonify({'error': f'訊息不能超過 {MAX_MESSAGE_LENGTH} 字。'}), 400
+
+    if image_file and image_file.filename:
+        try:
+            image_url, image_path = upload_image(image_file, room['id'])
+        except ValueError as exc:
+            return jsonify({'error': str(exc)}), 400
+
+    if not body and not image_url:
+        return jsonify({'error': '文字或圖片至少要有一項。'}), 400
 
     session_id = ensure_session_id()
     now = datetime.now(timezone.utc)
@@ -299,7 +405,7 @@ def create_message() -> Any:
     supabase_request(
         'POST',
         'chat_messages',
-        json_body={'room_id': room['id'], 'nickname': nickname, 'body': body},
+        json_body={'room_id': room['id'], 'nickname': nickname, 'body': body, 'image_url': image_url, 'image_path': image_path},
         prefer='return=minimal',
     )
     upsert_rate_limit(session_id)
@@ -363,6 +469,7 @@ def healthz() -> Any:
 
 
 with app.app_context():
+    ensure_bucket_public()
     ensure_default_room()
     ensure_bootstrap_invite()
 

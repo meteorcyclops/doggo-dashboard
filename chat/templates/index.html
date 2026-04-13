@@ -23,12 +23,18 @@
             </form>
           </div>
         </div>
-        <div class="notice">邀請制匿名聊天室，已啟用基本限流與字數限制。</div>
+        <div class="notice">匿名暱稱會隨機分配，可傳文字也可上傳原圖。手機上也能順順用。</div>
         <div id="messages" class="messages"></div>
-        <form id="composer" class="composer">
-          <textarea id="body" maxlength="{{ max_message_length }}" placeholder="輸入訊息..." required></textarea>
+        <form id="composer" class="composer" enctype="multipart/form-data">
+          <textarea id="body" name="body" maxlength="{{ max_message_length }}" placeholder="輸入訊息，或直接只傳圖片也可以"></textarea>
+          <div class="upload-row">
+            <label class="upload-label" for="imageInput">選擇照片</label>
+            <input id="imageInput" name="image" type="file" accept="image/*" />
+            <span id="fileName" class="file-name">尚未選擇照片</span>
+          </div>
+          <div id="imagePreview" class="image-preview hidden"></div>
           <div class="composer-row">
-            <small id="hint">匿名顯示，請溫柔使用。</small>
+            <small id="hint">單則最多 {{ max_message_length }} 字，圖片上限 {{ max_upload_mb }}MB，原圖上傳。</small>
             <button type="submit">送出</button>
           </div>
         </form>

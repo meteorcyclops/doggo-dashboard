@@ -8,14 +8,16 @@ async function loadMessages() {
   const root = document.getElementById('messages');
   const hint = document.getElementById('hint');
   if (hint && data.rateLimitSeconds) {
-    hint.textContent = `匿名顯示，發言冷卻 ${data.rateLimitSeconds} 秒，單則最多 ${data.maxMessageLength} 字。`;
+    hint.textContent = `匿名顯示，發言冷卻 ${data.rateLimitSeconds} 秒，單則最多 ${data.maxMessageLength} 字，圖片上限 ${data.maxUploadMb}MB。`;
   }
   root.innerHTML = '';
   for (const item of data.items || []) {
     const el = document.createElement('article');
     el.className = 'msg';
     const t = formatMessageTime(item.created_at);
-    el.innerHTML = `<div class="meta">${escapeHtml(item.nickname)} · ${t}</div><div>${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>`;
+    const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
+    const imageHtml = item.image_url ? `<img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" />` : '';
+    el.innerHTML = `<div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>${textHtml}${imageHtml}`;
     root.appendChild(el);
   }
   root.scrollTop = root.scrollHeight;
@@ -32,15 +34,45 @@ function escapeHtml(v) {
   return String(v).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
 }
 
+function escapeAttribute(v) {
+  return String(v).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+}
+
+function updatePreview(file) {
+  const preview = document.getElementById('imagePreview');
+  const fileName = document.getElementById('fileName');
+  if (!preview || !fileName) return;
+  if (!file) {
+    preview.classList.add('hidden');
+    preview.innerHTML = '';
+    fileName.textContent = '尚未選擇照片';
+    return;
+  }
+  fileName.textContent = file.name;
+  const url = URL.createObjectURL(file);
+  preview.classList.remove('hidden');
+  preview.innerHTML = `<img src="${url}" alt="預覽圖片" />`;
+}
+
 document.getElementById('refreshBtn')?.addEventListener('click', loadMessages);
+
+document.getElementById('imageInput')?.addEventListener('change', (e) => {
+  const file = e.target.files?.[0];
+  updatePreview(file);
+});
 
 document.getElementById('composer')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const body = document.getElementById('body');
+  const imageInput = document.getElementById('imageInput');
+  const form = new FormData();
+  form.append('body', body.value);
+  const file = imageInput?.files?.[0];
+  if (file) form.append('image', file);
+
   const res = await fetch('/api/messages', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ body: body.value }),
+    body: form,
   });
   const data = await res.json();
   if (!res.ok) {
@@ -48,6 +80,8 @@ document.getElementById('composer')?.addEventListener('submit', async (e) => {
     return;
   }
   body.value = '';
+  if (imageInput) imageInput.value = '';
+  updatePreview(null);
   loadMessages();
 });
 
