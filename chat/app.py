@@ -279,6 +279,8 @@ def index() -> Any:
             room=room,
             max_message_length=MAX_MESSAGE_LENGTH,
             max_upload_mb=max(1, MAX_UPLOAD_BYTES // (1024 * 1024)),
+            admin_mode=session.get('chat_admin_token') == ADMIN_TOKEN,
+            admin_token=session.get('chat_admin_token', ''),
         )
     return redirect('/enter')
 

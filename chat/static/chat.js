@@ -1,4 +1,4 @@
-const ADMIN_TOKEN = new URLSearchParams(location.search).get('token') || '';
+const ADMIN_TOKEN = window.CHAT_ADMIN_MODE ? (window.CHAT_ADMIN_TOKEN || '') : '';
 
 async function loadMessages() {
   const res = await fetch('/api/messages');

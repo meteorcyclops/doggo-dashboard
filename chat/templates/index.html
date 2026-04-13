@@ -44,6 +44,10 @@
       <button id="lightboxClose" class="lightbox-close" type="button">✕</button>
       <img id="lightboxImage" class="lightbox-image" alt="全螢幕圖片" />
     </div>
+    <script>
+      window.CHAT_ADMIN_MODE = {{ 'true' if admin_mode else 'false' }};
+      window.CHAT_ADMIN_TOKEN = {{ admin_token|tojson }};
+    </script>
     <script src="/static/chat.js"></script>
   </body>
 </html>
