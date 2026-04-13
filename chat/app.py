@@ -181,9 +181,12 @@ def ensure_bootstrap_invite() -> None:
         create_invite(room['id'], label='bootstrap')
 
 
+def current_admin_token() -> str:
+    return request.headers.get('X-Admin-Token', '') or request.args.get('token', '') or session.get('chat_admin_token', '')
+
+
 def require_admin_token() -> None:
-    token = request.headers.get('X-Admin-Token', '') or request.args.get('token', '')
-    if token != ADMIN_TOKEN:
+    if current_admin_token() != ADMIN_TOKEN:
         abort(401)
 
 
@@ -305,6 +308,9 @@ def enter() -> Any:
                     session['chat_authorized'] = True
                     session['chat_room_id'] = room['id']
                     session['chat_invite_token'] = invite_token
+                    admin_token = request.args.get('token', '') or request.form.get('admin_token', '')
+                    if admin_token == ADMIN_TOKEN:
+                        session['chat_admin_token'] = admin_token
                     ensure_nickname()
                     ensure_session_id()
                     return redirect('/')

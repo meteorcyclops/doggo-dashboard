@@ -8,14 +8,20 @@
   </head>
   <body>
     <main class="shell">
-      <section class="card">
-        <div class="kicker">PRIVATE CIRCLE</div>
+      <section class="card gate-card">
+        <div class="kicker">INVITE ONLY</div>
         <h1>匿名小圈圈聊天室</h1>
-        <p>輸入入口碼才能進入。聊天室內會匿名顯示，適合小圈圈使用。</p>
+        <p>這不是公開聊天室。要有邀請連結或入口碼才能進入，避免聊天室裸奔在公網上。</p>
         <form method="post" class="form">
-          <input type="password" name="token" placeholder="輸入入口碼" required />
+          <input type="password" name="token" placeholder="輸入邀請碼或 invite token" value="{{ invite_token or '' }}" required />
+          {% if request.args.get('token') %}<input type="hidden" name="admin_token" value="{{ request.args.get('token') }}" />{% endif %}
           <button type="submit">進入聊天室</button>
         </form>
+        <div class="tips">
+          <div>• 進房後會自動配一個匿名暱稱</div>
+          <div>• 發言有基本限流與長度限制</div>
+          <div>• 連結可做成一次性或限次邀請</div>
+        </div>
         {% if error %}<div class="error">{{ error }}</div>{% endif %}
       </section>
     </main>
