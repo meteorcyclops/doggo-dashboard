@@ -1,0 +1,16 @@
+chat.koxuan.com {
+    encode gzip zstd
+
+    reverse_proxy 127.0.0.1:8787
+
+    header {
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "same-origin"
+    }
+
+    log {
+        output file /var/log/caddy/chat.koxuan.com.log
+        format console
+    }
+}

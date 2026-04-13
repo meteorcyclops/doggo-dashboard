@@ -84,8 +84,17 @@ curl http://127.0.0.1:8787/healthz
 我另外補了可直接拿去改的範本：
 
 - `chat/nginx.chat.koxuan.com.conf.example`
+- `chat/Caddyfile.chat.koxuan.com.example`
 - `chat/chat.service.example`
+- `chat/chat-koxuan.service.example`
 - `scripts/deploy_chat.sh`
+- `scripts/deploy_chat_vps.sh`
+
+如果你的 VPS 跟目前這台 `koxuan-web-01` 一樣是跑 Caddy，優先用：
+
+- `chat/Caddyfile.chat.koxuan.com.example`
+- `chat/chat-koxuan.service.example`
+- `scripts/deploy_chat_vps.sh`
 
 ## 下一步建議
 

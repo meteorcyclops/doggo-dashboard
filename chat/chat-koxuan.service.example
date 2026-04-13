@@ -1,0 +1,16 @@
+[Unit]
+Description=chat.koxuan.com Flask app
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/chat-koxuan/chat
+EnvironmentFile=/opt/chat-koxuan/chat/.env
+ExecStart=/opt/chat-koxuan/chat/.venv/bin/gunicorn -c gunicorn.conf.py wsgi:app
+Restart=always
+RestartSec=3
+User=chatapp
+Group=chatapp
+
+[Install]
+WantedBy=multi-user.target
