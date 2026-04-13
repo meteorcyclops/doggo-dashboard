@@ -13,11 +13,20 @@ async function loadMessages() {
   root.innerHTML = '';
   for (const item of data.items || []) {
     const el = document.createElement('article');
-    el.className = 'msg';
+    const hasImage = Boolean(item.image_url);
+    el.className = hasImage ? 'msg msg-photo' : 'msg';
     const t = formatMessageTime(item.created_at);
     const textHtml = item.body ? `<div class="body-text">${escapeHtml(item.body).replace(/\n/g, '<br>')}</div>` : '';
-    const imageHtml = item.image_url ? `<img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" />` : '';
-    el.innerHTML = `<div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>${textHtml}${imageHtml}`;
+    if (hasImage) {
+      el.innerHTML = `
+        <img class="msg-image" src="${escapeAttribute(item.image_url)}" alt="上傳圖片" loading="lazy" />
+        <div class="msg-photo-caption">
+          <div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>
+          ${textHtml}
+        </div>`;
+    } else {
+      el.innerHTML = `<div class="meta"><span>${escapeHtml(item.nickname)}</span><span>${t}</span></div>${textHtml}`;
+    }
     root.appendChild(el);
   }
   root.scrollTop = root.scrollHeight;
