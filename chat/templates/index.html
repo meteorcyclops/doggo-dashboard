@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chat.koxuan.com</title>
+    <link rel="stylesheet" href="/static/chat.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="card chat-card">
+        <div class="topbar">
+          <div>
+            <div class="kicker">PRIVATE CIRCLE</div>
+            <h1>匿名小圈圈聊天室</h1>
+            <p class="sub">你現在的匿名暱稱是 <b id="nickname">{{ nickname }}</b></p>
+          </div>
+          <button id="refreshBtn" class="secondary">刷新</button>
+        </div>
+        <div id="messages" class="messages"></div>
+        <form id="composer" class="composer">
+          <textarea id="body" maxlength="400" placeholder="輸入訊息..." required></textarea>
+          <div class="composer-row">
+            <small>匿名顯示，基本限流已啟用。</small>
+            <button type="submit">送出</button>
+          </div>
+        </form>
+      </section>
+    </main>
+    <script src="/static/chat.js"></script>
+  </body>
+</html>

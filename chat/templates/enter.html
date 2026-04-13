@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chat.koxuan.com</title>
+    <link rel="stylesheet" href="/static/chat.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="card">
+        <div class="kicker">PRIVATE CIRCLE</div>
+        <h1>匿名小圈圈聊天室</h1>
+        <p>輸入入口碼才能進入。聊天室內會匿名顯示，適合小圈圈使用。</p>
+        <form method="post" class="form">
+          <input type="password" name="token" placeholder="輸入入口碼" required />
+          <button type="submit">進入聊天室</button>
+        </form>
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+      </section>
+    </main>
+  </body>
+</html>
