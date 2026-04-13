@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Xuan's Cyberdog Intel Grid</title>
+    <title>Xuan's First Home</title>
     <link rel="stylesheet" href="./style.css" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   </head>
@@ -11,9 +11,9 @@
     <div class="dream-shell">
       <header class="dream-top frame candy">
         <div class="title-block">
-          <div class="game-kicker">CYBERDOG INTEL GRID</div>
-          <div class="game-title">XUAN'S INTEL GRID</div>
-          <div class="game-sub">狗狗值守的高密度戰情面板，市場、事件、風向都被壓進同一個 HUD。</div>
+          <div class="game-kicker">PIXEL PET HOUSE</div>
+          <div class="game-title">XUAN'S FIRST HOME</div>
+          <div class="game-sub">狗狗守著的小屋，今天的重點都在這裡。</div>
         </div>
         <div class="top-stats">
           <div class="stat-pill"><span>狀態</span><b id="line-link">—</b></div>
@@ -25,26 +25,16 @@
       </header>
 
       <section class="hero-hud frame white-panel">
-        <div class="hero-grid-overlay" aria-hidden="true"></div>
         <div class="hero-copy">
-          <div class="hero-eyebrow-row">
-            <span class="hero-eyebrow-pill">LIVE INTEL</span>
-            <span class="hero-eyebrow-pill danger">DOGGO PRIORITY ENGINE</span>
-          </div>
           <div class="hero-label">DOGGO COMMAND HUD</div>
-          <h1 class="hero-title">狗狗坐鎮霓虹情報台，替你先把市場主線、異常訊號和事件節奏壓縮成可快速判讀的戰情畫面。</h1>
-          <p class="hero-desc">這裡不是可愛小屋展示頁，而是帶一點 cyberpunk 緊張感的情報 HUD。先看主軸，再看排行，最後再往下挖細節。</p>
+          <h1 class="hero-title">今天的狗狗，守在像素小屋裡，替你看著市場、新聞和外面的風向。</h1>
+          <p class="hero-desc">這裡不是冷冰冰的儀表板，比較像狗狗的情報基地。牠會整理今天值得先看的線索，也會在安靜的時候陪你慢慢逛。</p>
           <div class="market-session-strip" id="market-session-strip">
             <span class="market-session-pill">台股：讀取中</span>
             <span class="market-session-pill">美股：讀取中</span>
           </div>
         </div>
         <div class="hero-metrics">
-          <div class="hero-metric hero-metric-ledger">
-            <span>戰情層級</span>
-            <b>MARKET / SIGNAL / EVENT</b>
-            <small>將零散市場資訊收束成可行動的焦點排序</small>
-          </div>
           <div class="hero-metric">
             <span>目前模式</span>
             <b id="hero-session">讀取中</b>
@@ -72,7 +62,6 @@
 
       <main class="dream-layout">
         <div class="utility-strip frame white-panel">
-          <div class="utility-kicker">SYSTEM CONTROLS</div>
           <button class="cmd-btn" id="refresh-btn">刷新</button>
           <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
           <div class="hint utility-hint" id="action-hint">靜態儀表板；內容由建置流程寫入，報價與摘要非即時。</div>
@@ -80,8 +69,6 @@
 
         <section class="battle-card frame candy">
           <div class="battle-stage">
-            <div class="battle-hud-overlay" aria-hidden="true"></div>
-            <div class="battle-corners" aria-hidden="true"></div>
             <div class="moon"></div>
             <div class="star st1"></div>
             <div class="star st2"></div>
@@ -107,10 +94,6 @@
                 <div class="hp-bar pink"><i id="enemy-hp"></i></div>
               </div>
               <div class="enemy-text" id="current-status">讀取中...</div>
-              <div class="battle-status-leds" aria-hidden="true">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="battle-scanlines" aria-hidden="true"></div>
               <div class="battle-focus-grid">
                 <div class="battle-focus-card battle-broadcast-card">
                   <span>狗狗即時播報</span>
