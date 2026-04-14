@@ -1137,6 +1137,35 @@ function renderSummary(data) {
   pulseChildren('#summary-list > li');
 }
 
+
+async function refreshLiveTwQuotes() {
+  if (!currentData?.quotes?.items?.length) return;
+  const symbols = currentData.quotes.items.map((item) => item.symbol).filter(Boolean);
+  if (!symbols.length) return;
+  try {
+    const res = await fetch(`https://chat.koxuan.com/api/tw-quotes?symbols=${encodeURIComponent(symbols.join(','))}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    const map = new Map((payload.items || []).map((item) => [item.symbol, item]));
+    let changed = false;
+    currentData.quotes.items = currentData.quotes.items.map((item) => {
+      const live = map.get(item.symbol);
+      if (!live) return item;
+      changed = true;
+      return { ...item, ...live, name: item.name || live.name || item.symbol };
+    });
+    if (changed) {
+      currentData.quotes.asOf = payload.asOf;
+      renderQuotes(currentData.quotes);
+      renderSummary(currentData);
+      const hint = document.getElementById('action-hint');
+      if (hint) hint.textContent = `股價已切換為即時更新 · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
+    }
+  } catch (err) {
+    console.warn('live tw quotes failed', err);
+  }
+}
+
 const POLL_MS = 30_000;
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
@@ -1178,6 +1207,7 @@ async function loadData(opts = {}) {
     renderSummary(data);
     startBroadcastRotation(data);
     staggerFeedLists(silent);
+    refreshLiveTwQuotes();
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
