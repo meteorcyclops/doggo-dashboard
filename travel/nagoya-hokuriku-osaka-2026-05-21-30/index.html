@@ -291,6 +291,63 @@
         padding: 18px;
       }
 
+      .day-details {
+        margin-top: 14px;
+        border-top: 1px solid var(--line);
+        padding-top: 14px;
+      }
+
+      .day-details summary {
+        list-style: none;
+        cursor: pointer;
+        font-weight: 700;
+        color: var(--strong);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .day-details summary::-webkit-details-marker { display: none; }
+
+      .day-details summary::after {
+        content: "+";
+        font-size: 18px;
+        line-height: 1;
+      }
+
+      .day-details[open] summary::after {
+        content: "−";
+      }
+
+      .detail-grid {
+        display: grid;
+        gap: 12px;
+        margin-top: 14px;
+      }
+
+      .detail-card {
+        border-radius: 18px;
+        padding: 14px;
+        background: rgba(255,255,255,0.58);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+      }
+
+      .detail-card-label {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .detail-card-value {
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text);
+      }
+
       .day-top {
         display: flex;
         justify-content: space-between;
@@ -491,6 +548,58 @@
         gap: 14px;
       }
 
+      .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .dashboard-card {
+        border-radius: 24px;
+        padding: 18px;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow);
+      }
+
+      .dashboard-card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .check-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .check-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .check-item:last-child { border-bottom: 0; padding-bottom: 0; }
+
+      .check-dot {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        flex: 0 0 auto;
+        margin-top: 2px;
+      }
+
       .callout-card {
         border-radius: 22px;
         padding: 18px;
@@ -576,6 +685,8 @@
         .overview-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
         .resource-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
         .callout-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .dashboard-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .detail-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       }
 
       @media (min-width: 1000px) {
@@ -712,6 +823,7 @@
                 <li>晚上散步 MIRAI TOWER、Oasis 21，旅程第一晚不要排太滿。</li>
                 <li>晚餐可選手羽先或味噌炸豬排，讓名古屋感先上來。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 1 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">推薦區域</div><div class="detail-card-value">名古屋站適合進出，榮適合第一晚散步與吃晚餐。</div></div><div class="detail-card"><div class="detail-card-label">今天不要做</div><div class="detail-card-value">不要硬塞景點，不要把第一天變成跑點日。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-2">
@@ -724,6 +836,7 @@
                 <li>中午可安排鰻魚飯三吃，下午去熱田神宮、大須觀音與大須商店街。</li>
                 <li>如果想多一點知性行程，德川美術館可作為備選。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 2 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">吃飯關鍵字</div><div class="detail-card-value">Morning Service、鰻魚飯三吃、大須商店街小吃。</div></div><div class="detail-card"><div class="detail-card-label">節奏提醒</div><div class="detail-card-value">這天點很多，但還算順路，午休不要拖太長。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-3">
@@ -736,6 +849,7 @@
                 <li>下午散步三町通、高山陣屋，順手進酒造試飲。</li>
                 <li>高山這晚建議住溫泉旅館或步行方便的市區飯店。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 3 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">指定席提醒</div><div class="detail-card-value">JR Hida 建議提早劃位，避免熱門時段滿席。</div></div><div class="detail-card"><div class="detail-card-label">住宿建議</div><div class="detail-card-value">高山站步行圈最穩，想放鬆可找溫泉旅館。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-4">
@@ -748,6 +862,7 @@
                 <li>富山市玻璃美術館本身就是很強的建築景點，適合成人旅行。</li>
                 <li>傍晚走環水公園，搭配白蝦丼或富山黑拉麵收尾。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 4 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">亮點切換</div><div class="detail-card-value">今天從木造老街切到玻璃與水岸，風格變化很漂亮。</div></div><div class="detail-card"><div class="detail-card-label">美食關鍵字</div><div class="detail-card-value">白蝦丼、富山黑拉麵，選一個當富山記憶點。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-5">
@@ -760,6 +875,7 @@
                 <li>白天走兼六園、金澤城公園。</li>
                 <li>近江町市場吃海鮮，傍晚轉去東茶屋街看老街氣氛。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 5 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">拍照感最好</div><div class="detail-card-value">兼六園與東茶屋街是金澤第一天最有「來到這裡」感的地方。</div></div><div class="detail-card"><div class="detail-card-label">住宿重點</div><div class="detail-card-value">金澤留兩晚是對的，第一天先把古典面收起來。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-6">
@@ -772,6 +888,7 @@
                 <li>下午排金澤 21 世紀美術館；若想收心靈感，可補鈴木大拙館。</li>
                 <li>晚上留給居酒屋或加賀料理。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 6 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">最適合慢走</div><div class="detail-card-value">這天不需要趕，多留一點時間給街景與美術館感受。</div></div><div class="detail-card"><div class="detail-card-label">可刪可加</div><div class="detail-card-value">如果體力一般，可二選一保留 21 世紀美術館或鈴木大拙館。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-7">
@@ -784,6 +901,7 @@
                 <li>中午搭北陸新幹線到敦賀，再轉 Thunderbird 前往大阪。</li>
                 <li>建議住宿選在梅田，後兩天移動最輕鬆。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 7 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">最重要提醒</div><div class="detail-card-value">敦賀轉乘是這趟最需要穩穩處理的交通段，不要壓太緊。</div></div><div class="detail-card"><div class="detail-card-label">抵達後策略</div><div class="detail-card-value">進大阪後先入住、吃飯、熟悉梅田，不要急著再衝景點。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-8">
@@ -796,6 +914,7 @@
                 <li>中午可接 KITTE 大阪，適合選物與吃飯。</li>
                 <li>下午轉往中之島美術館與河岸散步，整天是比較新的大阪面貌。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 8 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">今日風格</div><div class="detail-card-value">不是經典觀光大阪，而是新城市作品感的大阪。</div></div><div class="detail-card"><div class="detail-card-label">適合拍什麼</div><div class="detail-card-value">建築、商場空間、河岸步道，比較有城市更新感。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-9">
@@ -808,6 +927,7 @@
                 <li>如果想回味大阪老味道，也可改走新世界與阿倍野 Harukas。</li>
                 <li>晚餐推薦北新地或福島區。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 9 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">A / B 路線</div><div class="detail-card-value">A 是設計與咖啡，B 是老大阪與展望景。</div></div><div class="detail-card"><div class="detail-card-label">最彈性的一天</div><div class="detail-card-value">很適合依天氣、體力、購物慾即時調整。</div></div></div></details>
             </article>
 
             <article class="day-card" id="day-10">
@@ -820,6 +940,7 @@
                 <li>中午前後搭 Haruka 前往關西機場。</li>
                 <li>16:20 飛回台北，結束 10 天行程。</li>
               </ul>
+              <details class="day-details"><summary>看更多 Day 10 細節</summary><div class="detail-grid"><div class="detail-card"><div class="detail-card-label">最後採買</div><div class="detail-card-value">伴手禮集中在梅田解決，避免最後一天再跑遠。</div></div><div class="detail-card"><div class="detail-card-label">機場節奏</div><div class="detail-card-value">這天關鍵是回得乾淨，不要讓最後一天變得狼狽。</div></div></div></details>
             </article>
           </div>
 
@@ -916,6 +1037,28 @@
           <article class="callout-card">
             <strong>最適合分享給朋友的看法</strong>
             這趟不是打卡式日本，而是偏城市散步、建築感和吃得舒服的版本，前面看名古屋，中段收北陸，最後用大阪新地標收尾。
+          </article>
+        </div>
+
+        <div class="dashboard-grid">
+          <article class="dashboard-card">
+            <h3>預約 / 待辦清單</h3>
+            <div class="check-list">
+              <div class="check-item"><div class="check-dot">1</div><div>確認高山、北陸周遊券購買方式與啟用日期。</div></div>
+              <div class="check-item"><div class="check-dot">2</div><div>優先處理 JR Hida、北陸段長途列車指定席。</div></div>
+              <div class="check-item"><div class="check-dot">3</div><div>確認大阪梅田住宿，避免最後機場日太趕。</div></div>
+              <div class="check-item"><div class="check-dot">4</div><div>之後補每城 1 到 2 間主餐廳與備選餐廳。</div></div>
+            </div>
+          </article>
+
+          <article class="dashboard-card">
+            <h3>行李 / 旅行提醒</h3>
+            <div class="check-list">
+              <div class="check-item"><div class="check-dot">✓</div><div>北陸段有城市移動，行李以好拖、好提為優先。</div></div>
+              <div class="check-item"><div class="check-dot">✓</div><div>5 月氣溫舒服，但早晚與雨天還是建議帶薄外套。</div></div>
+              <div class="check-item"><div class="check-dot">✓</div><div>每天節奏偏舒服，但移動日不要額外塞太多景點。</div></div>
+              <div class="check-item"><div class="check-dot">✓</div><div>最後一天採買集中梅田，減少機場日前的分散購物。</div></div>
+            </div>
           </article>
         </div>
       </section>
