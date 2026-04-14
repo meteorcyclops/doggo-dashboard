@@ -80,6 +80,12 @@
         font-size: 13px;
       }
 
+      .nav-links a:hover,
+      .jump-link:hover {
+        background: rgba(37, 92, 122, 0.08);
+        color: var(--strong);
+      }
+
       .hero {
         display: grid;
         gap: 18px;
@@ -145,6 +151,32 @@
         gap: 10px;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         margin-top: 18px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .hero-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 13px;
+        border: 1px solid rgba(37, 92, 122, 0.12);
+        background: rgba(255,255,255,0.72);
+        color: var(--strong);
+      }
+
+      .hero-action.primary {
+        background: linear-gradient(135deg, var(--strong), #4a7e9a);
+        color: white;
+        border-color: transparent;
       }
 
       .mini-card {
@@ -306,6 +338,43 @@
         font-weight: 700;
       }
 
+      .day-summary {
+        margin-top: 12px;
+        color: var(--text);
+        font-weight: 700;
+        line-height: 1.7;
+        font-size: 14px;
+      }
+
+      .day-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .day-stat {
+        border-radius: 16px;
+        padding: 12px;
+        background: rgba(255,255,255,0.62);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+      }
+
+      .day-stat-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 700;
+      }
+
+      .day-stat-value {
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
       .day-card ul {
         margin: 14px 0 0;
         padding-left: 18px;
@@ -321,6 +390,29 @@
       .highlight h3 {
         margin: 0 0 12px;
         font-size: 18px;
+      }
+
+      .map-links {
+        display: grid;
+        gap: 10px;
+      }
+
+      .map-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 14px;
+        border-radius: 16px;
+        background: rgba(255,255,255,0.58);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+        font-weight: 700;
+      }
+
+      .map-link span:last-child {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 600;
       }
 
       .sidebar-card p,
@@ -340,6 +432,28 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 14px;
+      }
+
+      .jump-strip {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        margin-top: 10px;
+        scrollbar-width: none;
+      }
+
+      .jump-strip::-webkit-scrollbar { display: none; }
+
+      .jump-link {
+        flex: 0 0 auto;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.72);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
       }
 
       .highlight {
@@ -400,6 +514,7 @@
           <a href="#overview">總覽</a>
           <a href="#days">每日行程</a>
           <a href="#highlights">亮點</a>
+          <a href="#resources">地圖資源</a>
           <a href="#notes">提醒</a>
         </div>
       </nav>
@@ -409,6 +524,12 @@
           <div class="eyebrow">Japan Family Trip · May 2026</div>
           <h1>名古屋進，<br />北陸穿越，<br />大阪回台。</h1>
           <p class="lead">這是一趟為 3 位成人安排的 10 天旅程。前段在名古屋以經典城市散策開場，中段用高山、北陸地區周遊券走高山、富山、金澤，最後收在大阪梅田與中之島的新地標。節奏以「好逛、好吃、好移動」為主，不硬塞。</p>
+
+          <div class="hero-actions">
+            <a class="hero-action primary" href="#days">直接看每日行程</a>
+            <a class="hero-action" href="#resources">先看住宿 / 地圖</a>
+            <a class="hero-action" href="#notes">旅前提醒</a>
+          </div>
 
           <div class="hero-meta">
             <div class="mini-card"><div class="mini-label">旅遊日期</div><div class="mini-value">2026/05/21 - 05/30</div></div>
@@ -475,11 +596,26 @@
           <p class="section-sub">手機滑動好讀，桌機則會搭配右側資訊欄一起看。</p>
         </div>
 
+        <div class="jump-strip" aria-label="快速跳日">
+          <a class="jump-link" href="#day-1">Day 1</a>
+          <a class="jump-link" href="#day-2">Day 2</a>
+          <a class="jump-link" href="#day-3">Day 3</a>
+          <a class="jump-link" href="#day-4">Day 4</a>
+          <a class="jump-link" href="#day-5">Day 5</a>
+          <a class="jump-link" href="#day-6">Day 6</a>
+          <a class="jump-link" href="#day-7">Day 7</a>
+          <a class="jump-link" href="#day-8">Day 8</a>
+          <a class="jump-link" href="#day-9">Day 9</a>
+          <a class="jump-link" href="#day-10">Day 10</a>
+        </div>
+
         <div class="content-grid">
           <div class="main-col day-list">
-            <article class="day-card">
+            <article class="day-card" id="day-1">
               <div class="day-top"><div><h3 class="day-title">Day 1｜抵達名古屋，晚上逛榮</h3><div class="day-date">5/21（四）</div></div><div class="day-badge">1</div></div>
               <div class="tag-row"><span class="tag">名古屋站 / 榮</span><span class="tag">夜景散步</span><span class="tag">手羽先</span></div>
+              <div class="day-summary">今日重點是順利進市區、吃一頓舒服的晚餐，先把旅行節奏慢慢打開。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">進市區 + 輕鬆散步</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">名鐵 μ-SKY</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">輕鬆</div></div></div>
               <ul>
                 <li>抵達 NGO 後搭名鐵 μ-SKY 進市區，入住名古屋站或榮商圈。</li>
                 <li>晚上散步 MIRAI TOWER、Oasis 21，旅程第一晚不要排太滿。</li>
@@ -487,9 +623,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-2">
               <div class="day-top"><div><h3 class="day-title">Day 2｜名古屋城、大須、熱田神宮</h3><div class="day-date">5/22（五）</div></div><div class="day-badge">2</div></div>
               <div class="tag-row"><span class="tag">名古屋城</span><span class="tag">鰻魚飯</span><span class="tag">大須商店街</span></div>
+              <div class="day-summary">今天是名古屋完整體驗日，歷史、神宮、美食與商店街會一次收齊。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">名古屋經典全餐</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">市區地鐵 / 步行</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等</div></div></div>
               <ul>
                 <li>早上體驗 Morning Service，再走名古屋城與本丸御殿。</li>
                 <li>中午可安排鰻魚飯三吃，下午去熱田神宮、大須觀音與大須商店街。</li>
@@ -497,9 +635,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-3">
               <div class="day-top"><div><h3 class="day-title">Day 3｜啟用周遊券，前往高山</h3><div class="day-date">5/23（六）</div></div><div class="day-badge">3</div></div>
               <div class="tag-row"><span class="tag">周遊券 Day 1</span><span class="tag">JR Hida</span><span class="tag">飛驒牛</span></div>
+              <div class="day-summary">正式切進北陸段，把移動本身也當成旅程的一部分，高山不是過站而是真正停一晚。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">啟用周遊券 + 進高山</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">JR Hida</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等</div></div></div>
               <ul>
                 <li>正式進入北陸段，搭 JR 特急 Hida 從名古屋前往高山。</li>
                 <li>下午散步三町通、高山陣屋，順手進酒造試飲。</li>
@@ -507,9 +647,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-4">
               <div class="day-top"><div><h3 class="day-title">Day 4｜宮川朝市，富山藝術半日</h3><div class="day-date">5/24（日）</div></div><div class="day-badge">4</div></div>
               <div class="tag-row"><span class="tag">周遊券 Day 2</span><span class="tag">富山玻璃美術館</span><span class="tag">環水公園</span></div>
+              <div class="day-summary">高山的早晨配上富山的現代感，今天的魅力在於氣質轉場很漂亮。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">高山早晨 + 富山藝術</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">JR 移動</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等偏輕</div></div></div>
               <ul>
                 <li>高山早上先逛宮川朝市，再搭車前往富山。</li>
                 <li>富山市玻璃美術館本身就是很強的建築景點，適合成人旅行。</li>
@@ -517,9 +659,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-5">
               <div class="day-top"><div><h3 class="day-title">Day 5｜金澤古典美學開場</h3><div class="day-date">5/25（一）</div></div><div class="day-badge">5</div></div>
               <div class="tag-row"><span class="tag">周遊券 Day 3</span><span class="tag">兼六園</span><span class="tag">東茶屋街</span></div>
+              <div class="day-summary">金澤第一天先把古典面收進來，第二天再交給美術館與比較靜的街區。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">金澤經典景點日</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">JR + 金澤市區</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等</div></div></div>
               <ul>
                 <li>從富山移動到金澤後入住，開始金澤 2 晚停留。</li>
                 <li>白天走兼六園、金澤城公園。</li>
@@ -527,9 +671,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-6">
               <div class="day-top"><div><h3 class="day-title">Day 6｜武家屋敷與現代美術</h3><div class="day-date">5/26（二）</div></div><div class="day-badge">6</div></div>
               <div class="tag-row"><span class="tag">周遊券 Day 4</span><span class="tag">長町武家屋敷</span><span class="tag">21 世紀美術館</span></div>
+              <div class="day-summary">這天是金澤最有質感的一天，節奏偏靜，很適合慢慢走。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">武家屋敷 + 現代美術</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">市區步行 / 巴士</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等偏輕</div></div></div>
               <ul>
                 <li>上午走長町武家屋敷跡、野村家，體驗比較靜的金澤。</li>
                 <li>下午排金澤 21 世紀美術館；若想收心靈感，可補鈴木大拙館。</li>
@@ -537,9 +683,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-7">
               <div class="day-top"><div><h3 class="day-title">Day 7｜金澤經敦賀前往大阪</h3><div class="day-date">5/27（三）</div></div><div class="day-badge">7</div></div>
               <div class="tag-row"><span class="tag">周遊券 Day 5</span><span class="tag">敦賀轉乘</span><span class="tag">入住梅田</span></div>
+              <div class="day-summary">今天是重要移動日，關鍵不是塞景點，而是順利把節奏切到大阪。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">轉乘日 + 入住梅田</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">北陸新幹線 + Thunderbird</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等偏高</div></div></div>
               <ul>
                 <li>上午保留彈性，可補散步或晚一點出發。</li>
                 <li>中午搭北陸新幹線到敦賀，再轉 Thunderbird 前往大阪。</li>
@@ -547,9 +695,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-8">
               <div class="day-top"><div><h3 class="day-title">Day 8｜梅田與中之島新地標</h3><div class="day-date">5/28（四）</div></div><div class="day-badge">8</div></div>
               <div class="tag-row"><span class="tag">GRAND GREEN OSAKA</span><span class="tag">KITTE 大阪</span><span class="tag">中之島</span></div>
+              <div class="day-summary">這天主打比較新的大阪，不走老觀光路線，而是建築與城市更新感。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">梅田新地標巡禮</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">大阪市區步行 / 地鐵</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">中等</div></div></div>
               <ul>
                 <li>上午主攻 GRAND GREEN OSAKA，感受梅北二期的整體氛圍。</li>
                 <li>中午可接 KITTE 大阪，適合選物與吃飯。</li>
@@ -557,9 +707,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-9">
               <div class="day-top"><div><h3 class="day-title">Day 9｜大阪深度漫遊</h3><div class="day-date">5/29（五）</div></div><div class="day-badge">9</div></div>
               <div class="tag-row"><span class="tag">堀江 / 南船場</span><span class="tag">或新世界</span><span class="tag">福島晚餐</span></div>
+              <div class="day-summary">今天保留最大彈性，想走設計感、老大阪或購物線都能依當下心情調整。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">自由發揮日</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">大阪市區移動</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">可輕可重</div></div></div>
               <ul>
                 <li>可選質感派的堀江、南船場，走設計店、咖啡與服飾路線。</li>
                 <li>如果想回味大阪老味道，也可改走新世界與阿倍野 Harukas。</li>
@@ -567,9 +719,11 @@
               </ul>
             </article>
 
-            <article class="day-card">
+            <article class="day-card" id="day-10">
               <div class="day-top"><div><h3 class="day-title">Day 10｜梅田補貨，前往 KIX</h3><div class="day-date">5/30（六）</div></div><div class="day-badge">10</div></div>
               <div class="tag-row"><span class="tag">阪神梅田本店</span><span class="tag">Haruka</span><span class="tag">CX565</span></div>
+              <div class="day-summary">最後一天的任務只有兩個，買得漂亮、回得輕鬆，不再硬塞景點。</div>
+              <div class="day-stats"><div class="day-stat"><div class="day-stat-label">今日核心</div><div class="day-stat-value">採買 + 機場移動</div></div><div class="day-stat"><div class="day-stat-label">主要交通</div><div class="day-stat-value">Haruka</div></div><div class="day-stat"><div class="day-stat-label">體力等級</div><div class="day-stat-value">輕鬆</div></div></div>
               <ul>
                 <li>上午在梅田最後採買，阪神梅田本店 B1 食品館很適合買伴手禮。</li>
                 <li>中午前後搭 Haruka 前往關西機場。</li>
@@ -608,13 +762,22 @@
               </ul>
             </section>
 
+            <section class="sidebar-card" id="resources">
+              <h3>快速地圖入口</h3>
+              <div class="map-links">
+                <a class="map-link" href="https://maps.google.com/?q=Nagoya+Station" target="_blank" rel="noreferrer"><span>名古屋站周邊</span><span>Google Maps ↗</span></a>
+                <a class="map-link" href="https://maps.google.com/?q=Kanazawa+Station" target="_blank" rel="noreferrer"><span>金澤站 / 市區</span><span>Google Maps ↗</span></a>
+                <a class="map-link" href="https://maps.google.com/?q=Osaka+Station" target="_blank" rel="noreferrer"><span>大阪梅田 / 大阪站</span><span>Google Maps ↗</span></a>
+              </div>
+            </section>
+
             <section class="sidebar-card">
-              <h3>下一版可補</h3>
+              <h3>待補 / 待訂清單</h3>
               <ul>
                 <li>每晚住宿區域與飯店候選</li>
                 <li>每日餐廳建議</li>
-                <li>Google Maps 連結按鈕</li>
-                <li>票券 / 行李 / 預約清單</li>
+                <li>重要指定席與預約清單</li>
+                <li>票券 / 行李 / 伴手禮提醒</li>
               </ul>
             </section>
           </aside>
@@ -622,7 +785,7 @@
       </section>
 
       <footer class="footer">
-        這是 workspace 版的可視化行程頁，現在已經同時顧到桌機和手機閱讀。下一步如果你要，我可以直接往正式上線版本做，把住宿、餐廳、地圖、票券資訊補齊，之後再掛到 <strong>travel.koxuan.com</strong>。
+        這份旅程頁會持續補住宿、餐廳、地圖與預約資訊，之後如果行程有微調，也會直接更新在這裡，讓分享和旅行途中查看都更方便。
       </footer>
     </main>
   </body>
