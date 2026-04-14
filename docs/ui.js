@@ -1193,7 +1193,8 @@ async function refreshLiveTwQuotes() {
       renderSummary(currentData);
       const hint = document.getElementById('action-hint');
       liveQuotesMode = true;
-      if (hint) hint.textContent = `股價已切換為即時更新 · ${twMarketStatusNow()} · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
+      liveQuoteSource = 'TWSE 最新日資料';
+      if (hint) hint.textContent = `股價已更新為 TWSE 最新日資料 · ${twMarketStatusNow()} · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
     }
   } catch (err) {
     console.warn('live tw quotes failed', err);
@@ -1202,6 +1203,8 @@ async function refreshLiveTwQuotes() {
 
 const POLL_MS = 30_000;
 let liveQuotesMode = false;
+let liveQuoteSource = '';
+
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
@@ -1242,7 +1245,7 @@ async function loadData(opts = {}) {
     renderSummary(data);
     startBroadcastRotation(data);
     staggerFeedLists(silent);
-    refreshLiveTwQuotes();
+    await refreshLiveTwQuotes();
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
