@@ -1139,6 +1139,37 @@ function renderSummary(data) {
 }
 
 
+function twMarketStatusNow() {
+  const now = new Date();
+  const tw = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Taipei' }));
+  const day = tw.getDay();
+  const hh = tw.getHours();
+  const mm = tw.getMinutes();
+  const minutes = hh * 60 + mm;
+  if (day === 0 || day === 6) return '休市';
+  if (minutes >= 9 * 60 && minutes < 13 * 60 + 30) return '盤中';
+  if (minutes >= 13 * 60 + 30 && minutes < 15 * 60) return '收盤後';
+  return '盤前 / 休市';
+}
+
+function summarizeLiveQuote(item) {
+  const pct = Number(item?.changePct || 0);
+  const symbol = item?.symbol || '這檔';
+  const status = twMarketStatusNow();
+  if (status === '盤中') {
+    if (pct >= 4) return `狗狗重點：${symbol} 盤中衝得很快，現在在前排強勢股。`;
+    if (pct >= 1.5) return `狗狗重點：${symbol} 盤中偏強，今天可放在前排盯。`;
+    if (pct <= -4) return `狗狗重點：${symbol} 盤中跌幅偏大，要小心。`;
+    if (pct <= -1.5) return `狗狗重點：${symbol} 盤中轉弱，先保守看。`;
+    return `狗狗重點：${symbol} 盤中波動不算大，先放在觀察名單前段。`;
+  }
+  if (pct >= 4) return `狗狗重點：${symbol} 今天收得很強，是前排強勢股。`;
+  if (pct >= 1.5) return `狗狗重點：${symbol} 今天收盤偏強，可以續追蹤。`;
+  if (pct <= -4) return `狗狗重點：${symbol} 今天收盤偏弱，先小心。`;
+  if (pct <= -1.5) return `狗狗重點：${symbol} 今天走勢轉弱，先保守看。`;
+  return `狗狗重點：${symbol} 今天整體波動不算大，仍可放在觀察名單前段。`;
+}
+
 async function refreshLiveTwQuotes() {
   if (!currentData?.quotes?.items?.length) return;
   const symbols = currentData.quotes.items.map((item) => item.symbol).filter(Boolean);
@@ -1153,7 +1184,8 @@ async function refreshLiveTwQuotes() {
       const live = map.get(item.symbol);
       if (!live) return item;
       changed = true;
-      return { ...item, ...live, name: item.name || live.name || item.symbol };
+      return { ...item, ...live, name: item.name || live.name || item.symbol, dogSummary: summarizeLiveQuote({ ...item, ...live }) };
+
     });
     if (changed) {
       currentData.quotes.asOf = payload.asOf;
@@ -1161,7 +1193,7 @@ async function refreshLiveTwQuotes() {
       renderSummary(currentData);
       const hint = document.getElementById('action-hint');
       liveQuotesMode = true;
-      if (hint) hint.textContent = `股價已切換為即時更新 · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
+      if (hint) hint.textContent = `股價已切換為即時更新 · ${twMarketStatusNow()} · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
     }
   } catch (err) {
     console.warn('live tw quotes failed', err);
