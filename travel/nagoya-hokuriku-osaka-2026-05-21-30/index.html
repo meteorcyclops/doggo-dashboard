@@ -423,6 +423,87 @@
         font-size: 14px;
       }
 
+      .overview-strip {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .overview-pill {
+        padding: 14px;
+        border-radius: 18px;
+        background: rgba(255,255,255,0.58);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+      }
+
+      .overview-pill-label {
+        font-size: 11px;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 700;
+        margin-bottom: 6px;
+      }
+
+      .overview-pill-value {
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1.6;
+      }
+
+      .resource-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .resource-card {
+        border-radius: 24px;
+        padding: 18px;
+        background: var(--card);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255,255,255,0.6);
+        box-shadow: var(--shadow);
+      }
+
+      .resource-card h3 {
+        margin: 0 0 12px;
+        font-size: 18px;
+      }
+
+      .resource-card p,
+      .resource-card li {
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .resource-card ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+
+      .callout-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+
+      .callout-card {
+        border-radius: 22px;
+        padding: 18px;
+        background: rgba(255,255,255,0.7);
+        border: 1px solid rgba(37, 92, 122, 0.08);
+      }
+
+      .callout-card strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 15px;
+      }
+
       .sidebar-card ul {
         margin: 0;
         padding-left: 18px;
@@ -492,6 +573,9 @@
         .hero-card { padding: 32px 30px; }
         .hero-meta { grid-template-columns: repeat(4, minmax(0,1fr)); }
         .highlight-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+        .overview-strip { grid-template-columns: repeat(4, minmax(0,1fr)); }
+        .resource-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+        .callout-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
       }
 
       @media (min-width: 1000px) {
@@ -536,6 +620,13 @@
             <div class="mini-card"><div class="mini-label">成員</div><div class="mini-value">3 位成人</div></div>
             <div class="mini-card"><div class="mini-label">去程</div><div class="mini-value">CX530<br />TPE 11:35 → NGO 15:35</div></div>
             <div class="mini-card"><div class="mini-label">回程</div><div class="mini-value">CX565<br />KIX 16:20 → TPE 18:30</div></div>
+          </div>
+
+          <div class="overview-strip">
+            <div class="overview-pill"><div class="overview-pill-label">旅程節奏</div><div class="overview-pill-value">10 天、5 座城市，不硬塞，但每天都有亮點。</div></div>
+            <div class="overview-pill"><div class="overview-pill-label">適合誰看</div><div class="overview-pill-value">自己整理、跟朋友分享、旅行途中快速查。</div></div>
+            <div class="overview-pill"><div class="overview-pill-label">最重要移動</div><div class="overview-pill-value">5/23 開票券、5/27 敦賀轉乘進大阪。</div></div>
+            <div class="overview-pill"><div class="overview-pill-label">這趟關鍵字</div><div class="overview-pill-value">城市感、建築感、美食密度高、節奏舒服。</div></div>
           </div>
         </article>
 
@@ -784,8 +875,53 @@
         </div>
       </section>
 
+      <section class="section" id="resources-panel">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">Resources</div>
+            <h2>住宿、地圖、旅前控制台</h2>
+          </div>
+          <p class="section-sub">把旅行真正會用到的資訊集中整理，之後補資料也會更順。</p>
+        </div>
+
+        <div class="resource-grid">
+          <article class="resource-card">
+            <h3>住宿區域策略</h3>
+            <ul>
+              <li><strong>名古屋：</strong>名古屋站適合進出，榮適合夜間散步與吃飯。</li>
+              <li><strong>高山：</strong>高山站步行圈或溫泉旅館最順，方便隔天一早移動。</li>
+              <li><strong>富山：</strong>富山站周邊優先，縮短交通成本。</li>
+              <li><strong>金澤：</strong>金澤站適合移動，近江町市場適合旅行氣氛。</li>
+              <li><strong>大阪：</strong>梅田優先，回 KIX 交通與後兩天動線最好處理。</li>
+            </ul>
+          </article>
+
+          <article class="resource-card">
+            <h3>餐廳方向速記</h3>
+            <ul>
+              <li><strong>名古屋：</strong>手羽先、味噌炸豬排、鰻魚飯三吃。</li>
+              <li><strong>高山：</strong>飛驒牛燒肉、握壽司、酒造試飲。</li>
+              <li><strong>富山：</strong>白蝦丼、富山黑拉麵。</li>
+              <li><strong>金澤：</strong>近江町海鮮、加賀料理、金澤關東煮。</li>
+              <li><strong>大阪：</strong>KITTE、福島區、北新地、堀江咖啡店。</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="callout-grid" style="margin-top:14px;">
+          <article class="callout-card">
+            <strong>旅前最需要先處理</strong>
+            高山 → 富山、金澤 → 敦賀 → 大阪這幾段的指定席，建議盡早規劃；大阪住宿若住梅田，最後一天會輕鬆很多。
+          </article>
+          <article class="callout-card">
+            <strong>最適合分享給朋友的看法</strong>
+            這趟不是打卡式日本，而是偏城市散步、建築感和吃得舒服的版本，前面看名古屋，中段收北陸，最後用大阪新地標收尾。
+          </article>
+        </div>
+      </section>
+
       <footer class="footer">
-        這份旅程頁會持續補住宿、餐廳、地圖與預約資訊，之後如果行程有微調，也會直接更新在這裡，讓分享和旅行途中查看都更方便。
+        這份旅程頁會持續補住宿、餐廳、地圖與預約資訊，之後如果行程有微調，也會直接更新在這裡，讓分享和旅行途中查看都更方便。下一步如果補進飯店候選、指定席與每日地圖，整體就會更接近真正可用的旅行控制台。
       </footer>
     </main>
   </body>
