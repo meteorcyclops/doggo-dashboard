@@ -421,11 +421,11 @@ function renderQuotes(quotes) {
   const asOf = quotes?.asOf;
   if (meta) {
     meta.textContent = asOf
-      ? `報價快照：${formatShortDateTime(asOf)}`
+      ? `${liveQuotesMode ? '即時股價更新：' : '報價快照：'}${formatShortDateTime(asOf)}`
       : '尚無報價時間戳';
   }
   const state = cardStateFromData({ items: quotes?.items, error: quotes?.error, asOf });
-  if (summaryEl) summaryEl.textContent = summarizeQuotes(quotes?.items || []);
+  if (summaryEl) summaryEl.textContent = `${liveQuotesMode ? '即時版' : '快照版'} · ${summarizeQuotes(quotes?.items || [])}`;
   if (state) {
     renderStateCard(list, meta, state, '台股快報暫時沒有完整資料');
     return;
@@ -1128,7 +1128,8 @@ function renderSummary(data) {
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
     <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
     <li><span>更新來源</span><b class="ok">${escHtml(buildTrigger)}</b></li>
-    <li><span>報價快照</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
+    <li><span>股價模式</span><b class="${liveQuotesMode ? 'ok' : 'warn'}">${escHtml(quoteSourceLabel)}</b></li>
+    <li><span>報價時間</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
     <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
@@ -1159,6 +1160,7 @@ async function refreshLiveTwQuotes() {
       renderQuotes(currentData.quotes);
       renderSummary(currentData);
       const hint = document.getElementById('action-hint');
+      liveQuotesMode = true;
       if (hint) hint.textContent = `股價已切換為即時更新 · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
     }
   } catch (err) {
@@ -1167,6 +1169,7 @@ async function refreshLiveTwQuotes() {
 }
 
 const POLL_MS = 30_000;
+let liveQuotesMode = false;
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
 function staggerFeedLists(silent) {
