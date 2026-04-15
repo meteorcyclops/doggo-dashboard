@@ -1173,12 +1173,19 @@ function summarizeLiveQuote(item) {
   return `狗狗重點：${symbol} 今天整體波動不算大，仍可放在觀察名單前段。`;
 }
 
+function resolveLiveTwQuoteUrl(symbols) {
+  const query = `symbols=${encodeURIComponent(symbols.join(','))}`;
+  const explicit = window.DOGGO_LIVE_TW_QUOTES_URL;
+  if (explicit) return `${explicit}${explicit.includes('?') ? '&' : '?'}${query}`;
+  return `./api/tw-quotes?${query}`;
+}
+
 async function refreshLiveTwQuotes({ silent = false } = {}) {
   if (!currentData?.quotes?.items?.length) return;
   const symbols = currentData.quotes.items.map((item) => item.symbol).filter(Boolean);
   if (!symbols.length) return;
   try {
-    const res = await fetch(`https://chat.koxuan.com/api/tw-quotes?symbols=${encodeURIComponent(symbols.join(','))}`, { cache: 'no-store' });
+    const res = await fetch(resolveLiveTwQuoteUrl(symbols), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const payload = await res.json();
     const map = new Map((payload.items || []).map((item) => [item.symbol, item]));
@@ -1195,7 +1202,7 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
     }
     const hint = document.getElementById('action-hint');
     liveQuotesMode = true;
-    liveQuoteSource = 'TWSE MIS 即時報價';
+    liveQuoteSource = window.DOGGO_LIVE_TW_QUOTES_LABEL || '即時台股 API';
     liveQuotesLastSuccessAt = Date.now();
     liveQuotesLastAsOf = payload.asOf || '';
     renderSummary(currentData);

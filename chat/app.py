@@ -20,6 +20,8 @@ DEFAULT_ROOM_SLUG = os.environ.get('CHAT_DEFAULT_ROOM', 'lobby')
 RATE_LIMIT_SECONDS = int(os.environ.get('CHAT_RATE_LIMIT_SECONDS', '8'))
 MAX_MESSAGE_LENGTH = int(os.environ.get('CHAT_MAX_MESSAGE_LENGTH', '400'))
 MAX_MESSAGES = int(os.environ.get('CHAT_MAX_MESSAGES', '120'))
+TW_QUOTES_CACHE_SECONDS = int(os.environ.get('TW_QUOTES_CACHE_SECONDS', '15'))
+TW_QUOTES_MAX_SYMBOLS = int(os.environ.get('TW_QUOTES_MAX_SYMBOLS', '80'))
 SESSION_COOKIE_NAME = os.environ.get('CHAT_SESSION_COOKIE_NAME', 'koxuan_chat_session')
 SESSION_COOKIE_SECURE = os.environ.get('CHAT_SESSION_COOKIE_SECURE', 'false').lower() in {'1', 'true', 'yes', 'on'}
 SESSION_COOKIE_SAMESITE = os.environ.get('CHAT_SESSION_COOKIE_SAMESITE', 'Lax')
@@ -31,6 +33,7 @@ SUPABASE_STORAGE_BUCKET = os.environ.get('CHAT_SUPABASE_STORAGE_BUCKET', 'chat-u
 MAX_UPLOAD_BYTES = int(os.environ.get('CHAT_MAX_UPLOAD_BYTES', str(20 * 1024 * 1024)))
 
 ANIMALS = ['🦊', '🦦', '🦋', '🐼', '🐶', '🐱', '🐺', '🐈', '🦭', '🐦', '🐰', '🦝', '🦔', '🐸']
+TW_QUOTES_CACHE: dict[str, dict[str, Any]] = {}
 
 app = Flask(__name__)
 app.config.update(
@@ -410,6 +413,25 @@ def delete_message(message_id: str) -> Any:
     return jsonify({'ok': True})
 
 
+def _cache_key_for_symbols(symbols: list[str]) -> str:
+    return ','.join(symbols)
+
+
+def _cached_tw_quotes(symbols: list[str]) -> dict[str, Any] | None:
+    key = _cache_key_for_symbols(symbols)
+    cached = TW_QUOTES_CACHE.get(key)
+    if not cached:
+        return None
+    if time.time() - float(cached.get('ts') or 0) > TW_QUOTES_CACHE_SECONDS:
+        TW_QUOTES_CACHE.pop(key, None)
+        return None
+    return cached.get('payload') if isinstance(cached.get('payload'), dict) else None
+
+
+def _store_cached_tw_quotes(symbols: list[str], payload: dict[str, Any]) -> None:
+    TW_QUOTES_CACHE[_cache_key_for_symbols(symbols)] = {'ts': time.time(), 'payload': payload}
+
+
 def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
     name_map = {
         '2330': '台積電', '2317': '鴻海', '2454': '聯發科', '2412': '中華電', '6505': '台塑化',
@@ -429,9 +451,13 @@ def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
 @app.route('/api/tw-quotes')
 def tw_quotes() -> Any:
     raw_symbols = (request.args.get('symbols') or '').strip()
-    symbols = [s.strip() for s in raw_symbols.split(',') if s.strip()][:80]
+    symbols = [s.strip() for s in raw_symbols.split(',') if s.strip()][:TW_QUOTES_MAX_SYMBOLS]
     if not symbols:
         return jsonify({'error': 'symbols is required'}), 400
+
+    cached = _cached_tw_quotes(symbols)
+    if cached is not None:
+        return jsonify(cached)
 
     items: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -496,6 +522,7 @@ def tw_quotes() -> Any:
     payload: dict[str, Any] = {'asOf': as_of, 'items': items}
     if errors:
         payload['error'] = '; '.join(errors[:5])
+    _store_cached_tw_quotes(symbols, payload)
     return jsonify(payload)
 
 
