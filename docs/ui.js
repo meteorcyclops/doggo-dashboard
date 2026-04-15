@@ -1254,6 +1254,26 @@ function staggerFeedLists(silent) {
   }
 }
 
+function mergeLiveQuotesIntoData(nextData) {
+  if (!currentData?.quotes?.items?.length || !liveQuotesLastAsOf) return nextData;
+  const nextAsOf = new Date(nextData?.quotes?.asOf || 0).getTime();
+  const liveAsOf = new Date(liveQuotesLastAsOf || 0).getTime();
+  if (!liveAsOf || (nextAsOf && nextAsOf >= liveAsOf)) return nextData;
+  const liveMap = new Map((currentData.quotes.items || []).map((item) => [item.symbol, item]));
+  return {
+    ...nextData,
+    quotes: {
+      ...nextData.quotes,
+      asOf: liveQuotesLastAsOf,
+      items: (nextData.quotes?.items || []).map((item) => {
+        const live = liveMap.get(item.symbol);
+        if (!live) return item;
+        return { ...item, ...live, dogSummary: live.dogSummary || item.dogSummary };
+      }),
+    },
+  };
+}
+
 async function loadData(opts = {}) {
   const silent = !!opts.silent;
   const hint = document.getElementById('action-hint');
@@ -1261,7 +1281,8 @@ async function loadData(opts = {}) {
     if (!silent && hint) hint.textContent = '正在更新資料…';
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    const rawData = await res.json();
+    const data = mergeLiveQuotesIntoData(rawData);
     currentData = data;
     renderTasks(data.jobs || []);
     renderQuotes(data.quotes);
