@@ -9,7 +9,7 @@
 
 ## 資料來源與免責
 
-- **台股報價**：建置腳本使用 [yfinance](https://github.com/ranaroussi/yfinance) 查詢 Yahoo Finance 上的台股代號（預設 `2330`、`0050`、`2317`，格式為 `.TW`）。數字為**延遲／匯總後的行情展示**，僅供版面與互動示範。
+- **台股報價**：公開頁初始資料會先讀建置腳本用 [yfinance](https://github.com/ranaroussi/yfinance) 產生的 `docs/data.json`，盤中再由 `chat` 後端提供 `/api/tw-quotes` 做較即時更新。若 live API 不可用，前端會自動退回建置時快照。
 - **新聞**：預設合併 [自由時報 財經](https://news.ltn.com.tw/rss/business.xml) 與 [國際](https://news.ltn.com.tw/rss/world.xml) RSS 標題與連結（繁體中文）。
 - **川普發言快訊**：建置時由 `scripts/trump_truth_tracker.py` 的 `fetch_posts` 讀取第三方存檔站 [trumpstruth.org](https://www.trumpstruth.org/) 的公開 HTML，解析後寫入 `data.json` 的 `trumpTruth`（摘要 + 外連至該站存檔頁）。**這不是官方 Truth Social、也不是本 repo 對該站或內容的背書**；若該站 HTML 結構變更，需手動更新 `scripts/trump_truth_tracker.py` 內的 regex 解析邏輯。
 - **任務卡片**：仍由 `docs/data.seed.json` 的示範 `jobs` 合併進 `docs/data.json`，與真實 cron／LINE 無關。
@@ -115,9 +115,10 @@ python3 -m http.server 4173 --bind 127.0.0.1
 
 - **不會連到本機 OpenClaw** 或你的私有服務
 - **不會讀取真實 cron／LINE／gateway 狀態**（頂多顯示種子裡的示範欄位）
-- 行情與 RSS 僅在 **GitHub Actions 建置時** 抓取，瀏覽器不向這些第三方直接請求
+- 新聞仍以 **GitHub Actions 建置時** 產生的靜態 JSON 為主，瀏覽器不向第三方 RSS 直接請求
+- 台股即時模式由受控後端 `/api/tw-quotes` 代理提供，瀏覽器不直接向第三方行情來源請求
 
-若需要私有／本機即時連線版，請另建資料來源與後端，勿把金鑰放進此靜態 repo。
+若需要私有／本機即時連線版，請將 `docs/` 與 `chat/` 一起部署，並確認前端可連到 `/api/tw-quotes`，勿把金鑰放進靜態頁面。
 
 ## 後續可以再做
 

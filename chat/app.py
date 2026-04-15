@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from typing import Any
 from urllib import error, parse, request as urllib_request
 
+import yfinance as yf
+
 from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -406,6 +408,95 @@ def delete_message(message_id: str) -> Any:
     require_admin_token()
     supabase_request('PATCH', 'chat_messages', query={'id': f'eq.{message_id}'}, json_body={'deleted': True}, prefer='return=minimal')
     return jsonify({'ok': True})
+
+
+def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
+    name_map = {
+        '2330': '台積電', '2317': '鴻海', '2454': '聯發科', '2412': '中華電', '6505': '台塑化',
+        '2308': '台達電', '2303': '聯電', '2881': '富邦金', '2882': '國泰金', '1303': '南亞',
+        '1301': '台塑', '2002': '中鋼', '2886': '兆豐金', '2891': '中信金', '1216': '統一',
+        '2382': '廣達', '2884': '玉山金', '2885': '元大金', '3711': '日月光投控', '2880': '華南金',
+        '5880': '合庫金', '3045': '台灣大', '2883': '凱基金', '2207': '和泰車', '2912': '統一超',
+        '3008': '大立光', '4904': '遠傳', '5871': '中租-KY', '6415': '矽力*-KY', '3034': '聯詠',
+        '2892': '第一金', '1326': '台化', '2603': '長榮', '1101': '台泥', '2887': '台新金',
+        '2327': '國巨', '2357': '華碩', '2379': '瑞昱', '4938': '和碩', '2408': '南亞科',
+        '1590': '亞德客-KY', '3037': '欣興', '2356': '英業達', '2801': '彰銀', '2609': '陽明',
+        '2615': '萬海', '8046': '南電', '0050': '元大台灣50', '0056': '元大高股息', '2606': '裕民',
+    }
+    return str(name_map.get(symbol) or info.get('shortName') or info.get('longName') or info.get('symbol') or symbol)
+
+
+@app.route('/api/tw-quotes')
+def tw_quotes() -> Any:
+    raw_symbols = (request.args.get('symbols') or '').strip()
+    symbols = [s.strip() for s in raw_symbols.split(',') if s.strip()][:80]
+    if not symbols:
+        return jsonify({'error': 'symbols is required'}), 400
+
+    items: list[dict[str, Any]] = []
+    errors: list[str] = []
+    as_of = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    for symbol in symbols:
+        suffix = '.TW' if symbol.isdigit() or (len(symbol) == 4 and symbol[0] == '0') else '.TWO'
+        ticker_symbol = symbol if '.' in symbol else f'{symbol}{suffix}'
+        ticker = yf.Ticker(ticker_symbol)
+        try:
+            hist = ticker.history(period='2d', interval='1m', prepost=False)
+            if hist is None or hist.empty:
+                hist = ticker.history(period='5d', interval='1d')
+            if hist is None or hist.empty:
+                errors.append(f'{symbol}: empty history')
+                continue
+
+            close_series = hist['Close'].dropna()
+            if close_series.empty:
+                errors.append(f'{symbol}: empty close')
+                continue
+
+            last = float(close_series.iloc[-1])
+            prev_close = None
+            if 'Close' in hist and len(close_series) >= 2:
+                prev_close = float(close_series.iloc[-2])
+            try:
+                fast = ticker.fast_info or {}
+                prev_close = float(fast.get('previous_close') or fast.get('regular_market_previous_close') or prev_close or last)
+                day_high = float(fast.get('day_high') or fast.get('regular_market_day_high') or last)
+                day_low = float(fast.get('day_low') or fast.get('regular_market_day_low') or last)
+            except Exception:
+                prev_close = float(prev_close or last)
+                high_series = hist['High'].dropna() if 'High' in hist else close_series
+                low_series = hist['Low'].dropna() if 'Low' in hist else close_series
+                day_high = float(high_series.iloc[-1]) if not high_series.empty else last
+                day_low = float(low_series.iloc[-1]) if not low_series.empty else last
+
+            info = {}
+            try:
+                info = ticker.info or {}
+            except Exception:
+                info = {}
+
+            change = last - prev_close
+            change_pct = ((change / prev_close) * 100.0) if prev_close else 0.0
+            series_tail = [round(float(v), 2) for v in close_series.tail(8).tolist() if v == v]
+            items.append({
+                'symbol': symbol,
+                'name': _tw_quote_name(symbol, info),
+                'price': round(last, 2),
+                'change': round(change, 2),
+                'changePct': round(change_pct, 2),
+                'prevClose': round(prev_close, 2),
+                'dayHigh': round(day_high, 2),
+                'dayLow': round(day_low, 2),
+                'series': series_tail,
+            })
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f'{symbol}: {exc}')
+
+    payload: dict[str, Any] = {'asOf': as_of, 'items': items}
+    if errors:
+        payload['error'] = '; '.join(errors[:5])
+    return jsonify(payload)
 
 
 @app.route('/admin')
