@@ -1124,12 +1124,15 @@ function renderSummary(data) {
   renderMarketSessionStrip(data);
   renderFocusPills(data);
   const summary = document.getElementById('summary-list');
+  const liveStatus = liveQuoteStatusLabel();
   summary.innerHTML = `
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
     <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
     <li><span>更新來源</span><b class="ok">${escHtml(buildTrigger)}</b></li>
-    <li><span>股價模式</span><b class="${liveQuotesMode ? 'ok' : 'warn'}">${escHtml(quoteSourceLabel)}</b></li>
-    <li><span>報價時間</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(quoteAsOf)}</b></li>
+    <li><span>台股即時來源</span><b class="${liveStatus.cls}">${escHtml(liveQuoteSource || '靜態 data.json')}</b></li>
+    <li><span>台股更新狀態</span><b class="${liveStatus.cls}">${escHtml(liveStatus.text)}</b></li>
+    <li><span>台股最後更新</span><b class="${liveStatus.cls}">${escHtml(liveQuotesLastSuccessAt ? secondsAgoLabel(liveQuotesLastSuccessAt) : '無紀錄')}</b></li>
+    <li><span>台股報價時間</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(liveQuotesLastAsOf ? formatShortDateTime(liveQuotesLastAsOf) + '（台北時間）' : quoteAsOf)}</b></li>
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
     <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
@@ -1189,14 +1192,18 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
     if (changed) {
       currentData.quotes.asOf = payload.asOf;
       renderQuotes(currentData.quotes);
-      renderSummary(currentData);
     }
-      const hint = document.getElementById('action-hint');
-      liveQuotesMode = true;
-      liveQuoteSource = 'TWSE MIS 即時報價';
-      if (hint && !silent) hint.textContent = `台股已切到 ${liveQuoteSource} · ${twMarketStatusNow()} · 更新 ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
+    const hint = document.getElementById('action-hint');
+    liveQuotesMode = true;
+    liveQuoteSource = 'TWSE MIS 即時報價';
+    liveQuotesLastSuccessAt = Date.now();
+    liveQuotesLastAsOf = payload.asOf || '';
+    renderSummary(currentData);
+    if (hint && !silent) hint.textContent = `台股來源 ${liveQuoteSource} · 狀態 ${liveQuoteStatusLabel().text} · 最後更新 ${secondsAgoLabel(liveQuotesLastSuccessAt)}`;
   } catch (err) {
+    liveQuotesMode = false;
     console.warn('live tw quotes failed', err);
+    renderSummary(currentData);
   }
 }
 
@@ -1204,6 +1211,21 @@ const POLL_MS = 30_000;
 const LIVE_TW_POLL_MS = 5_000;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
+let liveQuotesLastSuccessAt = 0;
+let liveQuotesLastAsOf = '';
+
+function secondsAgoLabel(ts) {
+  if (!ts) return '無紀錄';
+  const sec = Math.max(0, Math.floor((Date.now() - ts) / 1000));
+  return `${sec} 秒前`;
+}
+
+function liveQuoteStatusLabel() {
+  if (!liveQuotesMode || !liveQuotesLastSuccessAt) return { text: 'fallback', cls: 'warn' };
+  const ageSec = Math.max(0, Math.floor((Date.now() - liveQuotesLastSuccessAt) / 1000));
+  if (ageSec <= 15) return { text: 'live', cls: 'ok' };
+  return { text: 'stale', cls: 'warn' };
+}
 
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
 
@@ -1250,7 +1272,9 @@ async function loadData(opts = {}) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
       const buildTrigger = buildTriggerLabel(data.buildTrigger);
-      hint.textContent = `已載入資料 · 本地 ${localT} · 更新來源 ${buildTrigger} · 最後建置 ${fresh}`;
+      const liveStatusText = liveQuoteStatusLabel().text;
+      const liveAgeText = liveQuotesLastSuccessAt ? secondsAgoLabel(liveQuotesLastSuccessAt) : '無紀錄';
+      hint.textContent = `已載入資料 · 本地 ${localT} · 建置 ${buildTrigger} · 最後建置 ${fresh} · 台股 ${liveStatusText} / ${liveAgeText}`;
     }
   } catch (err) {
     if (hint) hint.textContent = `資料讀取失敗：${err.message}`;
