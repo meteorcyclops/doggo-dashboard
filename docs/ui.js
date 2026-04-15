@@ -1170,7 +1170,7 @@ function summarizeLiveQuote(item) {
   return `狗狗重點：${symbol} 今天整體波動不算大，仍可放在觀察名單前段。`;
 }
 
-async function refreshLiveTwQuotes() {
+async function refreshLiveTwQuotes({ silent = false } = {}) {
   if (!currentData?.quotes?.items?.length) return;
   const symbols = currentData.quotes.items.map((item) => item.symbol).filter(Boolean);
   if (!symbols.length) return;
@@ -1185,23 +1185,23 @@ async function refreshLiveTwQuotes() {
       if (!live) return item;
       changed = true;
       return { ...item, ...live, name: item.name || live.name || item.symbol, dogSummary: summarizeLiveQuote({ ...item, ...live }) };
-
     });
     if (changed) {
       currentData.quotes.asOf = payload.asOf;
       renderQuotes(currentData.quotes);
       renderSummary(currentData);
+    }
       const hint = document.getElementById('action-hint');
       liveQuotesMode = true;
-      liveQuoteSource = 'TWSE 最新日資料';
-      if (hint) hint.textContent = `股價已更新為 TWSE 最新日資料 · ${twMarketStatusNow()} · ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
-    }
+      liveQuoteSource = 'TWSE MIS 即時報價';
+      if (hint && !silent) hint.textContent = `台股已切到 ${liveQuoteSource} · ${twMarketStatusNow()} · 更新 ${new Date().toLocaleTimeString('zh-TW', { hour12: false })}`;
   } catch (err) {
     console.warn('live tw quotes failed', err);
   }
 }
 
 const POLL_MS = 30_000;
+const LIVE_TW_POLL_MS = 5_000;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
 
@@ -1245,7 +1245,7 @@ async function loadData(opts = {}) {
     renderSummary(data);
     startBroadcastRotation(data);
     staggerFeedLists(silent);
-    await refreshLiveTwQuotes();
+    await refreshLiveTwQuotes({ silent });
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
@@ -1360,6 +1360,7 @@ async function initApp() {
   await loadPreferences();
   loadData();
   setInterval(() => loadData({ silent: true }), POLL_MS);
+  setInterval(() => refreshLiveTwQuotes({ silent: true }), LIVE_TW_POLL_MS);
 }
 
 initApp();
