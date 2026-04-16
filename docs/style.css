@@ -1191,7 +1191,7 @@ body[data-theme="night"] .task-list small.trump-dog-summary,
 body[data-theme="night"] .quote-price-value,
 body[data-theme="night"] .guestbook-note-text,
 body[data-theme="night"] .guestbook-note-name {
-  color: #f3f7ff;
+  color: #f7fbff;
 }
 body[data-theme="night"] .task-list small.trump-translation {
   background: rgba(44, 54, 93, .92);
@@ -1235,8 +1235,8 @@ body[data-theme="night"] .theme-toggle:focus-visible small {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(15, 19, 35, .96);
-  border-color: var(--card-border-soft);
+  background: #161d33;
+  border-color: #4e5b88;
 }
 body[data-theme="night"] .intel-panel .task-list li,
 body[data-theme="night"] .intel-panel .summary-list li,
@@ -1930,10 +1930,10 @@ body[data-theme="night"] .guestbook-stamp {
   box-shadow: 0 3px 0 #21183f;
 }
 body[data-theme="night"] .guestbook-prompt {
-  color: #edf2ff;
-  background: linear-gradient(180deg, #222847 0%, #171b31 100%);
-  border-color: #56649a;
-  box-shadow: inset 0 0 0 2px rgba(148,165,230,.1);
+  color: #f2f6ff;
+  background: linear-gradient(180deg, #26304f 0%, #1a223a 100%);
+  border-color: #6a79b4;
+  box-shadow: inset 0 0 0 2px rgba(176,193,244,.12);
 }
 body[data-theme="night"] .guestbook-form label,
 body[data-theme="night"] .guestbook-status,
@@ -1967,10 +1967,10 @@ body[data-theme="night"] .guestbook-note-text {
   color: #edf2ff;
 }
 body[data-theme="night"] .guestbook-delete {
-  color: #edf2ff;
-  background: linear-gradient(180deg, #2a3358 0%, #1f2744 100%);
-  border-color: #566498;
-  box-shadow: inset 0 0 0 2px rgba(152,168,230,.12), 0 3px 0 #13192f;
+  color: #f7fbff;
+  background: linear-gradient(180deg, #3b497a 0%, #2b3558 100%);
+  border-color: #6f82c2;
+  box-shadow: inset 0 0 0 2px rgba(180,196,246,.16), 0 3px 0 #13192f;
 }
 body[data-theme="night"] .guestbook-delete:hover,
 body[data-theme="night"] .guestbook-delete:focus-visible {
