@@ -1217,6 +1217,7 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
 const POLL_MS = 30_000;
 const DATA_REFRESH_MS = 5 * 60_000;
 const LIVE_TW_POLL_MS = 5_000;
+const LIVE_DATA_POLL_MS = 60_000;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
 let liveQuotesLastSuccessAt = 0;
@@ -1275,6 +1276,37 @@ function mergeLiveQuotesIntoData(nextData) {
   };
 }
 
+function mergeLiveDataIntoCurrent(payload = {}) {
+  if (!currentData) return;
+  if (payload.feed) currentData.feed = payload.feed;
+  if (payload.usQuotes) currentData.usQuotes = payload.usQuotes;
+  if (payload.weather) currentData.weather = payload.weather;
+  if (payload.trumpTruth) currentData.trumpTruth = payload.trumpTruth;
+  if (payload.generatedAt) currentData.generatedAt = payload.generatedAt;
+}
+
+async function refreshLiveData({ silent = false } = {}) {
+  if (!currentData) return;
+  const hint = document.getElementById('action-hint');
+  try {
+    const res = await fetch('./api/live-data?_=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    mergeLiveDataIntoCurrent(payload);
+    renderUsQuotes(currentData.usQuotes);
+    renderHeadlines(currentData.feed);
+    renderTrumpTruth(currentData.trumpTruth);
+    renderWeather(currentData.weather);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+    staggerFeedLists(true);
+    if (hint && !silent) hint.textContent = '已更新即時資料，新聞 / 美股 / 天氣 / 川普快訊同步完成';
+  } catch (err) {
+    console.warn('live data refresh failed', err);
+    if (hint && !silent) hint.textContent = `即時資料更新失敗：${err.message}`;
+  }
+}
+
 async function loadData(opts = {}) {
   const silent = !!opts.silent;
   const hint = document.getElementById('action-hint');
@@ -1297,6 +1329,7 @@ async function loadData(opts = {}) {
     startBroadcastRotation(data);
     staggerFeedLists(silent);
     await refreshLiveTwQuotes({ silent });
+    await refreshLiveData({ silent: true });
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
@@ -1433,6 +1466,7 @@ async function initApp() {
   setInterval(() => loadData({ silent: true }), POLL_MS);
   setInterval(() => triggerDataRefresh({ silent: true }), DATA_REFRESH_MS);
   setInterval(() => refreshLiveTwQuotes({ silent: true }), LIVE_TW_POLL_MS);
+  setInterval(() => refreshLiveData({ silent: true }), LIVE_DATA_POLL_MS);
 }
 
 initApp();

@@ -1191,7 +1191,15 @@ body[data-theme="night"] .task-list small.trump-dog-summary,
 body[data-theme="night"] .quote-price-value,
 body[data-theme="night"] .guestbook-note-text,
 body[data-theme="night"] .guestbook-note-name {
-  color: #edf2ff;
+  color: #f3f7ff;
+}
+body[data-theme="night"] .task-list small.trump-translation {
+  background: rgba(44, 54, 93, .92);
+  border-color: rgba(126, 145, 211, .55);
+}
+body[data-theme="night"] .task-list small.trump-dog-summary {
+  background: rgba(53, 42, 76, .92);
+  border-color: rgba(155, 120, 205, .5);
 }
 body[data-theme="night"] .candy {
   background: linear-gradient(180deg, #6e5bb1 0%, #52448f 100%);
@@ -1971,7 +1979,8 @@ body[data-theme="night"] .guestbook-delete:focus-visible {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: rgba(15, 19, 35, .96);
+  background: #161d33;
+  border-color: #4e5b88;
 }
 body[data-theme="night"] .task-list span,
 body[data-theme="night"] .summary-list span,
@@ -1981,11 +1990,11 @@ body[data-theme="night"] .side-meta,
 body[data-theme="night"] .task-list a,
 body[data-theme="night"] .headline-list a,
 body[data-theme="night"] .hint {
-  color: #dbe4ff;
+  color: #e2e9ff;
 }
 body[data-theme="night"] .task-list b,
 body[data-theme="night"] .summary-list b {
-  color: #edf2ff;
+  color: #f4f7ff;
 }
 @keyframes quote-shell-pop {
   0% { transform: translateY(0); }

@@ -1,15 +1,21 @@
 from __future__ import annotations
 
+import calendar
 import json
 import mimetypes
 import os
+import re
 import secrets
 import time
 from datetime import datetime, timezone
 from typing import Any
 from urllib import error, parse, request as urllib_request
 
+import feedparser
+import requests
 import yfinance as yf
+from deep_translator import GoogleTranslator
+from zoneinfo import ZoneInfo
 
 from flask import Flask, abort, jsonify, redirect, render_template, request, session, url_for
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -22,6 +28,13 @@ MAX_MESSAGE_LENGTH = int(os.environ.get('CHAT_MAX_MESSAGE_LENGTH', '400'))
 MAX_MESSAGES = int(os.environ.get('CHAT_MAX_MESSAGES', '120'))
 TW_QUOTES_CACHE_SECONDS = int(os.environ.get('TW_QUOTES_CACHE_SECONDS', '15'))
 TW_QUOTES_MAX_SYMBOLS = int(os.environ.get('TW_QUOTES_MAX_SYMBOLS', '80'))
+DOGGO_RSS_URLS = [s.strip() for s in os.environ.get('DOGGO_RSS_URLS', 'https://news.ltn.com.tw/rss/business.xml,https://news.ltn.com.tw/rss/world.xml').split(',') if s.strip()]
+DOGGO_US_STOCK_SYMBOLS = [s.strip().upper() for s in os.environ.get('DOGGO_US_STOCK_SYMBOLS', 'TSLA,NVDA,AAPL,MSFT,AMZN,META,GOOGL,PLTR').split(',') if s.strip()]
+REQUEST_TIMEOUT = int(os.environ.get('DOGGO_REQUEST_TIMEOUT_SECONDS', '25'))
+TRUMP_POST_LIMIT = int(os.environ.get('DOGGO_TRUMP_POST_LIMIT', '12'))
+TRUMP_EXCERPT_MAX = int(os.environ.get('DOGGO_TRUMP_EXCERPT_MAX', '220'))
+TRUMP_TRANSLATE_MAX = int(os.environ.get('DOGGO_TRUMP_TRANSLATE_MAX', '2800'))
+USER_AGENT = "doggo-dashboard-api/1.0 (+https://github.com/meteorcyclops/doggo-dashboard)"
 SESSION_COOKIE_NAME = os.environ.get('CHAT_SESSION_COOKIE_NAME', 'koxuan_chat_session')
 SESSION_COOKIE_SECURE = os.environ.get('CHAT_SESSION_COOKIE_SECURE', 'false').lower() in {'1', 'true', 'yes', 'on'}
 SESSION_COOKIE_SAMESITE = os.environ.get('CHAT_SESSION_COOKIE_SAMESITE', 'Lax')
@@ -34,6 +47,14 @@ MAX_UPLOAD_BYTES = int(os.environ.get('CHAT_MAX_UPLOAD_BYTES', str(20 * 1024 * 1
 
 ANIMALS = ['🦊', '🦦', '🦋', '🐼', '🐶', '🐱', '🐺', '🐈', '🦭', '🐦', '🐰', '🦝', '🦔', '🐸']
 TW_QUOTES_CACHE: dict[str, dict[str, Any]] = {}
+TW = ZoneInfo('Asia/Taipei')
+URL_RE = re.compile(r"https?://\\S+")
+MAX_HEADLINES = 8
+WEATHER_SPOTS = [
+    {'key': 'shipai', 'label': '石牌', 'lat': 25.114, 'lon': 121.515},
+    {'key': 'zhonghe', 'label': '中和', 'lat': 24.999, 'lon': 121.498},
+    {'key': 'songshan', 'label': '松山', 'lat': 25.050, 'lon': 121.578},
+]
 
 app = Flask(__name__)
 app.config.update(
@@ -59,6 +80,353 @@ if not SUPABASE_SERVICE_ROLE_KEY:
 
 class SupabaseError(RuntimeError):
     pass
+
+
+def _http_session() -> requests.Session:
+    s = requests.Session()
+    s.headers.update({'User-Agent': USER_AGENT})
+    return s
+
+
+def _entry_time(entry: Any) -> float:
+    if getattr(entry, 'published_parsed', None):
+        try:
+            return calendar.timegm(entry.published_parsed)
+        except Exception:
+            pass
+    if getattr(entry, 'updated_parsed', None):
+        try:
+            return calendar.timegm(entry.updated_parsed)
+        except Exception:
+            pass
+    return 0.0
+
+
+def fetch_feed_live(urls: list[str]) -> dict[str, Any]:
+    merged: list[tuple[float, dict[str, str]]] = []
+    errors: list[str] = []
+    session = _http_session()
+    for raw_url in urls:
+        url = raw_url.strip()
+        if not url:
+            continue
+        try:
+            resp = session.get(url, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            parsed = feedparser.parse(resp.content)
+            if getattr(parsed, 'bozo', False) and not parsed.entries:
+                errors.append(f'{url}: parse')
+                continue
+            for entry in parsed.entries:
+                title = (entry.get('title') or '').strip()
+                link = (entry.get('link') or '').strip()
+                if not title:
+                    continue
+                merged.append((_entry_time(entry), {
+                    'title': title,
+                    'url': link,
+                    'time': (getattr(entry, 'published', None) or getattr(entry, 'updated', None) or ''),
+                }))
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f'{url}: {exc}')
+    merged.sort(key=lambda item: item[0], reverse=True)
+    payload: dict[str, Any] = {
+        'source': ' + '.join(urls[:2]) if urls else '',
+        'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'items': [item[1] for item in merged[:MAX_HEADLINES]],
+    }
+    if errors:
+        payload['error'] = '; '.join(errors[:3])
+    return payload
+
+
+def summarize_us_quote(item: dict[str, Any], session_name: str) -> str:
+    pct = float(item.get('changePct') or 0)
+    symbol = item.get('symbol') or '這檔'
+    if pct >= 3:
+        return f'狗狗重點：{symbol} 今天衝得很兇，是今晚美股最熱的帶頭股之一。'
+    if pct >= 1.5:
+        return f'狗狗重點：{symbol} 明顯走強，今晚市場情緒偏偏多。'
+    if pct <= -3:
+        return f'狗狗重點：{symbol} 跌幅偏大，今晚這檔要特別留意。'
+    if pct <= -1.5:
+        return f'狗狗重點：{symbol} 明顯轉弱，今晚市場有點緊。'
+    session_map = {
+        'premarket': '盤前還在暖身',
+        'market': '盤中還在觀察',
+        'afterhours': '盤後還有餘波',
+        'closed': '現在已經休市',
+    }
+    return f'狗狗重點：{symbol} 目前波動不算大，{session_map.get(session_name, "今晚先列進觀察名單")}。'
+
+
+def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    errors: list[str] = []
+    as_of = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    for symbol in symbols:
+        sym = symbol.strip().upper()
+        if not sym:
+            continue
+        ticker = yf.Ticker(sym)
+        try:
+            hist = ticker.history(period='5d', interval='1d')
+            if hist is None or hist.empty:
+                errors.append(f'{sym}: empty history')
+                continue
+            close_series = [float(v) for v in hist['Close'].tail(8).tolist() if v == v]
+            last = float(hist['Close'].iloc[-1])
+            prev = float(hist['Close'].iloc[-2]) if len(hist) >= 2 else last
+            change_pct = ((last - prev) / prev * 100.0) if prev else 0.0
+            info = {}
+            try:
+                info = ticker.info or {}
+            except Exception:
+                info = {}
+            items.append({
+                'symbol': sym,
+                'name': info.get('shortName') or info.get('longName') or sym,
+                'price': round(last, 2),
+                'changePct': round(change_pct, 2),
+                'series': [round(v, 2) for v in close_series[-5:]],
+            })
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f'{sym}: {exc}')
+    items.sort(key=lambda item: abs(float(item.get('changePct') or 0)), reverse=True)
+    session_name = 'closed'
+    now_ny = datetime.now(ZoneInfo('America/New_York'))
+    mins = now_ny.hour * 60 + now_ny.minute
+    if now_ny.weekday() < 5:
+        if 4 * 60 <= mins < 9 * 60 + 30:
+            session_name = 'premarket'
+        elif 9 * 60 + 30 <= mins < 16 * 60:
+            session_name = 'market'
+        elif 16 * 60 <= mins < 20 * 60:
+            session_name = 'afterhours'
+    for item in items:
+        item['dogSummary'] = summarize_us_quote(item, session_name)
+    summary = '美股觀察清單整理中。'
+    if items:
+        leader = items[0]
+        pct = float(leader.get('changePct') or 0)
+        if pct >= 2:
+            summary = f"{leader['symbol']} 漲幅最明顯，今天美股情緒偏熱。"
+        elif pct <= -2:
+            summary = f"{leader['symbol']} 波動最大且偏弱，美股情緒有點緊。"
+        else:
+            summary = f"{leader['symbol']} 目前最活躍，美股整體還在觀察區。"
+    payload: dict[str, Any] = {'asOf': as_of, 'session': session_name, 'summary': summary, 'items': items}
+    if errors and not items:
+        payload['error'] = '; '.join(errors[:5])
+    return payload
+
+
+def weather_icon(weather_code: int | None, rain: float | None) -> str:
+    if rain is not None and rain >= 60:
+        return '☔'
+    if weather_code in {0, 1}:
+        return '☀️'
+    if weather_code in {2, 3, 45, 48}:
+        return '☁️'
+    if weather_code in {51, 53, 55, 61, 63, 65, 80, 81, 82}:
+        return '🌧️'
+    if weather_code in {71, 73, 75, 85, 86}:
+        return '❄️'
+    return '🌤️'
+
+
+def weather_outfit_advice(temp: float | None, rain: float | None) -> str:
+    if temp is None:
+        return '帶件薄外套，先看天空臉色。'
+    if rain is not None and rain >= 60:
+        if temp >= 26:
+            return '短袖加摺傘，鞋子別太怕水。'
+        if temp >= 20:
+            return '薄外套加雨具，出門別穿太單薄。'
+        return '外套加雨具，今天偏濕涼。'
+    if temp >= 30:
+        return '短袖就好，注意防曬和補水。'
+    if temp >= 24:
+        return '短袖或薄襯衫就夠，早晚可帶薄外套。'
+    if temp >= 18:
+        return '建議薄外套，體感比較穩。'
+    return '建議外套，早晚會偏涼。'
+
+
+def weather_feel_text(temp: float | None, rain: float | None) -> str:
+    if temp is None:
+        return '帶件薄外套，先看天空臉色。'
+    if rain is not None and rain >= 60:
+        if temp >= 26:
+            return '短袖可，帶傘。'
+        if temp >= 20:
+            return '薄外套剛好，記得帶傘。'
+        return '外套加雨具，今天偏濕涼。'
+    if temp >= 30:
+        return '悶熱，注意補水。'
+    if temp >= 24:
+        return '短袖可，早晚可帶薄外套。'
+    if temp >= 18:
+        return '薄外套剛好。'
+    return '建議外套。'
+
+
+def weather_summary(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return '今天先看天空臉色，天氣資料還沒整理好。'
+    max_rain = max((item.get('rainChance') or 0) for item in items)
+    if max_rain >= 60:
+        return '出門建議帶傘。'
+    if max_rain >= 30:
+        return '可能遇到零星雨。'
+    return '今天大致穩。'
+
+
+def commute_watch(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return '三地天氣提醒還沒整理好。'
+    rainiest = max(items, key=lambda item: float(item.get('rainChance') or 0))
+    wet_spots = [item.get('label') for item in items if float(item.get('rainChance') or 0) >= 30]
+    if float(rainiest.get('rainChance') or 0) >= 60:
+        return f"三地裡最需要注意的是 {rainiest.get('label')}，降雨機率偏高；出門建議優先防這一區。"
+    if wet_spots:
+        return f"三地裡 {'、'.join([spot for spot in wet_spots if spot])} 比較可能遇到零星降雨，其它區域目前還算穩。"
+    return '目前石牌、中和、松山三地都算穩，先不用太擔心下雨。'
+
+
+def fetch_weather_live(spots: list[dict[str, Any]]) -> dict[str, Any]:
+    session = _http_session()
+    items: list[dict[str, Any]] = []
+    errors: list[str] = []
+    for spot in spots:
+        try:
+            url = (
+                'https://api.open-meteo.com/v1/forecast'
+                f"?latitude={spot['lat']}&longitude={spot['lon']}"
+                '&current=temperature_2m,weather_code,precipitation_probability'
+                '&hourly=precipitation_probability,temperature_2m'
+                '&forecast_hours=3&timezone=Asia%2FTaipei'
+            )
+            resp = session.get(url, timeout=REQUEST_TIMEOUT)
+            resp.raise_for_status()
+            data = resp.json()
+            current = data.get('current', {})
+            hourly = data.get('hourly', {}) or {}
+            temp = current.get('temperature_2m')
+            rain = current.get('precipitation_probability')
+            next_rain = hourly.get('precipitation_probability', [])[:3]
+            next_temp = hourly.get('temperature_2m', [])[:3]
+            items.append({
+                'key': spot['key'],
+                'label': spot['label'],
+                'icon': weather_icon(current.get('weather_code'), float(rain) if rain is not None else None),
+                'tempC': round(float(temp), 1) if temp is not None else None,
+                'rainChance': int(round(float(rain))) if rain is not None else None,
+                'weatherCode': current.get('weather_code'),
+                'advice': weather_outfit_advice(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
+                'feel': weather_feel_text(float(temp) if temp is not None else None, float(rain) if rain is not None else None),
+                'next3h': {
+                    'rainPeak': max(next_rain) if next_rain else rain,
+                    'tempMin': min(next_temp) if next_temp else temp,
+                    'tempMax': max(next_temp) if next_temp else temp,
+                },
+                'asOf': current.get('time'),
+            })
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{spot['label']}: {exc}")
+    payload: dict[str, Any] = {
+        'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'items': items,
+        'summary': weather_summary(items),
+        'commuteWatch': commute_watch(items),
+    }
+    if errors:
+        payload['error'] = '; '.join(errors[:3])
+    return payload
+
+
+def split_trailing_url(text: str) -> tuple[str, str]:
+    s = ' '.join(str(text).split())
+    if not s:
+        return '', ''
+    matches = list(URL_RE.finditer(s))
+    if not matches:
+        return s, ''
+    last = matches[-1]
+    if last.end() != len(s):
+        return s, ''
+    return s[: last.start()].rstrip(' ：:，,\n\t'), last.group(0)
+
+
+def polish_tw_zh(text: str) -> str:
+    zh = ' '.join(str(text).split())
+    replacements = {
+        '視頻': '影片', '信息': '資訊', '导弹': '飛彈', '关税': '關稅', '协议': '協議',
+        '美国': '美國', '特朗普': '川普', '總統唐納德·J·特朗普': '川普', '唐納德·J·特朗普總統': '川普',
+    }
+    for old, new in replacements.items():
+        zh = zh.replace(old, new)
+    zh = re.sub(r'\s+([，。！？])', r'\1', zh)
+    return zh.strip()
+
+
+def summarize_trump_post(item: dict[str, Any]) -> str:
+    lower = str(item.get('excerpt') or '').lower()
+    if 'iran' in lower or 'hormuz' in lower or 'oil' in lower:
+        return '狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。'
+    if item.get('important'):
+        return '狗狗重點：這則屬於高優先度貼文，建議先看原文和語氣。'
+    return '狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。'
+
+
+def fetch_trump_truth_live() -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        'source': 'https://www.trumpstruth.org/ (third-party archive; not Truth Social)',
+        'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'items': [],
+    }
+    try:
+        from scripts.trump_truth_tracker import fetch_posts, is_important  # type: ignore
+    except Exception as exc:  # noqa: BLE001
+        payload['error'] = f'import tracker: {exc}'
+        return payload
+    try:
+        posts = fetch_posts(limit=TRUMP_POST_LIMIT)
+    except Exception as exc:  # noqa: BLE001
+        payload['error'] = str(exc)
+        return payload
+
+    translator = None
+    try:
+        translator = GoogleTranslator(source='en', target='zh-TW')
+    except Exception:
+        translator = None
+
+    items: list[dict[str, Any]] = []
+    for post in posts:
+        content = (post.get('content') or '').strip()
+        excerpt = content if len(content) <= TRUMP_EXCERPT_MAX else content[: TRUMP_EXCERPT_MAX - 1].rstrip() + '…'
+        item: dict[str, Any] = {
+            'postedAtTw': post.get('posted_at_tw') or '',
+            'excerpt': excerpt,
+            'url': (post.get('archive_link') or '').strip(),
+        }
+        if is_important(post):
+            item['important'] = True
+        body, trailing_url = split_trailing_url(excerpt)
+        if trailing_url:
+            item['linkUrl'] = trailing_url
+        if translator and body and not body.startswith('http'):
+            try:
+                item['excerptZhTw'] = polish_tw_zh(translator.translate(body[:TRUMP_TRANSLATE_MAX]))
+            except Exception:
+                item['excerptZhTw'] = ''
+        else:
+            item['excerptZhTw'] = ''
+        item['dogSummary'] = summarize_trump_post(item)
+        items.append(item)
+    payload['items'] = items
+    return payload
 
 
 def supabase_request(method: str, path: str, *, query: dict[str, Any] | None = None, json_body: dict[str, Any] | list[dict[str, Any]] | None = None, data: bytes | None = None, extra_headers: dict[str, str] | None = None, prefer: str | None = None) -> Any:
@@ -446,6 +814,18 @@ def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
         '2615': '萬海', '8046': '南電', '0050': '元大台灣50', '0056': '元大高股息', '2606': '裕民',
     }
     return str(name_map.get(symbol) or info.get('shortName') or info.get('longName') or info.get('symbol') or symbol)
+
+
+@app.route('/api/live-data')
+def live_data() -> Any:
+    payload: dict[str, Any] = {
+        'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'feed': fetch_feed_live(DOGGO_RSS_URLS),
+        'usQuotes': fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS),
+        'weather': fetch_weather_live(WEATHER_SPOTS),
+        'trumpTruth': fetch_trump_truth_live(),
+    }
+    return jsonify(payload)
 
 
 @app.route('/api/tw-quotes')
