@@ -39,27 +39,27 @@
       }
     }
   ],
-  "generatedAt": "2026-04-13T05:02:23Z",
+  "generatedAt": "2026-04-16T01:53:51Z",
   "buildTrigger": "manual",
   "provenance": "LIVE (build)",
   "quotes": {
-    "asOf": "2026-04-13T05:01:48Z",
+    "asOf": "2026-04-16T01:53:14Z",
     "items": [
       {
         "symbol": "2330",
         "name": "台積電",
-        "price": 1975.0,
-        "change": -25.0,
-        "changePct": -1.25,
-        "prevClose": 2000.0,
-        "dayHigh": 1995.0,
-        "dayLow": 1975.0,
+        "price": 2065.0,
+        "change": -15.0,
+        "changePct": -0.72,
+        "prevClose": 2080.0,
+        "dayHigh": 2085.0,
+        "dayLow": 2060.0,
         "series": [
-          1860.0,
-          1950.0,
-          1955.0,
           2000.0,
-          1975.0
+          1990.0,
+          2055.0,
+          2080.0,
+          2065.0
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2330 目前波動不算大，先放在觀察名單前段。"
@@ -67,18 +67,18 @@
       {
         "symbol": "2317",
         "name": "鴻海",
-        "price": 200.5,
-        "change": 0.0,
-        "changePct": 0.0,
-        "prevClose": 200.5,
-        "dayHigh": 202.5,
-        "dayLow": 198.5,
+        "price": 210.0,
+        "change": 2.5,
+        "changePct": 1.2,
+        "prevClose": 207.5,
+        "dayHigh": 211.0,
+        "dayLow": 206.0,
         "series": [
-          192.0,
-          201.5,
-          200.0,
           200.5,
-          200.5
+          200.0,
+          207.5,
+          207.5,
+          210.0
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2317 目前波動不算大，先放在觀察名單前段。"
@@ -86,37 +86,37 @@
       {
         "symbol": "2454",
         "name": "聯發科",
-        "price": 1630.0,
-        "change": 55.0,
-        "changePct": 3.49,
-        "prevClose": 1575.0,
-        "dayHigh": 1665.0,
-        "dayLow": 1625.0,
+        "price": 1880.0,
+        "change": 90.0,
+        "changePct": 5.03,
+        "prevClose": 1790.0,
+        "dayHigh": 1890.0,
+        "dayLow": 1810.0,
         "series": [
-          1470.0,
-          1580.0,
           1575.0,
-          1575.0,
-          1630.0
+          1620.0,
+          1720.0,
+          1790.0,
+          1880.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2454 明顯走強，今天台股氣氛偏偏多。"
+        "dogSummary": "狗狗重點：2454 今天很衝，已經是台股前排強勢股。"
       },
       {
         "symbol": "2412",
         "name": "中華電",
-        "price": 134.5,
-        "change": -1.0,
-        "changePct": -0.74,
+        "price": 136.0,
+        "change": 0.5,
+        "changePct": 0.37,
         "prevClose": 135.5,
-        "dayHigh": 135.0,
-        "dayLow": 134.5,
+        "dayHigh": 136.0,
+        "dayLow": 135.0,
         "series": [
-          134.0,
-          134.0,
+          135.5,
+          134.5,
           135.0,
           135.5,
-          134.5
+          136.0
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：2412 目前波動不算大，先放在觀察名單前段。"
@@ -124,37 +124,37 @@
       {
         "symbol": "6505",
         "name": "台塑化",
-        "price": 54.7,
-        "change": 2.7,
-        "changePct": 5.19,
-        "prevClose": 52.0,
+        "price": 55.0,
+        "change": 0.6,
+        "changePct": 1.1,
+        "prevClose": 54.4,
         "dayHigh": 55.0,
-        "dayLow": 52.6,
+        "dayLow": 54.1,
         "series": [
-          56.8,
-          54.3,
-          52.7,
           52.0,
-          54.7
+          55.1,
+          56.2,
+          54.4,
+          55.0
         ],
-        "pattern": "downtrend",
-        "dogSummary": "狗狗重點：6505 今天很衝，已經是台股前排強勢股。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：6505 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2308",
         "name": "台達電",
-        "price": 1745.0,
+        "price": 1795.0,
         "change": 10.0,
-        "changePct": 0.58,
-        "prevClose": 1735.0,
-        "dayHigh": 1760.0,
-        "dayLow": 1710.0,
+        "changePct": 0.56,
+        "prevClose": 1785.0,
+        "dayHigh": 1840.0,
+        "dayLow": 1795.0,
         "series": [
-          1515.0,
-          1665.0,
-          1645.0,
           1735.0,
-          1745.0
+          1740.0,
+          1750.0,
+          1785.0,
+          1795.0
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2308 目前波動不算大，先放在觀察名單前段。"
@@ -162,37 +162,37 @@
       {
         "symbol": "2303",
         "name": "聯電",
-        "price": 60.3,
-        "change": -1.7,
-        "changePct": -2.74,
-        "prevClose": 62.0,
-        "dayHigh": 61.5,
-        "dayLow": 58.6,
+        "price": 68.3,
+        "change": 6.2,
+        "changePct": 9.98,
+        "prevClose": 62.1,
+        "dayHigh": 68.3,
+        "dayLow": 65.6,
         "series": [
-          58.3,
-          60.3,
-          60.0,
           62.0,
-          60.3
+          60.1,
+          59.7,
+          62.1,
+          68.3
         ],
-        "pattern": "volatile",
-        "dogSummary": "狗狗重點：2303 明顯轉弱，今天盤面有點保守。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：2303 今天很衝，已經是台股前排強勢股。"
       },
       {
         "symbol": "2881",
         "name": "富邦金",
-        "price": 87.0,
-        "change": -0.6,
-        "changePct": -0.68,
-        "prevClose": 87.6,
-        "dayHigh": 87.6,
-        "dayLow": 86.8,
+        "price": 88.2,
+        "change": 0.7,
+        "changePct": 0.8,
+        "prevClose": 87.5,
+        "dayHigh": 88.4,
+        "dayLow": 87.3,
         "series": [
-          87.7,
-          89.2,
-          88.5,
           87.6,
-          87.0
+          86.7,
+          87.6,
+          87.5,
+          88.2
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：2881 目前波動不算大，先放在觀察名單前段。"
@@ -200,18 +200,18 @@
       {
         "symbol": "2882",
         "name": "國泰金",
-        "price": 72.0,
-        "change": -0.9,
-        "changePct": -1.23,
+        "price": 73.7,
+        "change": 0.8,
+        "changePct": 1.1,
         "prevClose": 72.9,
-        "dayHigh": 72.8,
-        "dayLow": 71.6,
+        "dayHigh": 73.9,
+        "dayLow": 73.0,
         "series": [
-          71.9,
-          73.8,
-          73.6,
           72.9,
-          72.0
+          72.0,
+          72.7,
+          72.9,
+          73.7
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：2882 目前波動不算大，先放在觀察名單前段。"
@@ -219,75 +219,75 @@
       {
         "symbol": "1303",
         "name": "南亞",
-        "price": 85.6,
-        "change": 4.0,
-        "changePct": 4.9,
-        "prevClose": 81.6,
-        "dayHigh": 86.9,
-        "dayLow": 81.8,
+        "price": 88.3,
+        "change": -0.2,
+        "changePct": -0.23,
+        "prevClose": 88.5,
+        "dayHigh": 89.8,
+        "dayLow": 86.2,
         "series": [
-          80.5,
-          85.1,
-          85.2,
           81.6,
-          85.6
+          85.7,
+          89.0,
+          88.5,
+          88.3
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：1303 今天很衝，已經是台股前排強勢股。"
+        "dogSummary": "狗狗重點：1303 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1301",
         "name": "台塑",
-        "price": 50.9,
-        "change": 3.95,
-        "changePct": 8.41,
-        "prevClose": 46.95,
-        "dayHigh": 51.3,
-        "dayLow": 47.15,
+        "price": 53.7,
+        "change": 1.4,
+        "changePct": 2.68,
+        "prevClose": 52.3,
+        "dayHigh": 53.7,
+        "dayLow": 51.7,
         "series": [
-          47.5,
-          47.2,
-          47.4,
           46.95,
-          50.9
+          51.4,
+          54.3,
+          52.3,
+          53.7
         ],
-        "pattern": "volatile",
-        "dogSummary": "狗狗重點：1301 今天很衝，已經是台股前排強勢股。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：1301 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2002",
         "name": "中鋼",
-        "price": 20.15,
-        "change": 0.1,
-        "changePct": 0.5,
-        "prevClose": 20.05,
-        "dayHigh": 20.2,
-        "dayLow": 19.85,
+        "price": 20.1,
+        "change": 0.0,
+        "changePct": 0.0,
+        "prevClose": 20.1,
+        "dayHigh": 20.25,
+        "dayLow": 20.0,
         "series": [
-          19.5,
-          19.95,
-          20.2,
           20.05,
-          20.15
+          20.2,
+          20.5,
+          20.1,
+          20.1
         ],
-        "pattern": "uptrend",
+        "pattern": "range",
         "dogSummary": "狗狗重點：2002 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2886",
         "name": "兆豐金",
-        "price": 39.35,
-        "change": -0.5,
-        "changePct": -1.25,
-        "prevClose": 39.85,
-        "dayHigh": 39.85,
-        "dayLow": 39.05,
+        "price": 39.7,
+        "change": 0.2,
+        "changePct": 0.51,
+        "prevClose": 39.5,
+        "dayHigh": 39.95,
+        "dayLow": 39.55,
         "series": [
-          39.4,
-          39.35,
-          39.75,
           39.85,
-          39.35
+          39.3,
+          39.35,
+          39.5,
+          39.7
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：2886 目前波動不算大，先放在觀察名單前段。"
@@ -295,94 +295,94 @@
       {
         "symbol": "2891",
         "name": "中信金",
-        "price": 53.7,
-        "change": -0.3,
-        "changePct": -0.56,
-        "prevClose": 54.0,
-        "dayHigh": 54.2,
-        "dayLow": 53.3,
+        "price": 53.5,
+        "change": 0.7,
+        "changePct": 1.33,
+        "prevClose": 52.8,
+        "dayHigh": 53.7,
+        "dayLow": 53.0,
         "series": [
-          55.8,
-          56.5,
-          54.8,
           54.0,
-          53.7
+          53.3,
+          53.1,
+          52.8,
+          53.5
         ],
-        "pattern": "downtrend",
+        "pattern": "range",
         "dogSummary": "狗狗重點：2891 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1216",
         "name": "統一",
-        "price": 71.9,
-        "change": 0.1,
-        "changePct": 0.14,
-        "prevClose": 71.8,
-        "dayHigh": 72.2,
-        "dayLow": 71.4,
+        "price": 73.0,
+        "change": 0.4,
+        "changePct": 0.55,
+        "prevClose": 72.6,
+        "dayHigh": 73.3,
+        "dayLow": 72.6,
         "series": [
-          72.5,
-          72.7,
-          72.0,
           71.8,
-          71.9
+          72.0,
+          72.1,
+          72.6,
+          73.0
         ],
-        "pattern": "range",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：1216 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2382",
         "name": "廣達",
-        "price": 320.0,
-        "change": -1.5,
-        "changePct": -0.47,
-        "prevClose": 321.5,
-        "dayHigh": 320.5,
-        "dayLow": 313.0,
+        "price": 315.5,
+        "change": 7.0,
+        "changePct": 2.27,
+        "prevClose": 308.5,
+        "dayHigh": 318.5,
+        "dayLow": 311.0,
         "series": [
-          289.0,
-          307.5,
-          313.0,
           321.5,
-          320.0
+          319.0,
+          323.0,
+          308.5,
+          315.5
         ],
-        "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2382 目前波動不算大，先放在觀察名單前段。"
+        "pattern": "volatile",
+        "dogSummary": "狗狗重點：2382 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2884",
         "name": "玉山金",
-        "price": 32.1,
-        "change": -0.15,
-        "changePct": -0.47,
-        "prevClose": 32.25,
-        "dayHigh": 32.25,
-        "dayLow": 32.0,
+        "price": 33.0,
+        "change": 0.05,
+        "changePct": 0.15,
+        "prevClose": 32.95,
+        "dayHigh": 33.2,
+        "dayLow": 33.0,
         "series": [
-          32.4,
-          32.45,
-          32.6,
           32.25,
-          32.1
+          32.05,
+          32.7,
+          32.95,
+          33.0
         ],
-        "pattern": "range",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：2884 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2885",
         "name": "元大金",
-        "price": 47.7,
-        "change": 0.0,
-        "changePct": 0.0,
-        "prevClose": 47.7,
-        "dayHigh": 47.95,
-        "dayLow": 47.15,
+        "price": 50.6,
+        "change": 0.2,
+        "changePct": 0.4,
+        "prevClose": 50.4,
+        "dayHigh": 51.2,
+        "dayLow": 50.3,
         "series": [
-          46.5,
-          47.1,
-          47.95,
           47.7,
-          47.7
+          47.45,
+          49.55,
+          50.4,
+          50.6
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2885 目前波動不算大，先放在觀察名單前段。"
@@ -390,56 +390,56 @@
       {
         "symbol": "3711",
         "name": "日月光投控",
-        "price": 420.5,
-        "change": 27.5,
-        "changePct": 7.0,
-        "prevClose": 393.0,
-        "dayHigh": 428.0,
-        "dayLow": 403.0,
+        "price": 441.5,
+        "change": -5.0,
+        "changePct": -1.12,
+        "prevClose": 446.5,
+        "dayHigh": 453.0,
+        "dayLow": 441.5,
         "series": [
-          352.0,
-          383.0,
-          392.0,
           393.0,
-          420.5
+          417.5,
+          424.0,
+          446.5,
+          441.5
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：3711 今天很衝，已經是台股前排強勢股。"
+        "dogSummary": "狗狗重點：3711 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2880",
         "name": "華南金",
-        "price": 34.2,
-        "change": 0.1,
-        "changePct": 0.29,
-        "prevClose": 34.1,
-        "dayHigh": 34.35,
-        "dayLow": 33.8,
+        "price": 36.1,
+        "change": 0.05,
+        "changePct": 0.14,
+        "prevClose": 36.05,
+        "dayHigh": 36.55,
+        "dayLow": 35.9,
         "series": [
-          34.0,
-          33.95,
-          34.6,
           34.1,
-          34.2
+          34.0,
+          35.0,
+          36.05,
+          36.1
         ],
-        "pattern": "range",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：2880 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "5880",
         "name": "合庫金",
-        "price": 23.75,
-        "change": -0.1,
-        "changePct": -0.42,
+        "price": 23.9,
+        "change": 0.05,
+        "changePct": 0.21,
         "prevClose": 23.85,
-        "dayHigh": 23.9,
-        "dayLow": 23.7,
+        "dayHigh": 23.95,
+        "dayLow": 23.85,
         "series": [
-          23.7,
           23.85,
-          24.05,
+          23.9,
+          23.9,
           23.85,
-          23.75
+          23.9
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：5880 目前波動不算大，先放在觀察名單前段。"
@@ -454,8 +454,8 @@
         "dayHigh": 110.0,
         "dayLow": 109.5,
         "series": [
-          109.5,
-          109.5,
+          110.0,
+          110.0,
           110.0,
           110.0,
           110.0
@@ -466,94 +466,94 @@
       {
         "symbol": "2883",
         "name": "凱基金",
-        "price": 21.0,
-        "change": -0.15,
-        "changePct": -0.71,
-        "prevClose": 21.15,
+        "price": 21.1,
+        "change": 0.35,
+        "changePct": 1.69,
+        "prevClose": 20.75,
         "dayHigh": 21.15,
-        "dayLow": 20.75,
+        "dayLow": 20.85,
         "series": [
-          20.55,
-          21.35,
-          21.3,
           21.15,
-          21.0
+          21.05,
+          20.85,
+          20.75,
+          21.1
         ],
-        "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2883 目前波動不算大，先放在觀察名單前段。"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2883 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2207",
         "name": "和泰車",
-        "price": 499.5,
-        "change": -8.5,
-        "changePct": -1.67,
-        "prevClose": 508.0,
-        "dayHigh": 506.0,
-        "dayLow": 495.0,
+        "price": 521.0,
+        "change": 9.0,
+        "changePct": 1.76,
+        "prevClose": 512.0,
+        "dayHigh": 522.0,
+        "dayLow": 516.0,
         "series": [
-          483.5,
-          495.5,
-          497.5,
           508.0,
-          499.5
+          498.0,
+          511.0,
+          512.0,
+          521.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2207 明顯轉弱，今天盤面有點保守。"
+        "dogSummary": "狗狗重點：2207 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2912",
         "name": "統一超",
-        "price": 224.5,
-        "change": -3.0,
-        "changePct": -1.32,
-        "prevClose": 227.5,
-        "dayHigh": 227.5,
-        "dayLow": 223.0,
+        "price": 233.5,
+        "change": 2.0,
+        "changePct": 0.86,
+        "prevClose": 231.5,
+        "dayHigh": 233.5,
+        "dayLow": 231.0,
         "series": [
-          231.0,
-          229.0,
-          231.0,
           227.5,
-          224.5
+          225.0,
+          227.5,
+          231.5,
+          233.5
         ],
-        "pattern": "downtrend",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：2912 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "3008",
         "name": "大立光",
-        "price": 2425.0,
-        "change": 115.0,
-        "changePct": 4.98,
-        "prevClose": 2310.0,
-        "dayHigh": 2485.0,
-        "dayLow": 2300.0,
+        "price": 2785.0,
+        "change": -35.0,
+        "changePct": -1.24,
+        "prevClose": 2820.0,
+        "dayHigh": 2870.0,
+        "dayLow": 2780.0,
         "series": [
-          2170.0,
-          2280.0,
-          2280.0,
           2310.0,
-          2425.0
+          2430.0,
+          2670.0,
+          2820.0,
+          2785.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：3008 今天很衝，已經是台股前排強勢股。"
+        "dogSummary": "狗狗重點：3008 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "4904",
         "name": "遠傳",
-        "price": 94.2,
-        "change": -0.4,
-        "changePct": -0.42,
-        "prevClose": 94.6,
-        "dayHigh": 94.9,
-        "dayLow": 93.8,
+        "price": 95.4,
+        "change": 0.1,
+        "changePct": 0.1,
+        "prevClose": 95.3,
+        "dayHigh": 96.1,
+        "dayLow": 95.4,
         "series": [
-          93.3,
-          93.3,
-          95.3,
           94.6,
-          94.2
+          94.3,
+          94.3,
+          95.3,
+          95.4
         ],
         "pattern": "range",
         "dogSummary": "狗狗重點：4904 目前波動不算大，先放在觀察名單前段。"
@@ -561,56 +561,56 @@
       {
         "symbol": "5871",
         "name": "中租-KY",
-        "price": 110.0,
-        "change": 3.0,
-        "changePct": 2.8,
-        "prevClose": 107.0,
-        "dayHigh": 110.5,
-        "dayLow": 108.0,
+        "price": 117.0,
+        "change": 0.5,
+        "changePct": 0.43,
+        "prevClose": 116.5,
+        "dayHigh": 118.5,
+        "dayLow": 116.0,
         "series": [
-          108.5,
-          109.5,
-          108.5,
           107.0,
-          110.0
+          110.0,
+          113.0,
+          116.5,
+          117.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：5871 明顯走強，今天台股氣氛偏偏多。"
+        "dogSummary": "狗狗重點：5871 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "6415",
         "name": "矽力*-KY",
-        "price": 270.0,
-        "change": -9.5,
-        "changePct": -3.4,
-        "prevClose": 279.5,
-        "dayHigh": 281.0,
-        "dayLow": 270.0,
+        "price": 285.0,
+        "change": 10.0,
+        "changePct": 3.64,
+        "prevClose": 275.0,
+        "dayHigh": 288.0,
+        "dayLow": 278.5,
         "series": [
-          281.5,
-          299.5,
-          282.0,
           279.5,
-          270.0
+          273.0,
+          269.5,
+          275.0,
+          285.0
         ],
-        "pattern": "downtrend",
-        "dogSummary": "狗狗重點：6415 明顯轉弱，今天盤面有點保守。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：6415 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "3034",
         "name": "聯詠",
-        "price": 395.0,
-        "change": 1.0,
-        "changePct": 0.25,
-        "prevClose": 394.0,
-        "dayHigh": 395.0,
-        "dayLow": 385.0,
+        "price": 410.5,
+        "change": 5.5,
+        "changePct": 1.36,
+        "prevClose": 405.0,
+        "dayHigh": 414.0,
+        "dayLow": 406.5,
         "series": [
-          384.5,
-          391.5,
-          399.5,
           394.0,
-          395.0
+          394.5,
+          398.5,
+          405.0,
+          410.5
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：3034 目前波動不算大，先放在觀察名單前段。"
@@ -618,132 +618,132 @@
       {
         "symbol": "2892",
         "name": "第一金",
-        "price": 28.55,
-        "change": -0.05,
-        "changePct": -0.17,
-        "prevClose": 28.6,
-        "dayHigh": 28.65,
-        "dayLow": 28.4,
+        "price": 28.95,
+        "change": 0.1,
+        "changePct": 0.35,
+        "prevClose": 28.85,
+        "dayHigh": 29.0,
+        "dayLow": 28.8,
         "series": [
           28.6,
-          28.8,
-          29.1,
+          28.45,
           28.6,
-          28.55
+          28.85,
+          28.95
         ],
-        "pattern": "range",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：2892 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1326",
         "name": "台化",
-        "price": 49.9,
-        "change": 4.45,
-        "changePct": 9.79,
-        "prevClose": 45.45,
-        "dayHigh": 49.95,
-        "dayLow": 46.0,
+        "price": 51.3,
+        "change": 0.9,
+        "changePct": 1.79,
+        "prevClose": 50.4,
+        "dayHigh": 51.4,
+        "dayLow": 49.95,
         "series": [
-          45.6,
-          45.1,
-          45.6,
           45.45,
-          49.9
+          49.95,
+          54.6,
+          50.4,
+          51.3
         ],
-        "pattern": "volatile",
-        "dogSummary": "狗狗重點：1326 今天很衝，已經是台股前排強勢股。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：1326 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2603",
         "name": "長榮",
-        "price": 200.5,
-        "change": -2.0,
-        "changePct": -0.99,
-        "prevClose": 202.5,
-        "dayHigh": 203.0,
-        "dayLow": 200.0,
+        "price": 203.5,
+        "change": 0.5,
+        "changePct": 0.25,
+        "prevClose": 203.0,
+        "dayHigh": 204.5,
+        "dayLow": 203.0,
         "series": [
-          203.0,
-          202.0,
-          203.0,
           202.5,
-          200.5
+          200.0,
+          201.0,
+          203.0,
+          203.5
         ],
-        "pattern": "downtrend",
+        "pattern": "range",
         "dogSummary": "狗狗重點：2603 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1101",
         "name": "台泥",
-        "price": 25.2,
-        "change": -0.2,
-        "changePct": -0.79,
-        "prevClose": 25.4,
-        "dayHigh": 25.55,
-        "dayLow": 24.9,
+        "price": 24.9,
+        "change": 0.3,
+        "changePct": 1.22,
+        "prevClose": 24.6,
+        "dayHigh": 24.95,
+        "dayLow": 24.6,
         "series": [
-          24.0,
           25.4,
-          25.1,
-          25.4,
-          25.2
+          25.25,
+          25.3,
+          24.6,
+          24.9
         ],
-        "pattern": "volatile",
+        "pattern": "downtrend",
         "dogSummary": "狗狗重點：1101 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2887",
         "name": "台新金",
-        "price": 24.25,
-        "change": -0.3,
-        "changePct": -1.22,
-        "prevClose": 24.55,
-        "dayHigh": 24.5,
-        "dayLow": 23.9,
+        "price": 24.9,
+        "change": 0.3,
+        "changePct": 1.22,
+        "prevClose": 24.6,
+        "dayHigh": 25.1,
+        "dayLow": 24.6,
         "series": [
-          24.35,
-          24.7,
-          24.65,
           24.55,
-          24.25
+          24.15,
+          24.45,
+          24.6,
+          24.9
         ],
-        "pattern": "range",
+        "pattern": "uptrend",
         "dogSummary": "狗狗重點：2887 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2327",
         "name": "國巨",
-        "price": 304.5,
-        "change": 19.5,
-        "changePct": 6.84,
-        "prevClose": 285.0,
-        "dayHigh": 311.0,
-        "dayLow": 292.0,
+        "price": 331.0,
+        "change": 9.0,
+        "changePct": 2.8,
+        "prevClose": 322.0,
+        "dayHigh": 331.5,
+        "dayLow": 304.5,
         "series": [
-          256.0,
-          271.5,
-          281.5,
           285.0,
-          304.5
+          303.5,
+          312.0,
+          322.0,
+          331.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2327 今天很衝，已經是台股前排強勢股。"
+        "dogSummary": "狗狗重點：2327 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2357",
         "name": "華碩",
-        "price": 578.0,
-        "change": 0.0,
-        "changePct": 0.0,
-        "prevClose": 578.0,
-        "dayHigh": 579.0,
-        "dayLow": 565.0,
+        "price": 592.0,
+        "change": 8.0,
+        "changePct": 1.37,
+        "prevClose": 584.0,
+        "dayHigh": 593.0,
+        "dayLow": 584.0,
         "series": [
-          550.0,
-          562.0,
-          568.0,
           578.0,
-          578.0
+          578.0,
+          580.0,
+          584.0,
+          592.0
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2357 目前波動不算大，先放在觀察名單前段。"
@@ -751,18 +751,18 @@
       {
         "symbol": "2379",
         "name": "瑞昱",
-        "price": 524.0,
-        "change": 16.0,
-        "changePct": 3.15,
-        "prevClose": 508.0,
-        "dayHigh": 525.0,
-        "dayLow": 500.0,
+        "price": 533.0,
+        "change": 8.0,
+        "changePct": 1.52,
+        "prevClose": 525.0,
+        "dayHigh": 540.0,
+        "dayLow": 530.0,
         "series": [
-          499.0,
-          505.0,
-          512.0,
           508.0,
-          524.0
+          525.0,
+          524.0,
+          525.0,
+          533.0
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2379 明顯走強，今天台股氣氛偏偏多。"
@@ -770,113 +770,113 @@
       {
         "symbol": "4938",
         "name": "和碩",
-        "price": 77.8,
-        "change": -2.9,
-        "changePct": -3.59,
-        "prevClose": 80.7,
-        "dayHigh": 80.7,
-        "dayLow": 77.2,
+        "price": 79.5,
+        "change": 0.7,
+        "changePct": 0.89,
+        "prevClose": 78.8,
+        "dayHigh": 80.3,
+        "dayLow": 79.2,
         "series": [
-          77.9,
-          79.6,
-          80.0,
           80.7,
-          77.8
+          78.0,
+          78.5,
+          78.8,
+          79.5
         ],
-        "pattern": "range",
-        "dogSummary": "狗狗重點：4938 明顯轉弱，今天盤面有點保守。"
+        "pattern": "downtrend",
+        "dogSummary": "狗狗重點：4938 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2408",
         "name": "南亞科",
-        "price": 223.0,
-        "change": 8.0,
-        "changePct": 3.72,
-        "prevClose": 215.0,
-        "dayHigh": 227.5,
-        "dayLow": 214.5,
+        "price": 212.5,
+        "change": 1.0,
+        "changePct": 0.47,
+        "prevClose": 211.5,
+        "dayHigh": 216.5,
+        "dayLow": 208.5,
         "series": [
-          206.0,
-          223.0,
-          205.0,
           215.0,
-          223.0
+          225.5,
+          220.0,
+          211.5,
+          212.5
         ],
-        "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2408 明顯走強，今天台股氣氛偏偏多。"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：2408 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "1590",
         "name": "亞德客-KY",
-        "price": 1100.0,
-        "change": -15.0,
-        "changePct": -1.35,
-        "prevClose": 1115.0,
-        "dayHigh": 1125.0,
-        "dayLow": 1090.0,
+        "price": 1215.0,
+        "change": 30.0,
+        "changePct": 2.53,
+        "prevClose": 1185.0,
+        "dayHigh": 1245.0,
+        "dayLow": 1180.0,
         "series": [
-          1030.0,
-          1075.0,
-          1075.0,
           1115.0,
-          1100.0
+          1095.0,
+          1115.0,
+          1185.0,
+          1215.0
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：1590 目前波動不算大，先放在觀察名單前段。"
+        "dogSummary": "狗狗重點：1590 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "3037",
         "name": "欣興",
-        "price": 626.0,
-        "change": -12.0,
-        "changePct": -1.88,
-        "prevClose": 638.0,
-        "dayHigh": 648.0,
-        "dayLow": 624.0,
+        "price": 620.0,
+        "change": 2.0,
+        "changePct": 0.32,
+        "prevClose": 618.0,
+        "dayHigh": 620.0,
+        "dayLow": 620.0,
         "series": [
-          564.0,
-          620.0,
-          625.0,
           638.0,
-          626.0
+          626.0,
+          597.0,
+          618.0,
+          620.0
         ],
-        "pattern": "uptrend",
-        "dogSummary": "狗狗重點：3037 明顯轉弱，今天盤面有點保守。"
+        "pattern": "downtrend",
+        "dogSummary": "狗狗重點：3037 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2356",
         "name": "英業達",
-        "price": 44.6,
-        "change": 0.3,
-        "changePct": 0.68,
-        "prevClose": 44.3,
-        "dayHigh": 44.75,
-        "dayLow": 43.4,
+        "price": 45.35,
+        "change": 0.9,
+        "changePct": 2.02,
+        "prevClose": 44.45,
+        "dayHigh": 45.45,
+        "dayLow": 44.75,
         "series": [
-          40.85,
-          42.65,
-          43.8,
           44.3,
-          44.6
+          44.55,
+          44.6,
+          44.45,
+          45.35
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2356 目前波動不算大，先放在觀察名單前段。"
+        "dogSummary": "狗狗重點：2356 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2801",
         "name": "彰銀",
-        "price": 21.05,
-        "change": -0.1,
-        "changePct": -0.47,
-        "prevClose": 21.15,
-        "dayHigh": 21.15,
-        "dayLow": 20.9,
+        "price": 21.45,
+        "change": 0.05,
+        "changePct": 0.23,
+        "prevClose": 21.4,
+        "dayHigh": 21.45,
+        "dayLow": 21.35,
         "series": [
-          20.8,
-          20.9,
-          21.0,
           21.15,
-          21.05
+          21.15,
+          21.2,
+          21.4,
+          21.45
         ],
         "pattern": "uptrend",
         "dogSummary": "狗狗重點：2801 目前波動不算大，先放在觀察名單前段。"
@@ -884,235 +884,233 @@
       {
         "symbol": "2609",
         "name": "陽明",
-        "price": 50.7,
-        "change": -0.6,
-        "changePct": -1.17,
-        "prevClose": 51.3,
-        "dayHigh": 51.4,
-        "dayLow": 50.3,
+        "price": 51.5,
+        "change": 0.0,
+        "changePct": 0.0,
+        "prevClose": 51.5,
+        "dayHigh": 51.7,
+        "dayLow": 51.2,
         "series": [
-          51.7,
-          51.7,
           51.3,
-          51.3,
-          50.7
+          50.6,
+          50.4,
+          51.5,
+          51.5
         ],
-        "pattern": "downtrend",
+        "pattern": "range",
         "dogSummary": "狗狗重點：2609 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "2615",
         "name": "萬海",
-        "price": 76.1,
-        "change": -1.0,
-        "changePct": -1.3,
-        "prevClose": 77.1,
-        "dayHigh": 77.7,
-        "dayLow": 75.5,
+        "price": 77.7,
+        "change": 0.1,
+        "changePct": 0.13,
+        "prevClose": 77.6,
+        "dayHigh": 78.2,
+        "dayLow": 77.5,
         "series": [
-          79.4,
-          78.8,
-          78.3,
           77.1,
-          76.1
+          76.5,
+          76.2,
+          77.6,
+          77.7
         ],
-        "pattern": "downtrend",
+        "pattern": "range",
         "dogSummary": "狗狗重點：2615 目前波動不算大，先放在觀察名單前段。"
       },
       {
         "symbol": "8046",
         "name": "南電",
-        "price": 653.0,
-        "change": -14.0,
-        "changePct": -2.1,
-        "prevClose": 667.0,
-        "dayHigh": 675.0,
-        "dayLow": 650.0,
+        "price": 671.0,
+        "change": 15.0,
+        "changePct": 2.29,
+        "prevClose": 656.0,
+        "dayHigh": 680.0,
+        "dayLow": 651.0,
         "series": [
-          624.0,
-          637.0,
-          669.0,
           667.0,
-          653.0
+          655.0,
+          646.0,
+          656.0,
+          671.0
         ],
-        "pattern": "uptrend",
-        "dogSummary": "狗狗重點：8046 明顯轉弱，今天盤面有點保守。"
+        "pattern": "range",
+        "dogSummary": "狗狗重點：8046 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "0050",
         "name": "元大台灣50",
-        "price": 80.6,
-        "change": -0.15,
-        "changePct": -0.19,
-        "prevClose": 80.75,
-        "dayHigh": 81.0,
-        "dayLow": 80.4,
+        "price": 84.5,
+        "change": 1.4,
+        "changePct": 1.68,
+        "prevClose": 83.1,
+        "dayHigh": 84.75,
+        "dayLow": 84.15,
         "series": [
-          75.3,
-          79.2,
-          79.15,
           80.75,
-          80.6
+          80.6,
+          83.1,
+          84.5
         ],
-        "pattern": "volatile",
-        "dogSummary": "狗狗重點：0050 目前波動不算大，先放在觀察名單前段。"
+        "pattern": "uptrend",
+        "dogSummary": "狗狗重點：0050 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "0056",
         "name": "元大高股息",
-        "price": 39.57,
-        "change": 0.16,
-        "changePct": 0.41,
-        "prevClose": 39.41,
-        "dayHigh": 39.6,
-        "dayLow": 39.2,
+        "price": 40.86,
+        "change": 0.89,
+        "changePct": 2.23,
+        "prevClose": 39.97,
+        "dayHigh": 40.88,
+        "dayLow": 40.53,
         "series": [
-          38.07,
-          39.02,
-          39.08,
           39.41,
-          39.57
+          39.52,
+          39.97,
+          40.86
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：0056 目前波動不算大，先放在觀察名單前段。"
+        "dogSummary": "狗狗重點：0056 明顯走強，今天台股氣氛偏偏多。"
       },
       {
         "symbol": "2606",
         "name": "裕民",
-        "price": 60.7,
-        "change": -0.3,
-        "changePct": -0.49,
-        "prevClose": 61.0,
-        "dayHigh": 61.3,
-        "dayLow": 59.8,
+        "price": 64.9,
+        "change": 1.9,
+        "changePct": 3.02,
+        "prevClose": 63.0,
+        "dayHigh": 65.1,
+        "dayLow": 63.9,
         "series": [
-          59.6,
-          60.7,
-          60.8,
           61.0,
-          60.7
+          60.7,
+          60.3,
+          63.0,
+          64.9
         ],
         "pattern": "uptrend",
-        "dogSummary": "狗狗重點：2606 目前波動不算大，先放在觀察名單前段。"
+        "dogSummary": "狗狗重點：2606 明顯走強，今天台股氣氛偏偏多。"
       }
     ]
   },
   "usQuotes": {
-    "asOf": "2026-04-13T05:02:11Z",
+    "asOf": "2026-04-16T01:53:41Z",
     "session": "closed",
-    "summary": "NVDA 漲幅最明顯，今天美股情緒偏熱。",
+    "summary": "TSLA 漲幅最明顯，今天美股情緒偏熱。",
     "items": [
       {
-        "symbol": "NVDA",
-        "name": "NVIDIA Corporation",
-        "price": 188.63,
-        "changePct": 2.57,
+        "symbol": "TSLA",
+        "name": "Tesla, Inc.",
+        "price": 391.95,
+        "changePct": 7.62,
         "series": [
-          177.64,
-          178.1,
-          182.08,
-          183.91,
-          188.63
+          345.62,
+          348.95,
+          352.42,
+          364.2,
+          391.95
         ],
-        "dogSummary": "狗狗重點：NVDA 明顯走強，今晚市場情緒偏偏多。"
-      },
-      {
-        "symbol": "AMZN",
-        "name": "Amazon.com, Inc.",
-        "price": 238.38,
-        "changePct": 2.02,
-        "series": [
-          212.79,
-          213.77,
-          221.25,
-          233.65,
-          238.38
-        ],
-        "dogSummary": "狗狗重點：AMZN 明顯走強，今晚市場情緒偏偏多。"
+        "dogSummary": "狗狗重點：TSLA 今天衝得很兇，是今晚美股最熱的帶頭股之一。"
       },
       {
         "symbol": "PLTR",
         "name": "Palantir Technologies Inc.",
-        "price": 128.06,
-        "changePct": -1.86,
+        "price": 142.15,
+        "changePct": 4.75,
         "series": [
-          147.93,
-          150.07,
-          140.76,
           130.49,
-          128.06
+          128.06,
+          132.37,
+          135.7,
+          142.15
         ],
-        "dogSummary": "狗狗重點：PLTR 明顯轉弱，今晚市場有點緊。"
-      },
-      {
-        "symbol": "TSLA",
-        "name": "Tesla, Inc.",
-        "price": 348.95,
-        "changePct": 0.96,
-        "series": [
-          352.82,
-          346.65,
-          343.25,
-          345.62,
-          348.95
-        ],
-        "dogSummary": "狗狗重點：TSLA 目前波動不算大，現在已經休市。"
+        "dogSummary": "狗狗重點：PLTR 今天衝得很兇，是今晚美股最熱的帶頭股之一。"
       },
       {
         "symbol": "MSFT",
         "name": "Microsoft Corporation",
-        "price": 370.87,
-        "changePct": -0.59,
+        "price": 411.22,
+        "changePct": 4.61,
         "series": [
-          372.88,
-          372.29,
-          374.33,
           373.07,
-          370.87
+          370.87,
+          384.37,
+          393.11,
+          411.22
         ],
-        "dogSummary": "狗狗重點：MSFT 目前波動不算大，現在已經休市。"
-      },
-      {
-        "symbol": "GOOGL",
-        "name": "Alphabet Inc.",
-        "price": 317.24,
-        "changePct": -0.39,
-        "series": [
-          299.99,
-          305.46,
-          317.32,
-          318.49,
-          317.24
-        ],
-        "dogSummary": "狗狗重點：GOOGL 目前波動不算大，現在已經休市。"
-      },
-      {
-        "symbol": "META",
-        "name": "Meta Platforms, Inc.",
-        "price": 629.86,
-        "changePct": 0.23,
-        "series": [
-          573.02,
-          575.05,
-          612.42,
-          628.39,
-          629.86
-        ],
-        "dogSummary": "狗狗重點：META 目前波動不算大，現在已經休市。"
+        "dogSummary": "狗狗重點：MSFT 今天衝得很兇，是今晚美股最熱的帶頭股之一。"
       },
       {
         "symbol": "AAPL",
         "name": "Apple Inc.",
-        "price": 260.48,
-        "changePct": -0.0,
+        "price": 266.43,
+        "changePct": 2.94,
         "series": [
-          258.86,
-          253.5,
-          258.9,
           260.49,
-          260.48
+          260.48,
+          259.2,
+          258.83,
+          266.43
         ],
-        "dogSummary": "狗狗重點：AAPL 目前波動不算大，現在已經休市。"
+        "dogSummary": "狗狗重點：AAPL 明顯走強，今晚市場情緒偏偏多。"
+      },
+      {
+        "symbol": "META",
+        "name": "Meta Platforms, Inc.",
+        "price": 671.58,
+        "changePct": 1.37,
+        "series": [
+          628.39,
+          629.86,
+          634.53,
+          662.49,
+          671.58
+        ],
+        "dogSummary": "狗狗重點：META 目前波動不算大，現在已經休市。"
+      },
+      {
+        "symbol": "GOOGL",
+        "name": "Alphabet Inc.",
+        "price": 337.12,
+        "changePct": 1.26,
+        "series": [
+          318.49,
+          317.24,
+          321.31,
+          332.91,
+          337.12
+        ],
+        "dogSummary": "狗狗重點：GOOGL 目前波動不算大，現在已經休市。"
+      },
+      {
+        "symbol": "NVDA",
+        "name": "NVIDIA Corporation",
+        "price": 198.87,
+        "changePct": 1.2,
+        "series": [
+          183.91,
+          188.63,
+          189.31,
+          196.51,
+          198.87
+        ],
+        "dogSummary": "狗狗重點：NVDA 目前波動不算大，現在已經休市。"
+      },
+      {
+        "symbol": "AMZN",
+        "name": "Amazon.com, Inc.",
+        "price": 248.5,
+        "changePct": -0.21,
+        "series": [
+          233.65,
+          238.38,
+          239.89,
+          249.02,
+          248.5
+        ],
+        "dogSummary": "狗狗重點：AMZN 目前波動不算大，現在已經休市。"
       }
     ]
   },
@@ -1120,44 +1118,44 @@
     "source": "https://news.ltn.com.tw/rss/business.xml + https://news.ltn.com.tw/rss/world.xml",
     "items": [
       {
-        "title": "泰國「美人魚」慘遭斬首！ 胸部被刺穿固定 疑與暗黑迷信有關",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5401960",
-        "time": "Mon, 13 Apr 2026 12:46:43 +0800"
+        "title": "國際油價撐住了！荷姆茲海峽卡關45天 背後供應危機還在發酵",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405502",
+        "time": "Thu, 16 Apr 2026 09:47:22 +0800"
       },
       {
-        "title": "遞橄欖枝？古巴：對美國投資石油探勘持開放態度",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5401947",
-        "time": "Mon, 13 Apr 2026 12:40:54 +0800"
+        "title": "因應全球衝突升級 澳洲國防開支提高至GDP占比3％",
+        "url": "https://news.ltn.com.tw/news/world/breakingnews/5405433",
+        "time": "Thu, 16 Apr 2026 09:40:07 +0800"
       },
       {
-        "title": "穩匯防輸入性通膨！央行嚴宗大：出口競爭力非主要考量",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5402126",
-        "time": "Mon, 13 Apr 2026 12:40:05 +0800"
+        "title": "南投焚化爐爭議 農業部長陳駿季憂衝擊手搖飲、石虎",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405460",
+        "time": "Thu, 16 Apr 2026 09:30:46 +0800"
       },
       {
-        "title": "中工寶佳大戰》寶佳指中工董事會淪為打手 籲金管會啟動調查",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5402145",
-        "time": "Mon, 13 Apr 2026 12:36:18 +0800"
+        "title": "財富自由》長線潛力股",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405459",
+        "time": "Thu, 16 Apr 2026 09:18:59 +0800"
       },
       {
-        "title": "壯觀！美23層樓邁阿密文華東方酒店 爆破拆除夷為平地",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5402025",
-        "time": "Mon, 13 Apr 2026 12:34:53 +0800"
+        "title": "美擴大對石油大亨的制裁 繼續向伊朗施壓",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405386",
+        "time": "Thu, 16 Apr 2026 09:18:36 +0800"
       },
       {
-        "title": "一文看懂》談判破局！川普下令美軍「封鎖海峽」 5大關鍵牽動全球油價",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5402122",
-        "time": "Mon, 13 Apr 2026 12:24:37 +0800"
+        "title": "黃金創1高點紀錄後！立馬遭下殺",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405448",
+        "time": "Thu, 16 Apr 2026 09:15:46 +0800"
       },
       {
-        "title": "各界聚焦刪除3家廠商投標爭議 工程會暫緩推動「政府採購法」",
-        "url": "https://ec.ltn.com.tw/article/breakingnews/5402112",
-        "time": "Mon, 13 Apr 2026 12:15:45 +0800"
+        "title": "國票金董事改選大混戰喊卡 公股喬好15席名單董事會今審查",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405431",
+        "time": "Thu, 16 Apr 2026 09:14:08 +0800"
       },
       {
-        "title": "柬埔寨逮182台籍嫌犯！電詐藏身5星飯店 「假官員」專騙台灣人",
-        "url": "https://news.ltn.com.tw/news/world/breakingnews/5402006",
-        "time": "Mon, 13 Apr 2026 12:08:53 +0800"
+        "title": "台灣買美債了！登前10大美債持有國、最新各國排名一次看",
+        "url": "https://ec.ltn.com.tw/article/breakingnews/5405410",
+        "time": "Thu, 16 Apr 2026 09:13:45 +0800"
       }
     ]
   },
@@ -1167,49 +1165,49 @@
         "key": "shipai",
         "label": "石牌",
         "icon": "☁️",
-        "tempC": 27.9,
+        "tempC": 26.8,
         "rainChance": 0,
         "weatherCode": 2,
         "advice": "短袖或薄襯衫就夠，早晚可帶薄外套。",
         "feel": "短袖可，早晚可帶薄外套。",
         "next3h": {
-          "rainPeak": 0,
-          "tempMin": 27.8,
-          "tempMax": 27.9
+          "rainPeak": 3,
+          "tempMin": 25.7,
+          "tempMax": 28.0
         },
-        "asOf": "2026-04-13T13:00"
+        "asOf": "2026-04-16T09:45"
       },
       {
         "key": "zhonghe",
         "label": "中和",
         "icon": "☁️",
-        "tempC": 30.3,
+        "tempC": 26.9,
         "rainChance": 0,
         "weatherCode": 2,
-        "advice": "短袖就好，注意防曬和補水。",
-        "feel": "悶熱，注意補水。",
+        "advice": "短袖或薄襯衫就夠，早晚可帶薄外套。",
+        "feel": "短袖可，早晚可帶薄外套。",
         "next3h": {
-          "rainPeak": 0,
-          "tempMin": 29.3,
-          "tempMax": 30.3
+          "rainPeak": 3,
+          "tempMin": 25.7,
+          "tempMax": 28.5
         },
-        "asOf": "2026-04-13T13:00"
+        "asOf": "2026-04-16T09:45"
       },
       {
         "key": "songshan",
         "label": "松山",
         "icon": "☁️",
-        "tempC": 30.8,
+        "tempC": 27.8,
         "rainChance": 0,
         "weatherCode": 2,
-        "advice": "短袖就好，注意防曬和補水。",
-        "feel": "悶熱，注意補水。",
+        "advice": "短袖或薄襯衫就夠，早晚可帶薄外套。",
+        "feel": "短袖可，早晚可帶薄外套。",
         "next3h": {
-          "rainPeak": 0,
-          "tempMin": 29.9,
-          "tempMax": 30.8
+          "rainPeak": 3,
+          "tempMin": 26.3,
+          "tempMax": 29.6
         },
-        "asOf": "2026-04-13T13:00"
+        "asOf": "2026-04-16T09:45"
       }
     ],
     "summary": "今天大致穩。",
@@ -1217,7 +1215,7 @@
   },
   "flightDeals": {
     "source": "doggo flight watchlist v2",
-    "asOf": "2026-04-13T05:02:18Z",
+    "asOf": "2026-04-16T01:53:46Z",
     "preferences": {
       "origin": "TPE",
       "regions": [
@@ -1349,44 +1347,57 @@
     "summary": "以你固定 TPE 出發來看，目前最低門檻是 沖繩 5,666 起，整體以日本 / 韓國 / 東南亞最值得追。"
   },
   "dog": {
-    "state": "worried",
-    "label": "大盤情緒偏保守"
+    "state": "idle",
+    "label": "平穩日常"
   },
   "trumpTruth": {
     "source": "https://www.trumpstruth.org/ (third-party archive; not Truth Social)",
-    "asOf": "2026-04-13T05:02:18Z",
+    "asOf": "2026-04-16T01:53:46Z",
     "items": [
       {
-        "postedAtTw": "2026-04-13T12:43:00+08:00",
-        "excerpt": "The United States to Blockade Ships Entering or Exiting Iranian Ports on April 13 at 10:00 A.M. ET. Thank you for your attention to this matter! President DJT",
-        "url": "https://www.trumpstruth.org/statuses/37737",
+        "postedAtTw": "2026-04-16T03:54:00+08:00",
+        "excerpt": "Why is FoxNews showing SLEAZEBAG Tom Steyer, doing a big piece on him right now, and probably putting him “into play,” instead of talking about Republican Candidates, and really good ones like Steve Hilton, and Republic…",
+        "url": "https://www.trumpstruth.org/statuses/37790",
+        "excerptZhTw": "為什麼福克斯新聞要展示 SLEAZEBAG Tom Steyer，現在正在對他大做文章，並且可能會讓他“發揮作用”，而不是談論共和黨候選人，以及像史蒂夫·希爾頓和共和國這樣的真正優秀的候選人......",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
+      },
+      {
+        "postedAtTw": "2026-04-15T22:16:00+08:00",
+        "excerpt": "I am working very hard with our Great Speaker, Mike Johnson, along with Chairman Jim Jordan and Chairman Rick Crawford, to get a clean extension of FISA 702 through the House of Representatives this week. I am asking Re…",
+        "url": "https://www.trumpstruth.org/statuses/37788",
+        "excerptZhTw": "我正在與我們偉大的議長邁克·約翰遜、主席吉姆·喬丹和主席里克·克勞福德一起努力工作，爭取本週在眾議院順利通過 FISA 702。我問的是…",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
+      },
+      {
+        "postedAtTw": "2026-04-15T20:34:00+08:00",
+        "excerpt": "The Radical Left Lunatics might not like this, but I think it is quite nice!!!  President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37786",
+        "excerptZhTw": "激進左翼瘋子可能不喜歡這樣，但我認為這很好！DJT",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
+      },
+      {
+        "postedAtTw": "2026-04-15T20:09:00+08:00",
+        "excerpt": "JEROME STARKEY: If hot air was a weapon Starmer would have rearmed Britain – but words don’t win wars:\nhttps://www.thesun.co.uk/news/38819687/starmer-words-dont-win-wars-iran-russia-jerome-starkey/",
+        "url": "https://www.trumpstruth.org/statuses/37784",
         "important": true,
-        "excerptZhTw": "美國將於 4 月 13 日上午 10 點封鎖進出伊朗港口的船隻等。感謝您對此事的關注！DJT",
+        "linkUrl": "https://www.thesun.co.uk/news/38819687/starmer-words-dont-win-wars-iran-russia-jerome-starkey/",
+        "excerptZhTw": "傑羅姆·史塔基：如果熱空氣是一種武器，史塔默就會重新武裝英國——但言語並不能贏得戰爭",
         "dogSummary": "狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。"
       },
       {
-        "postedAtTw": "2026-04-13T10:53:00+08:00",
-        "excerpt": "DHS investigating claim about Swalwell nanny filed by conspiracy theorist: https://www.theguardian.com/us-news/2026/apr/12/dhs-investigates-eric-swalwell-brazilian-nanny",
-        "url": "https://www.trumpstruth.org/statuses/37736",
-        "linkUrl": "https://www.theguardian.com/us-news/2026/apr/12/dhs-investigates-eric-swalwell-brazilian-nanny",
-        "excerptZhTw": "國土安全部正在調查陰謀論者提出的有關斯瓦爾韋爾保姆的指控",
-        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
-      },
-      {
-        "postedAtTw": "2026-04-13T09:48:00+08:00",
-        "excerpt": "Eric Swalwell paid illegal Brazilian live-in nanny under the table with campaign funds, complaint alleges: https://nypost.com/2026/04/11/us-news/eric-swalwell-paid-illegal-brazilian-live-in-nanny-under-the-table-with-ca…",
-        "url": "https://www.trumpstruth.org/statuses/37731",
-        "linkUrl": "https://nypost.com/2026/04/11/us-news/eric-swalwell-paid-illegal-brazilian-live-in-nanny-under-the-table-with-ca…",
-        "excerptZhTw": "投訴稱，埃里克·斯瓦爾韋爾(Eric Swalwell)在桌子底下用競選資金支付非法巴西住家保母的費用",
-        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
-      },
-      {
-        "postedAtTw": "2026-04-13T09:03:00+08:00",
-        "excerpt": "Pope Leo is WEAK on Crime, and terrible for Foreign Policy. He talks about “fear” of the Trump Administration, but doesn’t mention the FEAR that the Catholic Church, and all other Christian Organizations, had during COV…",
-        "url": "https://www.trumpstruth.org/statuses/37728",
+        "postedAtTw": "2026-04-15T20:08:00+08:00",
+        "excerpt": "China is very happy that I am permanently opening the Strait of Hormuz. I am doing it for them, also - And the World. This situation will never happen again. They have agreed not to send weapons to Iran. President Xi wi…",
+        "url": "https://www.trumpstruth.org/statuses/37785",
         "important": true,
-        "excerptZhTw": "教宗利奧在犯罪問題上很軟弱，在外交政策上也很糟糕。他談到了對川普政府的“恐懼”，但沒有提到天主教會和所有其他基督教組織在新冠病毒期間的恐懼…",
-        "dogSummary": "狗狗重點：這則屬於高優先度貼文，建議先看原文和語氣。"
+        "excerptZhTw": "中國對我永久開放霍爾木茲海峽感到非常高興。我這樣做也是為了他們──還有全世界。這種情況再也不會發生了。他們已同意不向伊朗運送武器。習主席與…",
+        "dogSummary": "狗狗重點：這則偏能源與地緣政治訊號，語氣明顯帶警告意味。"
+      },
+      {
+        "postedAtTw": "2026-04-15T12:08:00+08:00",
+        "excerpt": "Will be interviewed tomorrow morning by Maria B. FoxBusiness. Enjoy!!! President DJT",
+        "url": "https://www.trumpstruth.org/statuses/37778",
+        "excerptZhTw": "明天早上將接受 Maria B. FoxBusiness 的採訪。享受！！！DJT",
+        "dogSummary": "狗狗重點：這則比較偏川普一貫的表態或宣傳型貼文。"
       }
     ]
   }
