@@ -45,6 +45,22 @@ body[data-theme="night"] {
   --card-muted: #b5c0e4;
   --card-link: #b7c9ff;
   --card-border-soft: #4d568a;
+  --night-panel-bg: #12182d;
+  --night-panel-bg-strong: #161d33;
+  --night-panel-bg-soft: #1f2743;
+  --night-panel-bg-elevated: #243050;
+  --night-panel-border: #6172ad;
+  --night-panel-border-soft: #4e5b88;
+  --night-panel-shadow: inset 0 0 0 2px rgba(164,182,238,.12), 0 6px 0 #0f1527;
+  --night-button-bg: linear-gradient(180deg, #2a3457 0%, #1d2541 100%);
+  --night-button-border: #6273af;
+  --night-button-shadow: inset 0 0 0 2px rgba(174,191,242,.1), 0 4px 0 #11172b;
+  --night-chip-ok-bg: #9be2b4;
+  --night-chip-ok-fg: #102a1a;
+  --night-chip-warn-bg: #ffd978;
+  --night-chip-warn-fg: #3c2a08;
+  --night-chip-danger-bg: #ffadc3;
+  --night-chip-danger-fg: #3d1320;
   --status-ok-bg: rgba(41, 83, 58, .45);
   --status-ok-fg: #bdf3cb;
   --status-warn-bg: rgba(110, 82, 30, .45);
@@ -129,9 +145,9 @@ body[data-theme="night"] {
 body[data-theme="night"] .theme-toggle,
 body[data-theme="night"] .layout-toggle,
 body[data-theme="night"] .cmd-btn {
-  background: linear-gradient(180deg, #2a3457 0%, #1d2541 100%);
-  border-color: #6273af;
-  box-shadow: inset 0 0 0 2px rgba(174,191,242,.1), 0 4px 0 #11172b;
+  background: var(--night-button-bg);
+  border-color: var(--night-button-border);
+  box-shadow: var(--night-button-shadow);
 }
 body[data-theme="night"] .theme-toggle span,
 body[data-theme="night"] .theme-toggle b,
@@ -603,8 +619,8 @@ body[data-theme="night"] .grass {
   border: 3px solid #8d86cb;
 }
 body[data-theme="night"] .battle-focus-card {
-  background: linear-gradient(180deg, #243050 0%, #1a223a 100%);
-  border-color: #6475b0;
+  background: linear-gradient(180deg, var(--night-panel-bg-elevated) 0%, var(--night-panel-bg-soft) 100%);
+  border-color: var(--night-panel-border);
   box-shadow: inset 0 0 0 2px rgba(176,193,244,.12);
 }
 .battle-focus-card span {
@@ -813,8 +829,8 @@ body[data-theme="night"] .quote-summary,
 body[data-theme="night"] .weather-summary,
 body[data-theme="night"] .weather-commute {
   color: #eef3ff;
-  background: linear-gradient(180deg, #243050 0%, #1a2139 100%);
-  border-color: #6475b0;
+  background: linear-gradient(180deg, var(--night-panel-bg-elevated) 0%, var(--night-panel-bg-soft) 100%);
+  border-color: var(--night-panel-border);
 }
 .weather-panel-collapsed #weather-list,
 .weather-panel-collapsed #weather-summary,
@@ -1158,9 +1174,9 @@ body[data-theme="night"] .main-feed-panel,
 body[data-theme="night"] .command-box,
 body[data-theme="night"] .dialog,
 body[data-theme="night"] .intel-panel {
-  background: #12182d;
+  background: var(--night-panel-bg);
   color: var(--card-text);
-  border-color: #48517f;
+  border-color: var(--night-panel-border-soft);
   box-shadow: inset 0 0 0 2px rgba(113,127,186,.14), 0 6px 0 #1a203d;
 }
 body[data-theme="night"] .enemy-name,
@@ -1270,8 +1286,8 @@ body[data-theme="night"] .theme-toggle:focus-visible small {
 }
 body[data-theme="night"] .task-list li,
 body[data-theme="night"] .summary-list li {
-  background: #161d33;
-  border-color: #4e5b88;
+  background: var(--night-panel-bg-strong);
+  border-color: var(--night-panel-border-soft);
 }
 body[data-theme="night"] .intel-panel .task-list li,
 body[data-theme="night"] .intel-panel .summary-list li,
@@ -1480,9 +1496,9 @@ body[data-theme="night"] .intel-panel:hover .summary-list li:first-child span {
   margin-bottom: 2px;
 }
 body[data-theme="night"] .utility-strip {
-  background: linear-gradient(180deg, #1f2743 0%, #151c31 100%);
-  border-color: #6172ad;
-  box-shadow: inset 0 0 0 2px rgba(164,182,238,.12), 0 6px 0 #0f1527;
+  background: linear-gradient(180deg, var(--night-panel-bg-soft) 0%, var(--night-panel-bg) 100%);
+  border-color: var(--night-panel-border);
+  box-shadow: var(--night-panel-shadow);
 }
 .utility-strip .cmd-btn {
   min-width: 88px;
@@ -1951,20 +1967,20 @@ body[data-theme="night"] .utility-strip {
 }
 body[data-theme="night"] .task-list b.ok,
 body[data-theme="night"] .summary-list b.ok {
-  color: #102a1a;
-  background: #9be2b4;
+  color: var(--night-chip-ok-fg);
+  background: var(--night-chip-ok-bg);
   border-color: #58a372;
 }
 body[data-theme="night"] .task-list b.warn,
 body[data-theme="night"] .summary-list b.warn {
-  color: #3c2a08;
-  background: #ffd978;
+  color: var(--night-chip-warn-fg);
+  background: var(--night-chip-warn-bg);
   border-color: #c6952a;
 }
 body[data-theme="night"] .task-list b.danger,
 body[data-theme="night"] .summary-list b.danger {
-  color: #3d1320;
-  background: #ffadc3;
+  color: var(--night-chip-danger-fg);
+  background: var(--night-chip-danger-bg);
   border-color: #c76786;
 }
 .hint {
@@ -1989,7 +2005,7 @@ body[data-theme="night"] .guestbook-stamp {
 }
 body[data-theme="night"] .guestbook-prompt {
   color: #f2f6ff;
-  background: linear-gradient(180deg, #26304f 0%, #1a223a 100%);
+  background: linear-gradient(180deg, var(--night-panel-bg-elevated) 0%, var(--night-panel-bg-soft) 100%);
   border-color: #6a79b4;
   box-shadow: inset 0 0 0 2px rgba(176,193,244,.12);
 }
@@ -2259,10 +2275,10 @@ body[data-theme="night"] .summary-list b {
   transform: translateY(6px) scale(.96);
 }
 body[data-theme="night"] .layout-modal-card {
-  background: linear-gradient(180deg, #1e2743 0%, #151c31 100%);
+  background: linear-gradient(180deg, var(--night-panel-bg-soft) 0%, var(--night-panel-bg) 100%);
   color: #eef3ff;
-  border-color: #6172ad;
-  box-shadow: inset 0 0 0 2px rgba(164,182,238,.12), 0 6px 0 #0f1527;
+  border-color: var(--night-panel-border);
+  box-shadow: var(--night-panel-shadow);
 }
 body[data-theme="night"] .layout-modal-head .intel-kicker,
 body[data-theme="night"] .layout-modal-head .side-title,
@@ -2272,12 +2288,12 @@ body[data-theme="night"] .layout-option-label {
   color: #eef3ff;
 }
 body[data-theme="night"] .layout-option {
-  background: #222b49;
-  border-color: #6273af;
+  background: var(--night-panel-bg-soft);
+  border-color: var(--night-button-border);
   box-shadow: inset 0 0 0 2px rgba(171,189,240,.1);
 }
 body[data-theme="night"] .layout-option.is-checked {
-  background: linear-gradient(180deg, #31406c 0%, #243055 100%);
+  background: linear-gradient(180deg, #31406c 0%, var(--night-panel-bg-elevated) 100%);
   border-color: #7d92d6;
   box-shadow: inset 0 0 0 2px rgba(191,206,250,.12);
 }
