@@ -818,13 +818,17 @@ def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
 
 @app.route('/api/live-data')
 def live_data() -> Any:
+    scope = (request.args.get('scope') or 'all').strip().lower()
     payload: dict[str, Any] = {
         'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'feed': fetch_feed_live(DOGGO_RSS_URLS),
         'usQuotes': fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS),
-        'weather': fetch_weather_live(WEATHER_SPOTS),
-        'trumpTruth': fetch_trump_truth_live(),
     }
+    if scope != 'us-only':
+        payload.update({
+            'feed': fetch_feed_live(DOGGO_RSS_URLS),
+            'weather': fetch_weather_live(WEATHER_SPOTS),
+            'trumpTruth': fetch_trump_truth_live(),
+        })
     return jsonify(payload)
 
 

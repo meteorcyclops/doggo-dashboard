@@ -11,7 +11,7 @@ on:
       - 'README.md'
   workflow_dispatch:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 * * * *'
 
 permissions:
   contents: read
