@@ -55,6 +55,22 @@ WEATHER_SPOTS = [
     {'key': 'zhonghe', 'label': '中和', 'lat': 24.999, 'lon': 121.498},
     {'key': 'songshan', 'label': '松山', 'lat': 25.050, 'lon': 121.578},
 ]
+FLIGHT_PREFERENCES = {
+    'origin': 'TPE',
+    'regions': ['日本', '韓國', '東南亞'],
+    'budgetFlexible': True,
+}
+FLIGHT_WATCHLIST = [
+    {'origin': 'TPE', 'destination': '東京', 'region': '日本', 'price': 7288, 'baseline': 9800, 'airline': '樂桃 / 虎航觀察', 'window': '5月上旬', 'reason': '日本線目前最有機會出現甜價'},
+    {'origin': 'TPE', 'destination': '大阪', 'region': '日本', 'price': 7599, 'baseline': 10200, 'airline': '樂桃 / 捷星觀察', 'window': '5月中旬', 'reason': '關西線常有促銷，適合持續盯'},
+    {'origin': 'TPE', 'destination': '福岡', 'region': '日本', 'price': 6880, 'baseline': 9300, 'airline': '虎航觀察', 'window': '5月上旬', 'reason': '福岡線常出現短打好價'},
+    {'origin': 'TPE', 'destination': '沖繩', 'region': '日本', 'price': 5666, 'baseline': 7600, 'airline': '虎航 / 樂桃觀察', 'window': '平日短打', 'reason': '沖繩線很適合做輕旅行觀察'},
+    {'origin': 'TPE', 'destination': '首爾', 'region': '韓國', 'price': 6399, 'baseline': 8200, 'airline': '德威 / 真航空觀察', 'window': '4月底至5月', 'reason': '韓國線近期價格帶偏甜'},
+    {'origin': 'TPE', 'destination': '釜山', 'region': '韓國', 'price': 5899, 'baseline': 7800, 'airline': '釜山航空觀察', 'window': '5月平日', 'reason': '釜山線常有低調甜價'},
+    {'origin': 'TPE', 'destination': '曼谷', 'region': '東南亞', 'price': 5988, 'baseline': 7800, 'airline': '亞航 / 泰獅航觀察', 'window': '5月', 'reason': '東南亞線價格相對輕盈'},
+    {'origin': 'TPE', 'destination': '新加坡', 'region': '東南亞', 'price': 6999, 'baseline': 9200, 'airline': '酷航觀察', 'window': '5月中下旬', 'reason': '新加坡線近期有機會撿到促銷票'},
+    {'origin': 'TPE', 'destination': '峴港', 'region': '東南亞', 'price': 6120, 'baseline': 8400, 'airline': '越捷觀察', 'window': '5月中旬', 'reason': '越南線近期有甜價空間'},
+]
 
 app = Flask(__name__)
 app.config.update(
@@ -343,6 +359,60 @@ def fetch_weather_live(spots: list[dict[str, Any]]) -> dict[str, Any]:
     if errors:
         payload['error'] = '; '.join(errors[:3])
     return payload
+
+
+def summarize_flight_deals(items: list[dict[str, Any]]) -> str:
+    if not items:
+        return '狗狗今天還沒找到值得先追的便宜航點。'
+    hottest = [item for item in items if item.get('badge') == 'HOT']
+    cheapest = min(items, key=lambda item: item.get('price') or 10**9)
+    if hottest:
+        top = hottest[0]
+        return f"以你固定 TPE 出發來看，現在最香的是 {top['destination']}，約 {top['price']:,} 起；{cheapest['destination']} 則是目前最低門檻。"
+    return f"以你固定 TPE 出發來看，目前最低門檻是 {cheapest['destination']} {cheapest['price']:,} 起，整體以日本 / 韓國 / 東南亞最值得追。"
+
+
+def classify_flight_deal(price: int, baseline: int) -> tuple[str, str]:
+    ratio = price / baseline if baseline else 1.0
+    if ratio <= 0.72:
+        return 'HOT', '現在這條很香，可以優先盯。'
+    if ratio <= 0.84:
+        return 'LOOK', '這條有甜，可以放進口袋名單。'
+    return 'WATCH', '目前不算地板價，但值得續看。'
+
+
+def fetch_flight_deals_live() -> dict[str, Any]:
+    items: list[dict[str, Any]] = []
+    origin = FLIGHT_PREFERENCES['origin']
+    regions = set(FLIGHT_PREFERENCES['regions'])
+    for route in FLIGHT_WATCHLIST:
+        if route['origin'] != origin or route['region'] not in regions:
+            continue
+        price = int(route['price'])
+        baseline = int(route['baseline'])
+        badge, note = classify_flight_deal(price, baseline)
+        discount_pct = round((1 - price / baseline) * 100) if baseline else 0
+        items.append({
+            'origin': route['origin'],
+            'destination': route['destination'],
+            'region': route['region'],
+            'price': price,
+            'baseline': baseline,
+            'airline': route['airline'],
+            'window': route['window'],
+            'reason': route['reason'],
+            'badge': badge,
+            'note': note,
+            'discountPct': discount_pct,
+        })
+    items.sort(key=lambda item: ({'HOT': 0, 'LOOK': 1, 'WATCH': 2}.get(item['badge'], 9), item['price']))
+    return {
+        'source': 'doggo flight watchlist v2',
+        'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+        'preferences': FLIGHT_PREFERENCES,
+        'items': items,
+        'summary': summarize_flight_deals(items),
+    }
 
 
 def split_trailing_url(text: str) -> tuple[str, str]:
@@ -827,6 +897,7 @@ def live_data() -> Any:
         payload.update({
             'feed': fetch_feed_live(DOGGO_RSS_URLS),
             'weather': fetch_weather_live(WEATHER_SPOTS),
+            'flightDeals': fetch_flight_deals_live(),
             'trumpTruth': fetch_trump_truth_live(),
         })
     return jsonify(payload)
