@@ -8,6 +8,7 @@ import re
 import secrets
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 from urllib import error, parse, request as urllib_request
 
@@ -55,6 +56,9 @@ WEATHER_SPOTS = [
     {'key': 'zhonghe', 'label': '中和', 'lat': 24.999, 'lon': 121.498},
     {'key': 'songshan', 'label': '松山', 'lat': 25.050, 'lon': 121.578},
 ]
+APP_DIR = Path(__file__).resolve().parent
+ROOT_DIR = APP_DIR.parent
+SCRIPTS_DIR = ROOT_DIR / 'scripts'
 FLIGHT_PREFERENCES = {
     'origin': 'TPE',
     'regions': ['日本', '韓國', '東南亞'],
@@ -455,8 +459,11 @@ def fetch_trump_truth_live() -> dict[str, Any]:
         'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
         'items': [],
     }
+    import sys
+    if str(SCRIPTS_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPTS_DIR))
     try:
-        from scripts.trump_truth_tracker import fetch_posts, is_important  # type: ignore
+        from trump_truth_tracker import fetch_posts, is_important  # type: ignore
     except Exception as exc:  # noqa: BLE001
         payload['error'] = f'import tracker: {exc}'
         return payload
