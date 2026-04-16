@@ -61,6 +61,25 @@ body[data-theme="night"] {
   --night-chip-warn-fg: #3c2a08;
   --night-chip-danger-bg: #ffadc3;
   --night-chip-danger-fg: #3d1320;
+  --night-accent-violet-bg: #56479d;
+  --night-accent-violet-border: #35285f;
+  --night-accent-violet-shadow: 0 3px 0 #21183f;
+  --night-hero-bg: linear-gradient(180deg, rgba(20,24,44,.96) 0%, rgba(14,18,34,.98) 100%);
+  --night-hero-border: #38426f;
+  --night-hero-shadow: inset 0 0 0 2px rgba(110,125,182,.18), 0 6px 0 #171c37;
+  --night-hero-label-bg: #37426d;
+  --night-hero-label-border: #1f2744;
+  --night-hero-label-shadow: 0 3px 0 #12182c;
+  --night-market-ok-bg: linear-gradient(180deg, rgba(37, 71, 49, .92) 0%, rgba(24, 45, 31, .92) 100%);
+  --night-market-ok-border: #567f57;
+  --night-market-warn-bg: linear-gradient(180deg, rgba(88, 68, 28, .92) 0%, rgba(54, 40, 17, .92) 100%);
+  --night-market-warn-border: #8d7236;
+  --night-market-danger-bg: linear-gradient(180deg, rgba(90, 34, 52, .92) 0%, rgba(56, 21, 32, .92) 100%);
+  --night-market-danger-border: #8d5365;
+  --night-guestbook-scene-bg: linear-gradient(180deg, #1f2342 0%, #161a31 100%);
+  --night-guestbook-shell-bg: linear-gradient(180deg, #181d37 0%, #11152a 100%);
+  --night-guestbook-shelf-bg: linear-gradient(180deg, #7b5ca0 0%, #543b76 100%);
+  --night-guestbook-shelf-border: #36244e;
   --status-ok-bg: rgba(41, 83, 58, .45);
   --status-ok-fg: #bdf3cb;
   --status-warn-bg: rgba(110, 82, 30, .45);
@@ -304,16 +323,16 @@ body[data-theme="night"] .market-session-pill {
   box-shadow: inset 0 0 0 2px rgba(137,151,209,.1);
 }
 body[data-theme="night"] .market-session-pill.ok {
-  background: linear-gradient(180deg, rgba(37, 71, 49, .92) 0%, rgba(24, 45, 31, .92) 100%);
-  border-color: #567f57;
+  background: var(--night-market-ok-bg);
+  border-color: var(--night-market-ok-border);
 }
 body[data-theme="night"] .market-session-pill.warn {
-  background: linear-gradient(180deg, rgba(88, 68, 28, .92) 0%, rgba(54, 40, 17, .92) 100%);
-  border-color: #8d7236;
+  background: var(--night-market-warn-bg);
+  border-color: var(--night-market-warn-border);
 }
 body[data-theme="night"] .market-session-pill.danger {
-  background: linear-gradient(180deg, rgba(90, 34, 52, .92) 0%, rgba(56, 21, 32, .92) 100%);
-  border-color: #8d5365;
+  background: var(--night-market-danger-bg);
+  border-color: var(--night-market-danger-border);
 }
 body[data-theme="night"] .focus-pill {
   color: #dde5ff;
@@ -419,19 +438,19 @@ body[data-theme="night"] .battle-stage {
   background: linear-gradient(180deg, #20275f 0%, #4358aa 54%, #2e4b78 54%, #1f3553 100%);
 }
 body[data-theme="night"] .hero-hud {
-  background: linear-gradient(180deg, rgba(20,24,44,.96) 0%, rgba(14,18,34,.98) 100%);
-  border-color: #38426f;
-  box-shadow: inset 0 0 0 2px rgba(110,125,182,.18), 0 6px 0 #171c37;
+  background: var(--night-hero-bg);
+  border-color: var(--night-hero-border);
+  box-shadow: var(--night-hero-shadow);
 }
 body[data-theme="night"] .intel-badge {
-  background: #56479d;
-  border-color: #35285f;
-  box-shadow: 0 3px 0 #21183f;
+  background: var(--night-accent-violet-bg);
+  border-color: var(--night-accent-violet-border);
+  box-shadow: var(--night-accent-violet-shadow);
 }
 body[data-theme="night"] .hero-label {
-  background: #37426d;
-  border-color: #1f2744;
-  box-shadow: 0 3px 0 #12182c;
+  background: var(--night-hero-label-bg);
+  border-color: var(--night-hero-label-border);
+  box-shadow: var(--night-hero-label-shadow);
   color: #e9eeff;
 }
 body[data-theme="night"] .hero-metric {
@@ -1257,9 +1276,9 @@ body[data-theme="night"] .candy {
 }
 body[data-theme="night"] .game-kicker {
   color: #fef9ff;
-  background: #56479d;
-  border-color: #35285f;
-  box-shadow: 0 3px 0 #21183f;
+  background: var(--night-accent-violet-bg);
+  border-color: var(--night-accent-violet-border);
+  box-shadow: var(--night-accent-violet-shadow);
 }
 body[data-theme="night"] .game-title,
 body[data-theme="night"] .game-sub {
@@ -1989,19 +2008,19 @@ body[data-theme="night"] .summary-list b.danger {
   color: var(--muted);
 }
 body[data-theme="night"] .guestbook-scene {
-  background: linear-gradient(180deg, #1f2342 0%, #161a31 100%);
+  background: var(--night-guestbook-scene-bg);
 }
 body[data-theme="night"] .guestbook-shell {
-  background: linear-gradient(180deg, #181d37 0%, #11152a 100%);
+  background: var(--night-guestbook-shell-bg);
 }
 body[data-theme="night"] .guestbook-shelf {
-  background: linear-gradient(180deg, #7b5ca0 0%, #543b76 100%);
-  border-color: #36244e;
+  background: var(--night-guestbook-shelf-bg);
+  border-color: var(--night-guestbook-shelf-border);
 }
 body[data-theme="night"] .guestbook-stamp {
-  background: #56479d;
-  border-color: #35285f;
-  box-shadow: 0 3px 0 #21183f;
+  background: var(--night-accent-violet-bg);
+  border-color: var(--night-accent-violet-border);
+  box-shadow: var(--night-accent-violet-shadow);
 }
 body[data-theme="night"] .guestbook-prompt {
   color: #f2f6ff;
@@ -2018,7 +2037,7 @@ body[data-theme="night"] .guestbook-note-time {
 body[data-theme="night"] .guestbook-form input,
 body[data-theme="night"] .guestbook-form textarea,
 body[data-theme="night"] .guestbook-password-input {
-  background: #12182d;
+  background: var(--night-panel-bg);
   color: #edf2ff;
   border-color: #5c6799;
   box-shadow: inset 0 0 0 2px rgba(154,167,226,.08);
@@ -2031,7 +2050,7 @@ body[data-theme="night"] .guestbook-password-input::placeholder {
 body[data-theme="night"] .guestbook-note,
 body[data-theme="night"] .guestbook-modal-card {
   color: #edf2ff;
-  background: linear-gradient(180deg, #222847 0%, #171b31 100%);
+  background: linear-gradient(180deg, var(--night-panel-bg-elevated) 0%, var(--night-panel-bg-soft) 100%);
   border-color: #56649a;
   box-shadow: inset 0 0 0 2px rgba(148,165,230,.1), 0 6px 0 #10152a;
 }
