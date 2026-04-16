@@ -1277,13 +1277,44 @@ function mergeLiveQuotesIntoData(nextData) {
   };
 }
 
+function isoMs(value) {
+  const ms = new Date(value || 0).getTime();
+  return Number.isFinite(ms) ? ms : 0;
+}
+
+function keepNewerSection(snapshotSection, liveSection, keys = ['asOf']) {
+  if (!liveSection) return snapshotSection;
+  if (!snapshotSection) return liveSection;
+  const snapshotFresh = Math.max(...keys.map((key) => isoMs(snapshotSection?.[key])));
+  const liveFresh = Math.max(...keys.map((key) => isoMs(liveSection?.[key])));
+  if (liveFresh && liveFresh >= snapshotFresh) return { ...snapshotSection, ...liveSection };
+  return snapshotSection;
+}
+
+function mergeProtectedLiveSections(nextData) {
+  if (!currentData) return nextData;
+  return {
+    ...nextData,
+    usQuotes: keepNewerSection(nextData.usQuotes, currentData.usQuotes, ['asOf']),
+    feed: keepNewerSection(nextData.feed, currentData.feed, ['asOf']),
+    weather: keepNewerSection(nextData.weather, currentData.weather, ['asOf']),
+    flightDeals: keepNewerSection(nextData.flightDeals, currentData.flightDeals, ['asOf']),
+    trumpTruth: keepNewerSection(nextData.trumpTruth, currentData.trumpTruth, ['asOf']),
+    generatedAt: isoMs(currentData.generatedAt) > isoMs(nextData.generatedAt) ? currentData.generatedAt : nextData.generatedAt,
+  };
+}
+
 function mergeLiveDataIntoCurrent(payload = {}) {
   if (!currentData) return;
-  if (payload.feed) currentData.feed = payload.feed;
-  if (payload.usQuotes) currentData.usQuotes = payload.usQuotes;
-  if (payload.weather) currentData.weather = payload.weather;
-  if (payload.trumpTruth) currentData.trumpTruth = payload.trumpTruth;
-  if (payload.generatedAt) currentData.generatedAt = payload.generatedAt;
+  currentData = {
+    ...currentData,
+    feed: keepNewerSection(currentData.feed, payload.feed, ['asOf']),
+    usQuotes: keepNewerSection(currentData.usQuotes, payload.usQuotes, ['asOf']),
+    weather: keepNewerSection(currentData.weather, payload.weather, ['asOf']),
+    flightDeals: keepNewerSection(currentData.flightDeals, payload.flightDeals, ['asOf']),
+    trumpTruth: keepNewerSection(currentData.trumpTruth, payload.trumpTruth, ['asOf']),
+    generatedAt: isoMs(payload.generatedAt) >= isoMs(currentData.generatedAt) ? payload.generatedAt || currentData.generatedAt : currentData.generatedAt,
+  };
 }
 
 function isUsMarketHotSession(session) {
@@ -1303,6 +1334,7 @@ async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
     renderUsQuotes(currentData.usQuotes);
     if (scope !== 'us-only') {
       renderHeadlines(currentData.feed);
+      renderFlightDeals(currentData.flightDeals);
       renderTrumpTruth(currentData.trumpTruth);
       renderWeather(currentData.weather);
     }
@@ -1326,7 +1358,7 @@ async function loadData(opts = {}) {
     const res = await fetch('./data.json?_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const rawData = await res.json();
-    const data = mergeLiveQuotesIntoData(rawData);
+    const data = mergeProtectedLiveSections(mergeLiveQuotesIntoData(rawData));
     currentData = data;
     renderTasks(data.jobs || []);
     renderQuotes(data.quotes);
