@@ -1215,6 +1215,7 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
 }
 
 const POLL_MS = 30_000;
+const DATA_REFRESH_MS = 5 * 60_000;
 const LIVE_TW_POLL_MS = 5_000;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
@@ -1348,6 +1349,24 @@ function initTheme() {
   });
 }
 
+async function triggerDataRefresh({ silent = false } = {}) {
+  const hint = document.getElementById('action-hint');
+  const scriptUrl = window.DOGGO_DATA_REFRESH_URL || './api/refresh-data';
+  try {
+    const res = await fetch(scriptUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ trigger: 'dashboard-auto-refresh' }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!silent && hint) hint.textContent = '已觸發背景資料重抓，正在重新載入…';
+    await loadData({ silent });
+  } catch (err) {
+    if (!silent && hint) hint.textContent = `背景重抓失敗，改讀現有快照：${err.message}`;
+    await loadData({ silent: true });
+  }
+}
+
 function bindActions() {
   const layoutModal = document.getElementById('layout-modal');
   const closeLayoutModal = () => {
@@ -1376,7 +1395,7 @@ function bindActions() {
       closeLayoutModal();
     }
   });
-  document.getElementById('refresh-btn')?.addEventListener('click', loadData);
+  document.getElementById('refresh-btn')?.addEventListener('click', () => triggerDataRefresh());
   document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const cardId = btn.dataset.cardCollapseToggle;
@@ -1410,8 +1429,9 @@ async function initApp() {
   bindActions();
   dogController.bindDogPet();
   await loadPreferences();
-  loadData();
+  await triggerDataRefresh({ silent: true });
   setInterval(() => loadData({ silent: true }), POLL_MS);
+  setInterval(() => triggerDataRefresh({ silent: true }), DATA_REFRESH_MS);
   setInterval(() => refreshLiveTwQuotes({ silent: true }), LIVE_TW_POLL_MS);
 }
 
