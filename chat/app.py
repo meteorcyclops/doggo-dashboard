@@ -50,6 +50,7 @@ MAX_UPLOAD_BYTES = int(os.environ.get('CHAT_MAX_UPLOAD_BYTES', str(20 * 1024 * 1
 
 ANIMALS = ['🦊', '🦦', '🦋', '🐼', '🐶', '🐱', '🐺', '🐈', '🦭', '🐦', '🐰', '🦝', '🦔', '🐸']
 TW_QUOTES_CACHE: dict[str, dict[str, Any]] = {}
+LIVE_SECTION_CACHE: dict[str, dict[str, Any]] = {}
 TW = ZoneInfo('Asia/Taipei')
 URL_RE = re.compile(r"https?://\\S+")
 MAX_HEADLINES = 8
@@ -904,16 +905,35 @@ def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
     return str(name_map.get(symbol) or info.get('shortName') or info.get('longName') or info.get('symbol') or symbol)
 
 
+def _cache_section(name: str, payload: dict[str, Any]) -> dict[str, Any]:
+    LIVE_SECTION_CACHE[name] = {
+        'ts': time.time(),
+        'payload': json.loads(json.dumps(payload, ensure_ascii=False)),
+    }
+    return payload
+
+
 def _safe_section(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+    now_iso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     try:
         data = fn()
         if isinstance(data, dict):
             data.setdefault('status', 'fresh')
-        return data
+            data.setdefault('asOf', now_iso)
+        return _cache_section(name, data)
     except Exception as exc:
+        cached = LIVE_SECTION_CACHE.get(name)
+        if cached and cached.get('payload'):
+            payload = json.loads(json.dumps(cached['payload'], ensure_ascii=False))
+            payload['status'] = 'stale'
+            payload['staleAsOf'] = payload.get('asOf') or now_iso
+            payload['error'] = f'{name} stale fallback: {exc}'
+            payload['fallbackAgeSeconds'] = int(time.time() - float(cached.get('ts') or 0))
+            payload['servedAt'] = now_iso
+            return payload
         return {
             'status': 'failed',
-            'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'asOf': now_iso,
             'items': [],
             'error': f'{name} failed: {exc}',
         }
