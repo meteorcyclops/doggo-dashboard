@@ -924,6 +924,21 @@ def us_quotes_live() -> Any:
     return jsonify(_safe_section('usQuotes', lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS)))
 
 
+@app.route('/api/feed')
+def feed_live() -> Any:
+    return jsonify(_safe_section('feed', lambda: fetch_feed_live(DOGGO_RSS_URLS)))
+
+
+@app.route('/api/weather')
+def weather_live() -> Any:
+    return jsonify(_safe_section('weather', lambda: fetch_weather_live(WEATHER_SPOTS)))
+
+
+@app.route('/api/trump-truth')
+def trump_truth_live() -> Any:
+    return jsonify(_safe_section('trumpTruth', fetch_trump_truth_live))
+
+
 @app.route('/api/live-data')
 def live_data() -> Any:
     scope = (request.args.get('scope') or 'all').strip().lower()

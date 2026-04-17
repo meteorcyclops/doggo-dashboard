@@ -1342,6 +1342,60 @@ async function refreshUsQuotes({ silent = false } = {}) {
   }
 }
 
+async function refreshFeed({ silent = false } = {}) {
+  if (!currentData) return;
+  try {
+    const res = await fetch(`./api/feed?_=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    currentData = {
+      ...currentData,
+      feed: keepNewerSection(currentData.feed, payload, ['asOf']),
+    };
+    renderHeadlines(currentData.feed);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+  } catch (err) {
+    console.warn('live feed refresh failed', err);
+  }
+}
+
+async function refreshWeather({ silent = false } = {}) {
+  if (!currentData) return;
+  try {
+    const res = await fetch(`./api/weather?_=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    currentData = {
+      ...currentData,
+      weather: keepNewerSection(currentData.weather, payload, ['asOf']),
+    };
+    renderWeather(currentData.weather);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+  } catch (err) {
+    console.warn('live weather refresh failed', err);
+  }
+}
+
+async function refreshTrumpTruth({ silent = false } = {}) {
+  if (!currentData) return;
+  try {
+    const res = await fetch(`./api/trump-truth?_=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    currentData = {
+      ...currentData,
+      trumpTruth: keepNewerSection(currentData.trumpTruth, payload, ['asOf']),
+    };
+    renderTrumpTruth(currentData.trumpTruth);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+  } catch (err) {
+    console.warn('live trump truth refresh failed', err);
+  }
+}
+
 async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
   if (!currentData) return;
   if (scope === 'us-only') {
@@ -1393,7 +1447,10 @@ async function loadData(opts = {}) {
     staggerFeedLists(silent);
     await refreshLiveTwQuotes({ silent });
     await refreshLiveData({ silent: true });
-  await refreshUsQuotes({ silent: true });
+    await refreshUsQuotes({ silent: true });
+    await refreshFeed({ silent: true });
+    await refreshWeather({ silent: true });
+    await refreshTrumpTruth({ silent: true });
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
@@ -1531,6 +1588,9 @@ async function initApp() {
   setInterval(() => triggerDataRefresh({ silent: true }), DATA_REFRESH_MS);
   setInterval(() => refreshLiveTwQuotes({ silent: true }), LIVE_TW_POLL_MS);
   setInterval(() => refreshLiveData({ silent: true }), LIVE_DATA_POLL_MS);
+  setInterval(() => refreshFeed({ silent: true }), LIVE_DATA_POLL_MS);
+  setInterval(() => refreshWeather({ silent: true }), LIVE_DATA_POLL_MS);
+  setInterval(() => refreshTrumpTruth({ silent: true }), LIVE_DATA_POLL_MS);
   setInterval(() => {
     if (!isUsMarketHotSession(currentData?.usQuotes?.session)) return;
     refreshLiveData({ silent: true, scope: 'us-only' });
