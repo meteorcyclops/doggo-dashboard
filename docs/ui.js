@@ -1321,29 +1321,49 @@ function isUsMarketHotSession(session) {
   return ['premarket', 'market', 'afterhours'].includes(String(session || '').toLowerCase());
 }
 
-async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
+async function refreshUsQuotes({ silent = false } = {}) {
   if (!currentData) return;
   const hint = document.getElementById('action-hint');
   try {
+    const res = await fetch(`./api/us-quotes?_=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    currentData = {
+      ...currentData,
+      usQuotes: keepNewerSection(currentData.usQuotes, payload, ['asOf']),
+    };
+    renderUsQuotes(currentData.usQuotes);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+    if (hint && !silent) hint.textContent = '已更新美股即時資料';
+  } catch (err) {
+    console.warn('live us quotes refresh failed', err);
+    if (hint && !silent) hint.textContent = `美股即時資料更新失敗：${err.message}`;
+  }
+}
+
+async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
+  if (!currentData) return;
+  if (scope === 'us-only') {
+    await refreshUsQuotes({ silent });
+    return;
+  }
+  const hint = document.getElementById('action-hint');
+  try {
     const params = new URLSearchParams({ _: String(Date.now()) });
-    if (scope === 'us-only') params.set('scope', 'us-only');
     const res = await fetch(`./api/live-data?${params.toString()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const payload = await res.json();
     mergeLiveDataIntoCurrent(payload);
     renderUsQuotes(currentData.usQuotes);
-    if (scope !== 'us-only') {
-      renderHeadlines(currentData.feed);
-      renderFlightDeals(currentData.flightDeals);
-      renderTrumpTruth(currentData.trumpTruth);
-      renderWeather(currentData.weather);
-    }
+    renderHeadlines(currentData.feed);
+    renderFlightDeals(currentData.flightDeals);
+    renderTrumpTruth(currentData.trumpTruth);
+    renderWeather(currentData.weather);
     renderSummary(currentData);
     startBroadcastRotation(currentData);
     staggerFeedLists(true);
-    if (hint && !silent) hint.textContent = scope === 'us-only'
-      ? '已更新美股即時資料'
-      : '已更新即時資料，新聞 / 美股 / 天氣 / 川普快訊同步完成';
+    if (hint && !silent) hint.textContent = '已更新即時資料，新聞 / 美股 / 天氣 / 川普快訊同步完成';
   } catch (err) {
     console.warn('live data refresh failed', err);
     if (hint && !silent) hint.textContent = `即時資料更新失敗：${err.message}`;
@@ -1373,6 +1393,7 @@ async function loadData(opts = {}) {
     staggerFeedLists(silent);
     await refreshLiveTwQuotes({ silent });
     await refreshLiveData({ silent: true });
+  await refreshUsQuotes({ silent: true });
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;

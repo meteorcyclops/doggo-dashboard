@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import calendar
+import concurrent.futures
 import json
 import mimetypes
 import os
@@ -9,7 +10,7 @@ import secrets
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib import error, parse, request as urllib_request
 
 import feedparser
@@ -32,6 +33,7 @@ TW_QUOTES_MAX_SYMBOLS = int(os.environ.get('TW_QUOTES_MAX_SYMBOLS', '80'))
 DOGGO_RSS_URLS = [s.strip() for s in os.environ.get('DOGGO_RSS_URLS', 'https://news.ltn.com.tw/rss/business.xml,https://news.ltn.com.tw/rss/world.xml').split(',') if s.strip()]
 DOGGO_US_STOCK_SYMBOLS = [s.strip().upper() for s in os.environ.get('DOGGO_US_STOCK_SYMBOLS', 'TSLA,NVDA,AAPL,MSFT,AMZN,META,GOOGL,PLTR').split(',') if s.strip()]
 REQUEST_TIMEOUT = int(os.environ.get('DOGGO_REQUEST_TIMEOUT_SECONDS', '25'))
+US_QUOTES_YF_TIMEOUT = float(os.environ.get('DOGGO_US_QUOTES_YF_TIMEOUT_SECONDS', '2.5'))
 TRUMP_POST_LIMIT = int(os.environ.get('DOGGO_TRUMP_POST_LIMIT', '12'))
 TRUMP_EXCERPT_MAX = int(os.environ.get('DOGGO_TRUMP_EXCERPT_MAX', '220'))
 TRUMP_TRANSLATE_MAX = int(os.environ.get('DOGGO_TRUMP_TRANSLATE_MAX', '2800'))
@@ -180,6 +182,12 @@ def summarize_us_quote(item: dict[str, Any], session_name: str) -> str:
     return f'狗狗重點：{symbol} 目前波動不算大，{session_map.get(session_name, "今晚先列進觀察名單")}。'
 
 
+def _run_with_timeout(seconds: float, fn: Callable[[], Any]) -> Any:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+        future = executor.submit(fn)
+        return future.result(timeout=seconds)
+
+
 def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     errors: list[str] = []
@@ -188,28 +196,27 @@ def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
         sym = symbol.strip().upper()
         if not sym:
             continue
-        ticker = yf.Ticker(sym)
         try:
-            hist = ticker.history(period='5d', interval='1d')
-            if hist is None or hist.empty:
-                errors.append(f'{sym}: empty history')
-                continue
-            close_series = [float(v) for v in hist['Close'].tail(8).tolist() if v == v]
-            last = float(hist['Close'].iloc[-1])
-            prev = float(hist['Close'].iloc[-2]) if len(hist) >= 2 else last
-            change_pct = ((last - prev) / prev * 100.0) if prev else 0.0
-            info = {}
-            try:
-                info = ticker.info or {}
-            except Exception:
-                info = {}
-            items.append({
-                'symbol': sym,
-                'name': info.get('shortName') or info.get('longName') or sym,
-                'price': round(last, 2),
-                'changePct': round(change_pct, 2),
-                'series': [round(v, 2) for v in close_series[-5:]],
-            })
+            def _fetch_one() -> dict[str, Any]:
+                ticker = yf.Ticker(sym)
+                hist = ticker.history(period='5d', interval='1d')
+                if hist is None or hist.empty:
+                    raise RuntimeError('empty history')
+                close_series = [float(v) for v in hist['Close'].tail(8).tolist() if v == v]
+                last = float(hist['Close'].iloc[-1])
+                prev = float(hist['Close'].iloc[-2]) if len(hist) >= 2 else last
+                change_pct = ((last - prev) / prev * 100.0) if prev else 0.0
+                return {
+                    'symbol': sym,
+                    'name': sym,
+                    'price': round(last, 2),
+                    'changePct': round(change_pct, 2),
+                    'series': [round(v, 2) for v in close_series[-5:]],
+                }
+
+            items.append(_run_with_timeout(US_QUOTES_YF_TIMEOUT, _fetch_one))
+        except concurrent.futures.TimeoutError:
+            errors.append(f'{sym}: timeout')
         except Exception as exc:  # noqa: BLE001
             errors.append(f'{sym}: {exc}')
     items.sort(key=lambda item: abs(float(item.get('changePct') or 0)), reverse=True)
@@ -235,9 +242,13 @@ def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
             summary = f"{leader['symbol']} 波動最大且偏弱，美股情緒有點緊。"
         else:
             summary = f"{leader['symbol']} 目前最活躍，美股整體還在觀察區。"
-    payload: dict[str, Any] = {'asOf': as_of, 'session': session_name, 'summary': summary, 'items': items}
-    if errors and not items:
+    payload: dict[str, Any] = {'status': 'fresh', 'asOf': as_of, 'session': session_name, 'summary': summary, 'items': items}
+    if errors:
         payload['error'] = '; '.join(errors[:5])
+        if not items:
+            payload['status'] = 'failed'
+        else:
+            payload['status'] = 'partial'
     return payload
 
 
@@ -893,19 +904,39 @@ def _tw_quote_name(symbol: str, info: dict[str, Any]) -> str:
     return str(name_map.get(symbol) or info.get('shortName') or info.get('longName') or info.get('symbol') or symbol)
 
 
+def _safe_section(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
+    try:
+        data = fn()
+        if isinstance(data, dict):
+            data.setdefault('status', 'fresh')
+        return data
+    except Exception as exc:
+        return {
+            'status': 'failed',
+            'asOf': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+            'items': [],
+            'error': f'{name} failed: {exc}',
+        }
+
+
+@app.route('/api/us-quotes')
+def us_quotes_live() -> Any:
+    return jsonify(_safe_section('usQuotes', lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS)))
+
+
 @app.route('/api/live-data')
 def live_data() -> Any:
     scope = (request.args.get('scope') or 'all').strip().lower()
     payload: dict[str, Any] = {
         'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'usQuotes': fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS),
+        'usQuotes': _safe_section('usQuotes', lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS)),
     }
     if scope != 'us-only':
         payload.update({
-            'feed': fetch_feed_live(DOGGO_RSS_URLS),
-            'weather': fetch_weather_live(WEATHER_SPOTS),
-            'flightDeals': fetch_flight_deals_live(),
-            'trumpTruth': fetch_trump_truth_live(),
+            'feed': _safe_section('feed', lambda: fetch_feed_live(DOGGO_RSS_URLS)),
+            'weather': _safe_section('weather', lambda: fetch_weather_live(WEATHER_SPOTS)),
+            'flightDeals': _safe_section('flightDeals', fetch_flight_deals_live),
+            'trumpTruth': _safe_section('trumpTruth', fetch_trump_truth_live),
         })
     return jsonify(payload)
 
