@@ -939,6 +939,11 @@ def trump_truth_live() -> Any:
     return jsonify(_safe_section('trumpTruth', fetch_trump_truth_live))
 
 
+@app.route('/api/flight-deals')
+def flight_deals_live() -> Any:
+    return jsonify(_safe_section('flightDeals', fetch_flight_deals_live))
+
+
 @app.route('/api/live-data')
 def live_data() -> Any:
     scope = (request.args.get('scope') or 'all').strip().lower()

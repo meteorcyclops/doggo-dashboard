@@ -1396,6 +1396,24 @@ async function refreshTrumpTruth({ silent = false } = {}) {
   }
 }
 
+async function refreshFlightDeals({ silent = false } = {}) {
+  if (!currentData) return;
+  try {
+    const res = await fetch(`./api/flight-deals?_=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const payload = await res.json();
+    currentData = {
+      ...currentData,
+      flightDeals: keepNewerSection(currentData.flightDeals, payload, ['asOf']),
+    };
+    renderFlightDeals(currentData.flightDeals);
+    renderSummary(currentData);
+    startBroadcastRotation(currentData);
+  } catch (err) {
+    console.warn('live flight deals refresh failed', err);
+  }
+}
+
 async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
   if (!currentData) return;
   if (scope === 'us-only') {
@@ -1451,6 +1469,7 @@ async function loadData(opts = {}) {
     await refreshFeed({ silent: true });
     await refreshWeather({ silent: true });
     await refreshTrumpTruth({ silent: true });
+    await refreshFlightDeals({ silent: true });
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
       const fresh = freshnessLabel(data.generatedAt).text;
@@ -1591,6 +1610,7 @@ async function initApp() {
   setInterval(() => refreshFeed({ silent: true }), LIVE_DATA_POLL_MS);
   setInterval(() => refreshWeather({ silent: true }), LIVE_DATA_POLL_MS);
   setInterval(() => refreshTrumpTruth({ silent: true }), LIVE_DATA_POLL_MS);
+  setInterval(() => refreshFlightDeals({ silent: true }), LIVE_DATA_POLL_MS);
   setInterval(() => {
     if (!isUsMarketHotSession(currentData?.usQuotes?.session)) return;
     refreshLiveData({ silent: true, scope: 'us-only' });
