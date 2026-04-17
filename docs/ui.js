@@ -355,9 +355,26 @@ function trumpSummaryRow(tt) {
   return { text: '無資料', cls: 'warn' };
 }
 
-function cardStateFromData({ items, error, asOf }) {
-  if (error) return { tone: 'danger', badge: 'ERROR', title: '資料暫時失敗', detail: error };
-  if (!items || !items.length) return { tone: 'warn', badge: 'EMPTY', title: '目前沒有資料', detail: '這張卡暫時是空的。' };
+function liveStatusMeta(section = {}) {
+  const status = section?.status || 'fresh';
+  if (status === 'stale') {
+    const age = section?.fallbackAgeSeconds != null ? `${section.fallbackAgeSeconds} 秒前快取` : '稍早快取';
+    return { badge: 'STALE', cls: 'warn', text: `目前顯示快取資料，來源暫時失敗, ${age}` };
+  }
+  if (status === 'failed') {
+    return { badge: 'FAIL', cls: 'danger', text: '這塊目前抓取失敗，還沒有可用快取。' };
+  }
+  const fresh = freshnessLabel(section?.asOf);
+  return { badge: 'LIVE', cls: fresh.cls, text: `更新 ${formatShortDateTime(section?.asOf)} · ${fresh.text}` };
+}
+
+function cardStateFromData({ items, error, asOf, status }) {
+  if (status === 'failed' && error) return { tone: 'danger', badge: 'FAIL', title: '資料暫時失敗', detail: error };
+  if (!items || !items.length) {
+    if (status === 'stale') return { tone: 'warn', badge: 'STALE', title: '暫用快取', detail: error || '來源暫時失敗，先顯示上一筆成功資料。' };
+    if (error) return { tone: 'danger', badge: 'ERROR', title: '資料暫時失敗', detail: error };
+    return { tone: 'warn', badge: 'EMPTY', title: '目前沒有資料', detail: '這張卡暫時是空的。' };
+  }
   if (!asOf) return { tone: 'warn', badge: 'STALE', title: '缺少時間戳', detail: '資料存在，但更新時間不明。' };
   return null;
 }
@@ -468,13 +485,14 @@ function renderUsQuotes(usQuotes) {
     afterhours: '盤後',
     closed: '休市',
   };
+  const statusMeta = liveStatusMeta(usQuotes);
   if (meta) {
     meta.textContent = usQuotes?.error
-      ? `美股資料有缺口：${usQuotes.error}`
-      : `美股 ${sessionMap[usQuotes?.session] || '觀察中'} · 更新 ${formatShortDateTime(asOf)}`;
+      ? `美股 ${statusMeta.badge} · ${sessionMap[usQuotes?.session] || '觀察中'} · ${statusMeta.text} · ${usQuotes.error}`
+      : `美股 ${statusMeta.badge} · ${sessionMap[usQuotes?.session] || '觀察中'} · ${statusMeta.text}`;
   }
   if (summaryEl) summaryEl.textContent = usQuotes?.summary || '狗狗正在整理今晚要先看的美股動向…';
-  const state = cardStateFromData({ items: usQuotes?.items, error: usQuotes?.error, asOf });
+  const state = cardStateFromData({ items: usQuotes?.items, error: usQuotes?.error, asOf, status: usQuotes?.status });
   if (state) {
     renderStateCard(list, meta, state, '美股快報暫時沒有完整資料');
     return;
@@ -496,16 +514,17 @@ function renderTrumpTruth(trump) {
   list.innerHTML = '';
   const src = trump?.source ? String(trump.source).slice(0, 140) : '';
   const asOf = trump?.asOf ? formatTrumpTime(trump.asOf) : '';
+  const statusMeta = liveStatusMeta(trump);
   if (meta) {
     if (trump?.error) {
-      meta.textContent = src ? `${src} · ${trump.error}` : trump.error;
+      meta.textContent = src ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text} · ${trump.error}` : `${statusMeta.badge} · ${statusMeta.text} · ${trump.error}`;
     } else if (asOf) {
-      meta.textContent = src ? `來源：${src} · 更新 ${asOf}` : `更新 ${asOf}`;
+      meta.textContent = src ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text}` : `${statusMeta.badge} · ${statusMeta.text}`;
     } else {
-      meta.textContent = src ? `來源：${src}` : '第三方存檔摘要';
+      meta.textContent = src ? `來源：${src} · ${statusMeta.badge}` : `第三方存檔摘要 · ${statusMeta.badge}`;
     }
   }
-  const state = cardStateFromData({ items: trump?.items, error: trump?.error, asOf });
+  const state = cardStateFromData({ items: trump?.items, error: trump?.error, asOf, status: trump?.status });
   if (state) {
     renderStateCard(list, meta, state, src || '川普快訊暫時沒有完整資料');
     return;
@@ -575,10 +594,11 @@ function renderWeather(weather) {
   if (!list) return;
   list.innerHTML = '';
   const latestAsOf = weather?.items?.map((item) => item.asOf).filter(Boolean).sort().slice(-1)[0];
-  if (meta) meta.textContent = weather?.error ? `天氣資料有缺口：${weather.error}` : `石牌 / 中和 / 松山 三地整理 · 更新 ${formatShortDateTime(latestAsOf)}`;
+  const statusMeta = liveStatusMeta({ ...weather, asOf: latestAsOf || weather?.asOf });
+  if (meta) meta.textContent = weather?.error ? `天氣 ${statusMeta.badge} · ${statusMeta.text} · ${weather.error}` : `石牌 / 中和 / 松山 · ${statusMeta.badge} · ${statusMeta.text}`;
   if (summary) summary.textContent = weather?.summary || '狗狗正在整理三地今天的天氣重點。';
   if (commute) commute.textContent = weather?.commuteWatch || '三地提醒整理中。';
-  const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf });
+  const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf, status: weather?.status });
   if (state) {
     renderStateCard(list, meta, state, '三地天氣智慧摘要暫時沒有完整資料');
     return;
@@ -736,16 +756,17 @@ function renderFlightDeals(flightDeals) {
   if (!list) return;
   list.innerHTML = '';
   const asOf = flightDeals?.asOf ? formatShortDateTime(flightDeals.asOf) : '';
+  const statusMeta = liveStatusMeta(flightDeals);
   if (meta) {
     const prefs = flightDeals?.preferences;
     const prefText = prefs
       ? `${prefs.origin} 出發 · ${Array.isArray(prefs.regions) ? prefs.regions.join(' / ') : ''}`
       : '台北出發 watchlist';
     meta.textContent = flightDeals?.error
-      ? `機票雷達異常：${flightDeals.error}`
-      : `${prefText} · 更新 ${asOf}`;
+      ? `${prefText} · ${statusMeta.badge} · ${statusMeta.text} · ${flightDeals.error}`
+      : `${prefText} · ${statusMeta.badge} · ${statusMeta.text}`;
   }
-  const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf });
+  const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf, status: flightDeals?.status });
   if (state) {
     renderStateCard(list, meta, state, '特價機票雷達暫時沒有完整資料');
     return;
@@ -766,14 +787,15 @@ function renderHeadlines(feed) {
   if (!list) return;
   list.innerHTML = '';
   const src = feed?.source ? String(feed.source).slice(0, 120) : '';
+  const statusMeta = liveStatusMeta(feed);
   if (meta) {
     meta.textContent = feed?.error
-      ? `RSS：${src || '—'}（${feed.error}）`
+      ? `RSS：${src || '—'} · ${statusMeta.badge} · ${statusMeta.text} · ${feed.error}`
       : src
-        ? `來源：${src}`
-        : 'RSS 未設定';
+        ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text}`
+        : `RSS 未設定 · ${statusMeta.badge}`;
   }
-  const state = cardStateFromData({ items: feed?.items, error: feed?.error, asOf: src || 'rss-source' });
+  const state = cardStateFromData({ items: feed?.items, error: feed?.error, asOf: feed?.asOf, status: feed?.status });
   if (state) {
     renderStateCard(list, meta, state, src || '新聞雷達暫時沒有完整資料');
     return;
