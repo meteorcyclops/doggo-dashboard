@@ -34,6 +34,8 @@ DOGGO_RSS_URLS = [s.strip() for s in os.environ.get('DOGGO_RSS_URLS', 'https://n
 DOGGO_US_STOCK_SYMBOLS = [s.strip().upper() for s in os.environ.get('DOGGO_US_STOCK_SYMBOLS', 'TSLA,NVDA,AAPL,MSFT,AMZN,META,GOOGL,PLTR').split(',') if s.strip()]
 REQUEST_TIMEOUT = int(os.environ.get('DOGGO_REQUEST_TIMEOUT_SECONDS', '25'))
 US_QUOTES_YF_TIMEOUT = float(os.environ.get('DOGGO_US_QUOTES_YF_TIMEOUT_SECONDS', '2.5'))
+LIVE_SECTION_CACHE_SECONDS = int(os.environ.get('DOGGO_LIVE_SECTION_CACHE_SECONDS', '75'))
+LIVE_SECTION_TIMEOUT_SECONDS = float(os.environ.get('DOGGO_LIVE_SECTION_TIMEOUT_SECONDS', '6'))
 TRUMP_POST_LIMIT = int(os.environ.get('DOGGO_TRUMP_POST_LIMIT', '12'))
 TRUMP_EXCERPT_MAX = int(os.environ.get('DOGGO_TRUMP_EXCERPT_MAX', '220'))
 TRUMP_TRANSLATE_MAX = int(os.environ.get('DOGGO_TRUMP_TRANSLATE_MAX', '2800'))
@@ -184,9 +186,13 @@ def summarize_us_quote(item: dict[str, Any], session_name: str) -> str:
 
 
 def _run_with_timeout(seconds: float, fn: Callable[[], Any]) -> Any:
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-        future = executor.submit(fn)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+    future = executor.submit(fn)
+    try:
         return future.result(timeout=seconds)
+    finally:
+        future.cancel()
+        executor.shutdown(wait=False, cancel_futures=True)
 
 
 def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
@@ -211,7 +217,9 @@ def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
                     'symbol': sym,
                     'name': sym,
                     'price': round(last, 2),
+                    'change': round(last - prev, 2),
                     'changePct': round(change_pct, 2),
+                    'prevClose': round(prev, 2),
                     'series': [round(v, 2) for v in close_series[-5:]],
                 }
 
@@ -220,7 +228,7 @@ def fetch_us_quotes_live(symbols: list[str]) -> dict[str, Any]:
             errors.append(f'{sym}: timeout')
         except Exception as exc:  # noqa: BLE001
             errors.append(f'{sym}: {exc}')
-    items.sort(key=lambda item: abs(float(item.get('changePct') or 0)), reverse=True)
+    items.sort(key=lambda item: (float(item.get('changePct') or 0), float(item.get('price') or 0)), reverse=True)
     session_name = 'closed'
     now_ny = datetime.now(ZoneInfo('America/New_York'))
     mins = now_ny.hour * 60 + now_ny.minute
@@ -913,6 +921,38 @@ def _cache_section(name: str, payload: dict[str, Any]) -> dict[str, Any]:
     return payload
 
 
+def _cached_section_copy(name: str, max_age_seconds: int | None = None) -> dict[str, Any] | None:
+    cached = LIVE_SECTION_CACHE.get(name)
+    if not cached or not isinstance(cached.get('payload'), dict):
+        return None
+    age_seconds = int(time.time() - float(cached.get('ts') or 0))
+    if max_age_seconds is not None and age_seconds > max_age_seconds:
+        return None
+    payload = json.loads(json.dumps(cached['payload'], ensure_ascii=False))
+    payload.setdefault('status', 'fresh')
+    payload['servedAt'] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+    payload['cacheAgeSeconds'] = age_seconds
+    return payload
+
+
+def _fallback_section(name: str, now_iso: str, exc: Exception) -> dict[str, Any]:
+    cached = LIVE_SECTION_CACHE.get(name)
+    if cached and cached.get('payload'):
+        payload = json.loads(json.dumps(cached['payload'], ensure_ascii=False))
+        payload['status'] = 'stale'
+        payload['staleAsOf'] = payload.get('asOf') or now_iso
+        payload['error'] = f'{name} stale fallback: {exc}'
+        payload['fallbackAgeSeconds'] = int(time.time() - float(cached.get('ts') or 0))
+        payload['servedAt'] = now_iso
+        return payload
+    return {
+        'status': 'failed',
+        'asOf': now_iso,
+        'items': [],
+        'error': f'{name} failed: {exc}',
+    }
+
+
 def _safe_section(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]:
     now_iso = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
     try:
@@ -922,21 +962,22 @@ def _safe_section(name: str, fn: Callable[[], dict[str, Any]]) -> dict[str, Any]
             data.setdefault('asOf', now_iso)
         return _cache_section(name, data)
     except Exception as exc:
-        cached = LIVE_SECTION_CACHE.get(name)
-        if cached and cached.get('payload'):
-            payload = json.loads(json.dumps(cached['payload'], ensure_ascii=False))
-            payload['status'] = 'stale'
-            payload['staleAsOf'] = payload.get('asOf') or now_iso
-            payload['error'] = f'{name} stale fallback: {exc}'
-            payload['fallbackAgeSeconds'] = int(time.time() - float(cached.get('ts') or 0))
-            payload['servedAt'] = now_iso
-            return payload
-        return {
-            'status': 'failed',
-            'asOf': now_iso,
-            'items': [],
-            'error': f'{name} failed: {exc}',
-        }
+        return _fallback_section(name, now_iso, exc)
+
+
+def _cached_or_safe_section(
+    name: str,
+    fn: Callable[[], dict[str, Any]],
+    *,
+    max_age_seconds: int | None = None,
+    timeout_seconds: float | None = None,
+) -> dict[str, Any]:
+    cached = _cached_section_copy(name, max_age_seconds=max_age_seconds)
+    if cached is not None:
+        return cached
+    if timeout_seconds is None:
+        return _safe_section(name, fn)
+    return _safe_section(name, lambda: _run_with_timeout(timeout_seconds, fn))
 
 
 @app.route('/api/us-quotes')
@@ -969,16 +1010,59 @@ def live_data() -> Any:
     scope = (request.args.get('scope') or 'all').strip().lower()
     payload: dict[str, Any] = {
         'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-        'usQuotes': _safe_section('usQuotes', lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS)),
+        'usQuotes': _cached_or_safe_section(
+            'usQuotes',
+            lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS),
+            max_age_seconds=LIVE_SECTION_CACHE_SECONDS,
+            timeout_seconds=LIVE_SECTION_TIMEOUT_SECONDS,
+        ),
     }
     if scope != 'us-only':
         payload.update({
-            'feed': _safe_section('feed', lambda: fetch_feed_live(DOGGO_RSS_URLS)),
-            'weather': _safe_section('weather', lambda: fetch_weather_live(WEATHER_SPOTS)),
-            'flightDeals': _safe_section('flightDeals', fetch_flight_deals_live),
-            'trumpTruth': _safe_section('trumpTruth', fetch_trump_truth_live),
+            'feed': _cached_or_safe_section(
+                'feed',
+                lambda: fetch_feed_live(DOGGO_RSS_URLS),
+                max_age_seconds=LIVE_SECTION_CACHE_SECONDS,
+                timeout_seconds=LIVE_SECTION_TIMEOUT_SECONDS,
+            ),
+            'weather': _cached_or_safe_section(
+                'weather',
+                lambda: fetch_weather_live(WEATHER_SPOTS),
+                max_age_seconds=LIVE_SECTION_CACHE_SECONDS,
+                timeout_seconds=LIVE_SECTION_TIMEOUT_SECONDS,
+            ),
+            'flightDeals': _cached_or_safe_section(
+                'flightDeals',
+                fetch_flight_deals_live,
+                max_age_seconds=LIVE_SECTION_CACHE_SECONDS,
+                timeout_seconds=LIVE_SECTION_TIMEOUT_SECONDS,
+            ),
+            'trumpTruth': _cached_or_safe_section(
+                'trumpTruth',
+                fetch_trump_truth_live,
+                max_age_seconds=LIVE_SECTION_CACHE_SECONDS,
+                timeout_seconds=LIVE_SECTION_TIMEOUT_SECONDS,
+            ),
         })
     return jsonify(payload)
+
+
+@app.route('/api/refresh-data', methods=['POST'])
+def refresh_data() -> Any:
+    trigger = ((request.get_json(silent=True) or {}).get('trigger') or 'manual').strip() or 'manual'
+    refreshed = {
+        'feed': _safe_section('feed', lambda: fetch_feed_live(DOGGO_RSS_URLS)).get('status'),
+        'usQuotes': _safe_section('usQuotes', lambda: fetch_us_quotes_live(DOGGO_US_STOCK_SYMBOLS)).get('status'),
+        'weather': _safe_section('weather', lambda: fetch_weather_live(WEATHER_SPOTS)).get('status'),
+        'flightDeals': _safe_section('flightDeals', fetch_flight_deals_live).get('status'),
+        'trumpTruth': _safe_section('trumpTruth', fetch_trump_truth_live).get('status'),
+    }
+    return jsonify({
+        'ok': True,
+        'trigger': trigger,
+        'refreshed': refreshed,
+        'generatedAt': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+    })
 
 
 @app.route('/api/tw-quotes')
@@ -1002,8 +1086,9 @@ def tw_quotes() -> Any:
         ticker = yf.Ticker(ticker_symbol)
         try:
             hist = ticker.history(period='2d', interval='1m', prepost=False)
+            daily_hist = ticker.history(period='5d', interval='1d')
             if hist is None or hist.empty:
-                hist = ticker.history(period='5d', interval='1d')
+                hist = daily_hist
             if hist is None or hist.empty:
                 errors.append(f'{symbol}: empty history')
                 continue
@@ -1015,11 +1100,19 @@ def tw_quotes() -> Any:
 
             last = float(close_series.iloc[-1])
             prev_close = None
-            if 'Close' in hist and len(close_series) >= 2:
+            if daily_hist is not None and not daily_hist.empty:
+                daily_close = daily_hist['Close'].dropna()
+                if len(daily_close) >= 2:
+                    prev_close = float(daily_close.iloc[-2])
+                elif len(daily_close) == 1:
+                    prev_close = float(daily_close.iloc[-1])
+            if prev_close is None and 'Close' in hist and len(close_series) >= 2:
                 prev_close = float(close_series.iloc[-2])
             try:
                 fast = ticker.fast_info or {}
-                prev_close = float(fast.get('previous_close') or fast.get('regular_market_previous_close') or prev_close or last)
+                fast_prev_close = fast.get('previous_close') or fast.get('regular_market_previous_close')
+                if fast_prev_close not in (None, 0, last):
+                    prev_close = float(fast_prev_close)
                 day_high = float(fast.get('day_high') or fast.get('regular_market_day_high') or last)
                 day_low = float(fast.get('day_low') or fast.get('regular_market_day_low') or last)
             except Exception:
@@ -1028,6 +1121,7 @@ def tw_quotes() -> Any:
                 low_series = hist['Low'].dropna() if 'Low' in hist else close_series
                 day_high = float(high_series.iloc[-1]) if not high_series.empty else last
                 day_low = float(low_series.iloc[-1]) if not low_series.empty else last
+            prev_close = float(prev_close or last)
 
             info = {}
             try:
