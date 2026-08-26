@@ -5,9 +5,17 @@ const listEl = document.getElementById('guestbook-list');
 const formEl = document.getElementById('guestbook-form');
 const nameEl = document.getElementById('guestbook-name');
 const messageEl = document.getElementById('guestbook-message');
+const websiteEl = document.getElementById('guestbook-website');
+const moreBtn = document.getElementById('guestbook-more');
 
 let pendingDeleteId = null;
 let lastRenderedIds = [];
+let allNotes = [];
+let visibleNoteCount = 3;
+let deleteTriggerEl = null;
+let submitting = false;
+const SUBMIT_COOLDOWN_MS = 30_000;
+const LAST_SUBMIT_KEY = 'doggo-guestbook-last-submit-v1';
 
 function setStatus(text) {
   if (statusEl) statusEl.textContent = text;
@@ -44,10 +52,12 @@ function ensureModal() {
   modal.className = 'guestbook-modal';
   modal.hidden = true;
   modal.innerHTML = `
-    <div class="guestbook-modal-card">
-      <div class="guestbook-modal-title">刪除像素便條紙</div>
+    <div class="guestbook-modal-card" role="dialog" aria-modal="true" aria-labelledby="guestbook-modal-title">
+      <div class="guestbook-modal-title" id="guestbook-modal-title">管理像素便條紙</div>
       <div class="guestbook-modal-copy">只有管理員知道密碼。輸入後就會把這張便條紙移除。</div>
-      <input class="guestbook-password-input" id="guestbook-password-input" type="password" inputmode="numeric" placeholder="輸入刪除密碼" />
+      <label for="guestbook-password-input">管理員密碼</label>
+      <input class="guestbook-password-input" id="guestbook-password-input" type="password" inputmode="numeric" autocomplete="current-password" placeholder="輸入刪除密碼" />
+      <div class="guestbook-modal-status" id="guestbook-modal-status" role="status" aria-live="polite"></div>
       <div class="guestbook-modal-actions">
         <button class="cmd-btn" id="guestbook-cancel-btn" type="button">取消</button>
         <button class="cmd-btn" id="guestbook-delete-btn" type="button">刪除</button>
@@ -55,18 +65,43 @@ function ensureModal() {
     </div>
   `;
   document.body.appendChild(modal);
-  modal.querySelector('#guestbook-cancel-btn')?.addEventListener('click', () => {
-    modal.hidden = true;
-    pendingDeleteId = null;
-  });
+  modal.querySelector('#guestbook-cancel-btn')?.addEventListener('click', closeDeleteModal);
   modal.querySelector('#guestbook-delete-btn')?.addEventListener('click', submitDelete);
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
-      modal.hidden = true;
-      pendingDeleteId = null;
+      closeDeleteModal();
+    }
+  });
+  modal.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDeleteModal();
+    if (e.key !== 'Tab') return;
+    const focusable = [...modal.querySelectorAll('input, button')].filter((el) => !el.disabled);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
   return modal;
+}
+
+function closeDeleteModal() {
+  const modal = document.getElementById('guestbook-modal');
+  if (modal) {
+    modal.hidden = true;
+    const modalStatus = modal.querySelector('#guestbook-modal-status');
+    if (modalStatus) modalStatus.textContent = '';
+  }
+  const page = document.querySelector('.dream-shell');
+  if (page) page.inert = false;
+  pendingDeleteId = null;
+  deleteTriggerEl?.focus();
+  deleteTriggerEl = null;
 }
 
 function burstSticker(target, symbol = '❤') {
@@ -103,23 +138,30 @@ function noteLabel(note, index) {
 function renderNotes(notes) {
   if (!listEl) return;
   const prevIds = lastRenderedIds;
-  lastRenderedIds = notes.map((note) => note.id);
+  allNotes = notes;
+  const visibleNotes = notes.slice(0, visibleNoteCount);
+  lastRenderedIds = visibleNotes.map((note) => note.id);
   if (!notes.length) {
     listEl.innerHTML = '<div class="guestbook-empty">牆上還沒有便條紙，來替狗狗貼第一張吧。</div>';
+    if (moreBtn) moreBtn.hidden = true;
     return;
   }
-  listEl.innerHTML = notes.map((note, index) => `
+  listEl.innerHTML = visibleNotes.map((note, index) => `
     <article class="guestbook-note" data-id="${escHtml(note.id)}" data-label="${escHtml(noteLabel(note, index))}">
       <div class="guestbook-note-head">
         <div class="guestbook-note-name">
           ${escHtml(note.nickname || '匿名訪客')}
           <span class="guestbook-note-time">${escHtml(formatTime(note.created_at))}</span>
         </div>
-        <button class="guestbook-delete" type="button" data-delete-id="${escHtml(note.id)}">X</button>
+        <button class="guestbook-delete" type="button" data-delete-id="${escHtml(note.id)}" aria-label="管理 ${escHtml(note.nickname || '匿名訪客')} 的留言">管理</button>
       </div>
       <div class="guestbook-note-text">${escHtml(note.message || '')}</div>
     </article>
   `).join('');
+  if (moreBtn) {
+    moreBtn.hidden = notes.length <= visibleNoteCount;
+    moreBtn.textContent = `顯示更多留言（還有 ${Math.max(notes.length - visibleNoteCount, 0)} 則）`;
+  }
 
   listEl.querySelectorAll('.guestbook-note').forEach((noteEl) => {
     const isNew = !prevIds.includes(noteEl.dataset.id);
@@ -132,7 +174,10 @@ function renderNotes(notes) {
   listEl.querySelectorAll('[data-delete-id]').forEach((btn) => {
     btn.addEventListener('click', () => {
       pendingDeleteId = btn.dataset.deleteId;
+      deleteTriggerEl = btn;
       const modal = ensureModal();
+      const page = document.querySelector('.dream-shell');
+      if (page) page.inert = true;
       modal.hidden = false;
       modal.querySelector('#guestbook-password-input')?.focus();
     });
@@ -152,7 +197,8 @@ async function loadNotes() {
     .order('created_at', { ascending: false })
     .limit(50);
   if (error) {
-    setStatus(`留言板讀取失敗：${error.message}`);
+    console.warn('guestbook load failed', error);
+    setStatus('留言板暫時無法連線，狗狗會稍後再試。');
     renderNotes([]);
     return;
   }
@@ -162,25 +208,40 @@ async function loadNotes() {
 
 async function submitNote(e) {
   e?.preventDefault?.();
-  if (!supabase) {
-    setStatus('Supabase 尚未設定完成，所以目前不能送出留言。');
+  if (submitting) return;
+  if (!supabase || !cfg.submitFunctionUrl) {
+    setStatus('留言功能尚未設定完成，所以目前不能送出留言。');
     return;
   }
   const nickname = (nameEl?.value || '').trim() || '匿名訪客';
   const message = (messageEl?.value || '').trim();
+  if (websiteEl?.value) {
+    setStatus('便條紙貼上成功 ✦');
+    return;
+  }
   if (!message) {
     setStatus('先寫點內容再貼上便條紙吧。');
     return;
   }
-  setStatus('正在貼上便條紙…');
-  const createdAt = new Date().toISOString();
-  const { error } = await supabase.from('guestbook_notes').insert({ nickname, message, created_at: createdAt });
-  if (error) {
-    setStatus(`送出失敗：${error.message}`);
+  let lastSubmitAt = 0;
+  try { lastSubmitAt = Number(localStorage.getItem(LAST_SUBMIT_KEY) || 0); } catch {}
+  const remaining = SUBMIT_COOLDOWN_MS - (Date.now() - lastSubmitAt);
+  if (remaining > 0) {
+    setStatus(`請再等 ${Math.ceil(remaining / 1000)} 秒，讓狗狗把上一張便條紙貼好。`);
     return;
   }
-  if (cfg.notifyFunctionUrl && cfg.supabaseAnonKey) {
-    const notifyRes = await fetch(cfg.notifyFunctionUrl, {
+  setStatus('正在貼上便條紙…');
+  submitting = true;
+  const submitBtn = formEl?.querySelector('button[type="submit"]');
+  if (submitBtn) submitBtn.disabled = true;
+  const releaseSubmit = () => {
+    submitting = false;
+    if (submitBtn) submitBtn.disabled = false;
+  };
+  const createdAt = new Date().toISOString();
+  let submitRes;
+  try {
+    submitRes = await fetch(cfg.submitFunctionUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -189,47 +250,72 @@ async function submitNote(e) {
       },
       body: JSON.stringify({ nickname, message, createdAt }),
     });
-    if (!notifyRes.ok) {
-      const detail = await notifyRes.text().catch(() => 'notify failed');
-      setStatus(`便條紙貼上成功，但通知寄送失敗：${detail || notifyRes.status}`);
-      await loadNotes();
-      return;
-    }
+  } catch (error) {
+    console.warn('guestbook submit unavailable', error);
+    setStatus('留言暫時無法送出，請稍後再試。');
+    releaseSubmit();
+    return;
   }
+  if (!submitRes.ok) {
+    console.warn('guestbook submit failed', submitRes.status);
+    setStatus(submitRes.status === 429 ? '留言送得有點快，請稍後再試。' : '留言暫時無法送出，請稍後再試。');
+    releaseSubmit();
+    return;
+  }
+  try { localStorage.setItem(LAST_SUBMIT_KEY, String(Date.now())); } catch {}
   if (messageEl) messageEl.value = '';
   if (nameEl && !nameEl.value.trim()) nameEl.value = '';
   setStatus('便條紙貼上成功 ✦');
-  await loadNotes();
+  try {
+    await loadNotes();
+  } finally {
+    releaseSubmit();
+  }
 }
 
 async function submitDelete() {
   if (!pendingDeleteId) return;
   const modal = ensureModal();
   const password = modal.querySelector('#guestbook-password-input')?.value || '';
+  const modalStatus = modal.querySelector('#guestbook-modal-status');
   if (!cfg.deleteFunctionUrl) {
     setStatus('刪除功能尚未接上後端函式。');
     return;
   }
   setStatus('正在驗證密碼並刪除…');
-  const res = await fetch(cfg.deleteFunctionUrl, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ noteId: pendingDeleteId, password }),
-  });
-  const text = await res.text();
-  if (!res.ok) {
-    setStatus(`刪除失敗：${text || res.status}`);
-    return;
+  if (modalStatus) modalStatus.textContent = '正在驗證管理員密碼…';
+  try {
+    const res = await fetch(cfg.deleteFunctionUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ noteId: pendingDeleteId, password }),
+    });
+    const text = await res.text();
+    if (!res.ok) {
+      console.warn('guestbook delete failed', res.status, text);
+      setStatus('管理驗證失敗，便條紙沒有被刪除。');
+      if (modalStatus) modalStatus.textContent = res.status === 429 ? '嘗試次數太快，請稍後再試。' : '密碼不正確，便條紙沒有被刪除。';
+      modal.querySelector('#guestbook-password-input')?.focus();
+      return;
+    }
+    modal.querySelector('#guestbook-password-input').value = '';
+    closeDeleteModal();
+    setStatus('便條紙已刪除。');
+    await loadNotes();
+  } catch (error) {
+    console.warn('guestbook delete unavailable', error);
+    setStatus('管理功能暫時無法連線，便條紙沒有被刪除。');
+    if (modalStatus) modalStatus.textContent = '管理功能暫時無法連線，請稍後再試。';
+    modal.querySelector('#guestbook-password-input')?.focus();
   }
-  modal.hidden = true;
-  modal.querySelector('#guestbook-password-input').value = '';
-  pendingDeleteId = null;
-  setStatus('便條紙已刪除。');
-  await loadNotes();
 }
 
 function initGuestbook() {
   formEl?.addEventListener('submit', submitNote);
+  moreBtn?.addEventListener('click', () => {
+    visibleNoteCount += 6;
+    renderNotes(allNotes);
+  });
   if (supabase) {
     loadNotes();
     supabase
@@ -243,3 +329,4 @@ function initGuestbook() {
 }
 
 initGuestbook();
+window.__DOGGO_GUESTBOOK_READY__ = true;

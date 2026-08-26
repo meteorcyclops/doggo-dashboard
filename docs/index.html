@@ -3,17 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Xuan's First Home</title>
+    <title>狗狗情報小屋｜今天先看什麼，狗狗替你整理</title>
+    <meta name="description" content="狗狗替你整理今天的天氣、台美股盤勢、新聞與旅行線索，一眼看懂現在最值得注意的事。" />
+    <meta name="theme-color" content="#ffbdd8" />
+    <link rel="canonical" href="https://dog.xuan.tw/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="zh_TW" />
+    <meta property="og:site_name" content="狗狗情報小屋" />
+    <meta property="og:title" content="狗狗情報小屋｜今天先看什麼，狗狗替你整理" />
+    <meta property="og:description" content="天氣、盤勢與新聞，只留下此刻最值得注意的線索。" />
+    <meta property="og:url" content="https://dog.xuan.tw/" />
+    <meta property="og:image" content="https://dog.xuan.tw/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="狗狗情報小屋｜今天先看什麼，狗狗替你整理" />
+    <meta name="twitter:description" content="天氣、盤勢與新聞，只留下此刻最值得注意的線索。" />
+    <meta name="twitter:image" content="https://dog.xuan.tw/og.png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebSite","name":"狗狗情報小屋","alternateName":"Doggo Daily Brief","url":"https://dog.xuan.tw/","description":"狗狗替你整理今天的天氣、台美股盤勢、新聞與旅行線索。","inLanguage":"zh-Hant"}
+    </script>
     <link rel="stylesheet" href="./style.css" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   </head>
   <body>
+    <a class="skip-link" href="#main-content">跳到今日重點</a>
     <div class="dream-shell">
       <header class="dream-top frame candy">
         <div class="title-block">
-          <div class="game-kicker">PIXEL PET HOUSE</div>
-          <div class="game-title">XUAN'S FIRST HOME</div>
-          <div class="game-sub">狗狗守著的小屋，今天的重點都在這裡。</div>
+          <div class="game-kicker">DOGGO DAILY BRIEF</div>
+          <div class="game-title">狗狗情報小屋</div>
+          <div class="game-sub">今天先看什麼，狗狗替你整理。</div>
         </div>
         <div class="top-stats">
           <div class="stat-pill"><span>狀態</span><b id="line-link">—</b></div>
@@ -22,13 +41,14 @@
           <button class="stat-pill theme-toggle" id="theme-toggle" type="button" aria-describedby="theme-toggle-hint"><span>主題</span><b id="theme-label">DAY</b><small id="theme-toggle-hint">點一下切換日夜</small></button>
           <button class="stat-pill layout-toggle" id="layout-toggle" type="button"><span>版面</span><b>設定</b><small>卡片顯示與偏好</small></button>
         </div>
+        <p class="monitor-disclaimer">狀態與同步為展示資料，非即時系統監控。</p>
       </header>
 
-      <section class="hero-hud frame white-panel">
+      <section class="hero-hud frame white-panel" aria-labelledby="page-title">
         <div class="hero-copy">
-          <div class="hero-label">DOGGO COMMAND HUD</div>
-          <h1 class="hero-title">今天的狗狗，守在像素小屋裡，替你看著市場、新聞和外面的風向。</h1>
-          <p class="hero-desc">這裡不是冷冰冰的儀表板，比較像狗狗的情報基地。牠會整理今天值得先看的線索，也會在安靜的時候陪你慢慢逛。</p>
+          <div class="hero-label">TODAY'S DOGGO BRIEF</div>
+          <h1 class="hero-title" id="page-title">今天先看什麼，狗狗替你整理。</h1>
+          <p class="hero-desc">天氣、盤勢與新聞，只留下此刻最值得注意的線索。想看細節時，再展開每張情報卡。</p>
           <div class="market-session-strip" id="market-session-strip">
             <span class="market-session-pill">台股：讀取中</span>
             <span class="market-session-pill">美股：讀取中</span>
@@ -41,11 +61,11 @@
           </div>
           <div class="hero-metric">
             <span>狗狗狀態</span>
-            <b id="hero-dog-state">讀取中</b>
+            <b id="hero-dog-state" aria-live="polite">讀取中</b>
           </div>
           <div class="hero-metric">
             <span>資料可信度</span>
-            <b id="hero-provenance">讀取中</b>
+            <b id="hero-provenance" aria-live="polite">讀取中</b>
           </div>
           <div class="hero-metric emphasis">
             <span>現在建議先看</span>
@@ -60,14 +80,15 @@
         </div>
       </section>
 
-      <main class="dream-layout">
+      <main class="dream-layout" id="main-content">
         <div class="utility-strip frame white-panel">
           <button class="cmd-btn" id="refresh-btn">刷新</button>
           <button class="cmd-btn" id="theme-copy-btn">複製網址</button>
-          <div class="hint utility-hint" id="action-hint">靜態儀表板；內容由建置流程寫入，報價與摘要非即時。</div>
+          <div class="hint utility-hint" id="action-hint" aria-live="polite">正在確認資料更新時間…</div>
         </div>
 
-        <section class="battle-card frame candy">
+        <section class="battle-card frame candy" aria-labelledby="doggo-brief-title">
+          <h2 class="section-title" id="doggo-brief-title">狗狗的今日播報</h2>
           <div class="battle-stage">
             <div class="moon"></div>
             <div class="star st1"></div>
@@ -151,7 +172,7 @@
           <div class="bottom-panels">
             <div class="player-stack">
               <div class="player-box frame white-panel" data-card-id="squad">
-                <div class="player-name">狗狗小隊</div>
+                <h2 class="player-name">今日情報概況</h2>
                 <div class="hp-wrap">
                   <span>HP</span>
                   <div class="hp-bar green"><i id="player-hp"></i></div>
@@ -166,11 +187,11 @@
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">MARKET SNAPSHOT</div>
-                    <div class="side-title">台股快報</div>
+                    <h2 class="side-title">台股快報</h2>
                   </div>
                   <div class="intel-head-actions">
                     <b class="intel-badge" id="quote-badge">WATCH</b>
-                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="quotes">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="quotes" aria-expanded="false">展開台股明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="quote-meta">報價快照讀取中…</div>
@@ -187,11 +208,11 @@
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">US MARKET WATCH</div>
-                    <div class="side-title">美股快報</div>
+                    <h2 class="side-title">美股快報</h2>
                   </div>
                   <div class="intel-head-actions">
                     <b class="intel-badge" id="us-quote-badge">US</b>
-                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="us-quotes">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="us-quotes" aria-expanded="false">展開美股明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="us-quote-meta">美股整理中…</div>
@@ -205,11 +226,11 @@
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">WEATHER WATCH</div>
-                    <div class="side-title">三地天氣智慧摘要</div>
+                    <h2 class="side-title">三地天氣提醒</h2>
                   </div>
                   <div class="weather-head-actions intel-head-actions">
                     <b class="intel-badge" id="weather-badge">SKY</b>
-                    <button class="cmd-btn intel-toggle-btn" id="weather-toggle-btn" type="button" data-card-collapse-toggle="weather">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" id="weather-toggle-btn" type="button" data-card-collapse-toggle="weather" aria-expanded="true">收起天氣明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="weather-meta">三地天氣整理中…</div>
@@ -224,11 +245,11 @@
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">NEWS RADAR</div>
-                    <div class="side-title">新聞雷達</div>
+                    <h2 class="side-title">新聞雷達</h2>
                   </div>
                   <div class="intel-head-actions">
                     <b class="intel-badge" id="feed-badge">SCAN</b>
-                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="feed">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="feed" aria-expanded="false">展開新聞明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="feed-meta">RSS 讀取中…</div>
@@ -241,11 +262,11 @@
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">FLIGHT DEALS</div>
-                    <div class="side-title">特價機票雷達</div>
+                    <h2 class="side-title">特價機票雷達</h2>
                   </div>
                   <div class="intel-head-actions">
                     <b class="intel-badge" id="flight-badge">AIR</b>
-                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="flight">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="flight" aria-expanded="false">展開機票明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="flight-meta">狗狗正在搜尋便宜航點…</div>
@@ -254,15 +275,15 @@
                 </ul>
               </article>
 
-              <article class="intel-panel frame white-panel" data-card-id="trump" data-dog-target="trump" data-focus-label="川普發言快訊">
+              <article class="intel-panel frame white-panel experimental-card" data-card-id="trump" data-dog-target="trump" data-focus-label="川普發言快訊">
                 <div class="intel-head">
                   <div>
                     <div class="intel-kicker">TRUTH WATCH</div>
-                    <div class="side-title">川普發言快訊</div>
+                    <h2 class="side-title">川普發言觀察</h2>
                   </div>
                   <div class="intel-head-actions">
                     <b class="intel-badge" id="trump-badge">ALERT</b>
-                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="trump">收起</button>
+                    <button class="cmd-btn intel-toggle-btn" type="button" data-card-collapse-toggle="trump" aria-expanded="false">展開觀察明細</button>
                   </div>
                 </div>
                 <div class="side-meta" id="trump-meta">讀取中…</div>
@@ -275,7 +296,7 @@
           </div>
         </section>
 
-        <aside class="side-stack">
+        <aside class="side-stack" aria-label="留言與網站資訊">
           <section class="frame candy side-card side-card-hidden" hidden>
             <div class="side-title">追蹤小記</div>
             <ul class="task-list" id="task-list">
@@ -283,17 +304,19 @@
             </ul>
           </section>
 
-          <section class="frame candy side-card">
-            <div class="side-title">資料狀態</div>
-            <ul class="summary-list" id="summary-list">
-              <li><span>頁面類型</span><b>CHECK</b></li>
-              <li><span>資料來源</span><b>CHECK</b></li>
-              <li><span>同步</span><b>WAIT</b></li>
-            </ul>
+          <section class="frame candy side-card diagnostics-card">
+            <details class="diagnostics-disclosure">
+              <summary class="side-title">資料與更新狀態</summary>
+              <ul class="summary-list" id="summary-list">
+                <li><span>頁面類型</span><b>CHECK</b></li>
+                <li><span>資料來源</span><b>CHECK</b></li>
+                <li><span>同步</span><b>WAIT</b></li>
+              </ul>
+            </details>
           </section>
 
           <section class="frame candy side-card dev-card">
-            <div class="side-title">開發資訊</div>
+            <h2 class="side-title">關於這座小屋</h2>
             <div class="dev-link-list">
               <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard" target="_blank" rel="noreferrer">GitHub</a>
               <a class="cmd-btn" href="https://github.com/meteorcyclops/doggo-dashboard/tree/master/docs" target="_blank" rel="noreferrer">原始碼</a>
@@ -304,7 +327,7 @@
             <div class="guestbook-header">
               <div>
                 <div class="guestbook-kicker">PIXEL NOTE WALL</div>
-                <div class="side-title">8-bit 留言板</div>
+                <h2 class="side-title">狗狗留言板</h2>
               </div>
               <div class="guestbook-stamp">WOOF MAIL</div>
             </div>
@@ -315,25 +338,27 @@
                 <span class="guestbook-toy heart"></span>
               </div>
               <div class="guestbook-shell white-panel">
-                <div class="guestbook-prompt">留一張小紙條給狗狗吧，像貼在小屋牆上的祕密便條，會慢慢把這個角落填滿。</div>
+                <div class="guestbook-prompt">留一張小紙條給狗狗吧。留言會公開顯示，請不要留下聯絡方式或其他私人資料。</div>
                 <form class="guestbook-form" id="guestbook-form">
                   <div class="guestbook-form-grid">
-                    <label>
+                    <label for="guestbook-name">
                       <span>暱稱</span>
-                      <input id="guestbook-name" maxlength="24" placeholder="例如：Koxuan / 路過的小狗" />
+                      <input id="guestbook-name" name="nickname" type="text" maxlength="24" autocomplete="nickname" placeholder="例如：Koxuan / 路過的小狗" />
                     </label>
-                    <label>
+                    <label for="guestbook-message">
                       <span>留言</span>
-                      <textarea id="guestbook-message" rows="4" maxlength="220" placeholder="寫點想對狗狗說的話吧"></textarea>
+                      <textarea id="guestbook-message" name="message" rows="4" maxlength="220" required placeholder="寫點想對狗狗說的話吧"></textarea>
                     </label>
+                    <label class="guestbook-honeypot" aria-hidden="true" for="guestbook-website">網站<input id="guestbook-website" name="website" type="text" tabindex="-1" autocomplete="off" /></label>
                   </div>
                   <div class="guestbook-form-footer">
-                    <div class="guestbook-status" id="guestbook-status">留言板準備中…</div>
+                    <div class="guestbook-status" id="guestbook-status" role="status" aria-live="polite">留言板準備中…</div>
                     <button class="cmd-btn guestbook-submit" type="submit">貼上便條紙</button>
                   </div>
                 </form>
                 <div class="guestbook-divider" aria-hidden="true"></div>
                 <div class="guestbook-list" id="guestbook-list"></div>
+                <button class="cmd-btn guestbook-more" id="guestbook-more" type="button" hidden>顯示更多留言</button>
               </div>
             </div>
           </section>
@@ -342,13 +367,13 @@
     </div>
 
     <div class="layout-modal" id="layout-modal" hidden>
-      <div class="layout-modal-card frame white-panel">
+      <div class="layout-modal-card frame white-panel" role="dialog" aria-modal="true" aria-labelledby="layout-title">
         <div class="layout-modal-head">
           <div>
             <div class="intel-kicker">DOGGO LAYOUT</div>
-            <div class="side-title">我的面板</div>
+            <div class="side-title" id="layout-title">我的面板</div>
           </div>
-          <button class="cmd-btn" id="layout-close-btn" type="button">關閉</button>
+          <button class="cmd-btn" id="layout-close-btn" type="button" aria-label="關閉版面設定">關閉</button>
         </div>
         <div class="layout-section">
           <div class="layout-section-title">顯示卡片</div>
@@ -359,6 +384,7 @@
 
     <script src="./guestbook-config.js"></script>
     <script type="module" src="./ui.js"></script>
-    <script type="module" src="./guestbook.js"></script>
+    <script type="module" src="./guestbook.js" onerror="document.getElementById('guestbook-status').textContent='留言板暫時無法連線，請稍後再試。'"></script>
+    <noscript><p class="noscript-note">請啟用 JavaScript，狗狗才能載入今日情報。</p></noscript>
   </body>
 </html>

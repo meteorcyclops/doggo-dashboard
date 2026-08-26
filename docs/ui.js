@@ -1,8 +1,9 @@
 import { createDogController } from './dog-controller.js';
-import { profileId, supabase } from './supabase-client.js';
-const defaultVisibleCards = ['squad', 'quotes', 'us-quotes', 'weather', 'feed', 'flight', 'trump', 'guestbook'];
-const defaultCollapsedCards = ['quotes', 'us-quotes', 'feed', 'flight', 'trump', 'guestbook'];
-const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v1';
+const defaultVisibleCards = ['squad', 'quotes', 'us-quotes', 'weather', 'feed', 'flight', 'guestbook'];
+const optionalCards = ['trump'];
+const allCardIds = [...defaultVisibleCards, ...optionalCards];
+const defaultCollapsedCards = ['quotes', 'us-quotes', 'feed', 'flight', 'trump'];
+const LOCAL_PREFS_KEY = 'doggo-dashboard-prefs-v2';
 let dashboardPreferences = {
   visible_cards: [...defaultVisibleCards],
   card_order: [...defaultVisibleCards],
@@ -102,9 +103,22 @@ function safeHttpUrl(raw) {
 
 function provenanceClass(text) {
   if (!text) return 'warn';
-  if (String(text).startsWith('LIVE')) return 'ok';
-  if (String(text).startsWith('PARTIAL')) return 'warn';
+  if (String(text).startsWith('資料已更新')) return 'ok';
   return 'warn';
+}
+
+function provenanceLabel(text, generatedAt) {
+  const generatedMs = new Date(generatedAt || 0).getTime();
+  const ageMinutes = generatedMs ? Math.max(0, (Date.now() - generatedMs) / 60000) : Infinity;
+  if (ageMinutes > 15) return generatedMs ? `快照資料 · ${formatShortDateTime(generatedAt)}` : '快照資料';
+  const value = String(text || '').toUpperCase();
+  if (value.startsWith('LIVE')) return '資料已更新';
+  if (value.startsWith('PARTIAL')) return '部分資料稍舊';
+  return '快照資料';
+}
+
+function friendlyFailure() {
+  return '來源暫時無法取得，狗狗會稍後再試。';
 }
 
 function escHtml(s) {
@@ -165,7 +179,8 @@ function heroDogStatusText(data, { jammed = 0, alerts = 0 } = {}) {
   const now = new Date();
   const hour = Number(now.toLocaleString('en-US', { hour: 'numeric', hour12: false, timeZone: 'Asia/Taipei' }));
   const topQuote = data?.quotes?.items?.[0];
-  const hasHotTrump = data?.trumpTruth?.items?.some((item) => item.important);
+  const hasHotTrump = dashboardPreferences.visible_cards?.includes('trump')
+    && data?.trumpTruth?.items?.some((item) => item.important);
   const hasFeed = !!data?.feed?.items?.length;
   if (alerts) return '外面有警報冒出來了，狗狗正在把需要先看的事往前推。';
   if (jammed) return '有幾個追蹤項目卡卡的，但狗狗還在守著主要情報台。';
@@ -180,6 +195,7 @@ function heroDogStatusText(data, { jammed = 0, alerts = 0 } = {}) {
 }
 
 function topImportantTrump(data) {
+  if (!dashboardPreferences.visible_cards?.includes('trump')) return null;
   return data?.trumpTruth?.items?.find((item) => item.important) || null;
 }
 
@@ -263,14 +279,14 @@ function heroFocusLabel(data) {
 }
 
 function battleModeLabel(data) {
-  if (data?.trumpTruth?.items?.some((item) => item.important)) return 'ALERT MODE';
+  if (topImportantTrump(data)) return 'ALERT MODE';
   if (data?.feed?.items?.length) return 'SCAN MODE';
   if (data?.quotes?.items?.length) return 'MARKET MODE';
   return 'IDLE MODE';
 }
 
 function battleRhythmLabel(session, prov) {
-  return `${session} · ${String(prov || 'SNAPSHOT').replace(/^LIVE\s*/,'LIVE ')}`;
+  return `${session} · ${prov}`;
 }
 
 function battleBroadcastDetail(data, focus) {
@@ -308,7 +324,9 @@ function dogGuideLine(target) {
 function taskBubbleText(data, jammed, alerts) {
   const label = data.dog?.label || '今天';
   const st = data.dog?.state || 'idle';
-  const topTrump = topImportantTrump(data) || data?.trumpTruth?.items?.[0];
+  const topTrump = dashboardPreferences.visible_cards?.includes('trump')
+    ? (topImportantTrump(data) || data?.trumpTruth?.items?.[0])
+    : null;
   const topFeed = data?.feed?.items?.[0];
   const topQuote = data?.quotes?.items?.[0];
   if (alerts) return `狗狗快報：${label}，有項目需要留意，我先幫你把警報掛在前面。`;
@@ -342,14 +360,14 @@ function pillGateway(online) {
 }
 
 function feedSummaryRow(feed) {
-  if (feed?.error) return { text: `異常 · ${feed.error}`, cls: 'danger' };
+  if (feed?.error) return { text: '來源暫時無法取得', cls: 'danger' };
   const n = feed?.items?.length || 0;
   if (n) return { text: `${n} 則`, cls: 'ok' };
   return { text: '無資料', cls: 'warn' };
 }
 
 function trumpSummaryRow(tt) {
-  if (tt?.error) return { text: `異常 · ${tt.error}`, cls: 'danger' };
+  if (tt?.error) return { text: '來源暫時無法取得', cls: 'danger' };
   const n = tt?.items?.length || 0;
   if (n) return { text: `${n} 則`, cls: 'ok' };
   return { text: '無資料', cls: 'warn' };
@@ -359,33 +377,37 @@ function liveStatusMeta(section = {}) {
   const status = section?.status || 'fresh';
   if (status === 'stale') {
     const age = section?.fallbackAgeSeconds != null ? `${section.fallbackAgeSeconds} 秒前快取` : '稍早快取';
-    return { badge: 'STALE', cls: 'warn', text: `目前顯示快取資料，來源暫時失敗, ${age}` };
+    return { badge: '快取', cls: 'warn', text: `目前顯示${age}資料，來源稍後重試。` };
   }
   if (status === 'failed') {
-    return { badge: 'FAIL', cls: 'danger', text: '這塊目前抓取失敗，還沒有可用快取。' };
+    return { badge: '暫停', cls: 'danger', text: friendlyFailure() };
+  }
+  if (!section?.asOf) {
+    return { badge: '快照', cls: 'warn', text: '目前顯示建置快照，等待即時更新。' };
   }
   const fresh = freshnessLabel(section?.asOf);
-  return { badge: 'LIVE', cls: fresh.cls, text: `更新 ${formatShortDateTime(section?.asOf)} · ${fresh.text}` };
+  const badge = fresh.cls === 'ok' ? '已更新' : fresh.cls === 'warn' ? '稍舊' : '可能過期';
+  return { badge, cls: fresh.cls, text: `更新 ${formatShortDateTime(section?.asOf)} · ${fresh.text}` };
 }
 
 function cardStateFromData({ items, error, asOf, status }) {
-  if (status === 'failed' && error) return { tone: 'danger', badge: 'FAIL', title: '資料暫時失敗', detail: error };
+  if (status === 'failed') return { tone: 'danger', badge: '暫停', title: '資料暫時無法取得', detail: friendlyFailure() };
+  if (status === 'stale') return { tone: 'warn', badge: '快取', title: '暫用稍早資料', detail: '來源正在重試，先顯示上一筆成功資料。' };
   if (!items || !items.length) {
-    if (status === 'stale') return { tone: 'warn', badge: 'STALE', title: '暫用快取', detail: error || '來源暫時失敗，先顯示上一筆成功資料。' };
-    if (error) return { tone: 'danger', badge: 'ERROR', title: '資料暫時失敗', detail: error };
-    return { tone: 'warn', badge: 'EMPTY', title: '目前沒有資料', detail: '這張卡暫時是空的。' };
+    if (error) return { tone: 'danger', badge: '暫停', title: '資料暫時無法取得', detail: friendlyFailure() };
+    return { tone: 'warn', badge: '等待', title: '目前沒有資料', detail: '狗狗還在等下一筆情報。' };
   }
-  if (!asOf) return { tone: 'warn', badge: 'STALE', title: '缺少時間戳', detail: '資料存在，但更新時間不明。' };
+  if (!asOf) return { tone: 'warn', badge: '稍舊', title: '更新時間不明', detail: '內容可以閱讀，但請先視為快照資料。' };
   return null;
 }
 
-function renderStateCard(list, meta, state, fallbackMeta) {
+function renderStateCard(list, meta, state) {
   list.innerHTML = '';
   const li = document.createElement('li');
   li.className = `card-state card-state-${state.tone}`;
   li.innerHTML = `<span><strong>${state.title}</strong><br><small>${state.detail}</small></span><b class="${state.tone}">${state.badge}</b>`;
   list.appendChild(li);
-  if (meta) meta.textContent = fallbackMeta || state.detail;
+  if (meta) meta.textContent = state.detail;
 }
 
 function patternLabel(pattern) {
@@ -444,7 +466,7 @@ function renderQuotes(quotes) {
   const state = cardStateFromData({ items: quotes?.items, error: quotes?.error, asOf });
   if (summaryEl) summaryEl.textContent = `${liveQuotesMode ? '即時版' : '快照版'} · ${summarizeQuotes(quotes?.items || [])}`;
   if (state) {
-    renderStateCard(list, meta, state, '台股快報暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   const items = quotesExpanded ? quotes.items : quotes.items.slice(0, 10);
@@ -461,7 +483,7 @@ function renderQuotes(quotes) {
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
     const prev = previousQuoteMap.get(q.symbol);
     const changed = !!prev && (prev.price !== q.price || prev.changePct !== q.changePct || JSON.stringify(prev.series || []) !== JSON.stringify(q.series || []));
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value ${changed ? 'flash-update' : ''}">${q.price != null ? q.price : '—'}</strong></span><span class="quote-mini-pattern">${patternLabel(q.pattern)}</span></small>${q.dogSummary ? `<br><small class="trump-dog-summary">${q.dogSummary}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series, changed)}<b class="quote-change-badge ${cls} ${changed ? 'flash-update' : ''}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${escHtml(q.symbol)} ${escHtml(q.name || '')}<br><small><span class="quote-price-line">現價 <strong class="quote-price-value ${changed ? 'flash-update' : ''}">${escHtml(q.price != null ? q.price : '—')}</strong></span><span class="quote-mini-pattern">${escHtml(patternLabel(q.pattern))}</span></small>${q.dogSummary ? `<br><small class="trump-dog-summary">${escHtml(q.dogSummary)}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series, changed)}<b class="quote-change-badge ${cls} ${changed ? 'flash-update' : ''}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${escHtml(formatChangePct(q.changePct))}</b></span>`;
     list.appendChild(li);
     previousQuoteMap.set(q.symbol, { price: q.price, changePct: q.changePct, series: q.series || [] });
   });
@@ -488,20 +510,20 @@ function renderUsQuotes(usQuotes) {
   const statusMeta = liveStatusMeta(usQuotes);
   if (meta) {
     meta.textContent = usQuotes?.error
-      ? `美股 ${statusMeta.badge} · ${sessionMap[usQuotes?.session] || '觀察中'} · ${statusMeta.text} · ${usQuotes.error}`
+      ? `美股 ${statusMeta.badge} · ${sessionMap[usQuotes?.session] || '觀察中'} · ${statusMeta.text}`
       : `美股 ${statusMeta.badge} · ${sessionMap[usQuotes?.session] || '觀察中'} · ${statusMeta.text}`;
   }
   if (summaryEl) summaryEl.textContent = usQuotes?.summary || '狗狗正在整理今晚要先看的美股動向…';
   const state = cardStateFromData({ items: usQuotes?.items, error: usQuotes?.error, asOf, status: usQuotes?.status });
   if (state) {
-    renderStateCard(list, meta, state, '美股快報暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   usQuotes.items.forEach((q) => {
     const li = document.createElement('li');
     const pct = Number(q.changePct);
     const cls = pct > 0 ? 'ok' : pct < 0 ? 'danger' : 'warn';
-    li.innerHTML = `<span>${q.symbol} ${q.name || ''}<br><small>現價 <strong class="quote-price-value">${q.price != null ? q.price : '—'}</strong> · ${usQuotes.session || 'closed'}<br>${patternLabel(pct > 1 ? 'uptrend' : pct < -1 ? 'downtrend' : 'range')}</small>${q.dogSummary ? `<br><small class="trump-dog-summary">${q.dogSummary}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${formatChangePct(q.changePct)}</b></span>`;
+    li.innerHTML = `<span>${escHtml(q.symbol)} ${escHtml(q.name || '')}<br><small>現價 <strong class="quote-price-value">${escHtml(q.price != null ? q.price : '—')}</strong> · ${escHtml(usQuotes.session || 'closed')}<br>${escHtml(patternLabel(pct > 1 ? 'uptrend' : pct < -1 ? 'downtrend' : 'range'))}</small>${q.dogSummary ? `<br><small class="trump-dog-summary">${escHtml(q.dogSummary)}</small>` : ''}</span><span class="quote-trend-wrap">${renderSparkline(q.series)}<b class="quote-change-badge ${cls}">${pct > 0 ? '▲' : pct < 0 ? '▼' : '→'} ${escHtml(formatChangePct(q.changePct))}</b></span>`;
     list.appendChild(li);
   });
   pulseChildren('#us-quote-list > li');
@@ -517,7 +539,7 @@ function renderTrumpTruth(trump) {
   const statusMeta = liveStatusMeta(trump);
   if (meta) {
     if (trump?.error) {
-      meta.textContent = src ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text} · ${trump.error}` : `${statusMeta.badge} · ${statusMeta.text} · ${trump.error}`;
+      meta.textContent = `${statusMeta.badge} · ${statusMeta.text}`;
     } else if (asOf) {
       meta.textContent = src ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text}` : `${statusMeta.badge} · ${statusMeta.text}`;
     } else {
@@ -526,7 +548,7 @@ function renderTrumpTruth(trump) {
   }
   const state = cardStateFromData({ items: trump?.items, error: trump?.error, asOf, status: trump?.status });
   if (state) {
-    renderStateCard(list, meta, state, src || '川普快訊暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   trump.items.forEach((item, index) => {
@@ -595,18 +617,18 @@ function renderWeather(weather) {
   list.innerHTML = '';
   const latestAsOf = weather?.items?.map((item) => item.asOf).filter(Boolean).sort().slice(-1)[0];
   const statusMeta = liveStatusMeta({ ...weather, asOf: latestAsOf || weather?.asOf });
-  if (meta) meta.textContent = weather?.error ? `天氣 ${statusMeta.badge} · ${statusMeta.text} · ${weather.error}` : `石牌 / 中和 / 松山 · ${statusMeta.badge} · ${statusMeta.text}`;
+  if (meta) meta.textContent = weather?.error ? `天氣 ${statusMeta.badge} · ${statusMeta.text}` : `石牌 / 中和 / 松山 · ${statusMeta.badge} · ${statusMeta.text}`;
   if (summary) summary.textContent = weather?.summary || '狗狗正在整理三地今天的天氣重點。';
   if (commute) commute.textContent = weather?.commuteWatch || '三地提醒整理中。';
   const state = cardStateFromData({ items: weather?.items, error: weather?.error, asOf: weather?.items?.[0]?.asOf, status: weather?.status });
   if (state) {
-    renderStateCard(list, meta, state, '三地天氣智慧摘要暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   weather.items.forEach((item) => {
     const li = document.createElement('li');
     const next = item.next3h || {};
-    li.innerHTML = `<span>${item.icon || '🌤️'} ${item.label}<br><small>${item.tempC != null ? `${item.tempC}°C` : '—'} · 降雨 ${item.rainChance != null ? `${item.rainChance}%` : '—'}<br>${item.feel || item.advice || ''}<br>接下來 3 小時：最高降雨 ${next.rainPeak != null ? `${Math.round(next.rainPeak)}%` : '—'} · ${next.tempMin != null && next.tempMax != null ? `${Math.round(next.tempMin)}°-${Math.round(next.tempMax)}°` : '溫度整理中'}</small></span><b class="ok">天氣</b>`;
+    li.innerHTML = `<span>${escHtml(item.icon || '🌤️')} ${escHtml(item.label || '')}<br><small>${item.tempC != null ? `${Number(item.tempC)}°C` : '—'} · 降雨 ${item.rainChance != null ? `${Number(item.rainChance)}%` : '—'}<br>${escHtml(item.feel || item.advice || '')}<br>接下來 3 小時：最高降雨 ${next.rainPeak != null ? `${Math.round(Number(next.rainPeak))}%` : '—'} · ${next.tempMin != null && next.tempMax != null ? `${Math.round(Number(next.tempMin))}°-${Math.round(Number(next.tempMax))}°` : '溫度整理中'}</small></span><b class="ok">天氣</b>`;
     list.appendChild(li);
   });
   pulseChildren('#weather-list > li');
@@ -622,13 +644,31 @@ function applyCardVisibility() {
 
 function applyCollapsedCards() {
   const collapsed = new Set(dashboardPreferences.collapsed_cards || defaultCollapsedCards);
+  const labels = {
+    quotes: ['展開台股明細', '收起台股明細'],
+    'us-quotes': ['展開美股明細', '收起美股明細'],
+    weather: ['展開天氣明細', '收起天氣明細'],
+    feed: ['展開新聞明細', '收起新聞明細'],
+    flight: ['展開機票明細', '收起機票明細'],
+    trump: ['展開觀察明細', '收起觀察明細'],
+  };
+  const controlledIds = {
+    quotes: 'quote-list',
+    'us-quotes': 'us-quote-list',
+    weather: 'weather-list',
+    feed: 'headline-list',
+    flight: 'flight-list',
+    trump: 'trump-list',
+  };
   document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
     const cardId = btn.dataset.cardCollapseToggle;
     const card = document.querySelector(`[data-card-id="${cardId}"]`);
     if (!card) return;
     const isCollapsed = collapsed.has(cardId);
     card.classList.toggle('intel-panel-collapsed', isCollapsed);
-    btn.textContent = isCollapsed ? '展開' : '收起';
+    btn.setAttribute('aria-expanded', String(!isCollapsed));
+    btn.setAttribute('aria-controls', controlledIds[cardId] || 'main-content');
+    btn.textContent = labels[cardId]?.[isCollapsed ? 0 : 1] || (isCollapsed ? '展開明細' : '收起明細');
   });
 }
 
@@ -642,11 +682,11 @@ function renderLayoutOptions() {
     weather: '生活天氣提醒',
     feed: '新聞雷達',
     flight: '特價機票雷達',
-    trump: '川普發言快訊',
+    trump: '川普發言觀察（實驗）',
     guestbook: '8-bit 留言板',
   };
   const visible = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
-  root.innerHTML = defaultVisibleCards.map((id) => `
+  root.innerHTML = allCardIds.map((id) => `
     <label class="layout-option ${visible.has(id) ? 'is-checked' : ''}">
       <input type="checkbox" data-card-toggle="${id}" ${visible.has(id) ? 'checked' : ''} />
       <span class="layout-option-box" aria-hidden="true">${visible.has(id) ? '■' : '□'}</span>
@@ -659,7 +699,7 @@ function renderLayoutOptions() {
       const next = new Set(dashboardPreferences.visible_cards || defaultVisibleCards);
       if (e.target.checked) next.add(cardId);
       else next.delete(cardId);
-      dashboardPreferences.visible_cards = defaultVisibleCards.filter((id) => next.has(id));
+      dashboardPreferences.visible_cards = allCardIds.filter((id) => next.has(id));
       const row = e.target.closest('.layout-option');
       row?.classList.toggle('is-checked', e.target.checked);
       const box = row?.querySelector('.layout-option-box');
@@ -675,15 +715,12 @@ function renderLayoutOptions() {
 
 function normalizePreferenceList(list, fallback = defaultVisibleCards) {
   const base = Array.isArray(list) ? list : fallback;
-  const known = new Set(defaultVisibleCards);
+  const known = new Set(allCardIds);
   const deduped = [];
   for (const id of base) {
     if (known.has(id) && !deduped.includes(id)) deduped.push(id);
   }
-  for (const id of defaultVisibleCards) {
-    if (!deduped.includes(id)) deduped.push(id);
-  }
-  return deduped;
+  return deduped.length ? deduped : [...fallback];
 }
 
 function loadLocalPreferences() {
@@ -708,16 +745,6 @@ function saveLocalPreferences() {
 }
 
 async function loadPreferences() {
-  if (supabase) {
-    const { data, error } = await supabase
-      .from('dashboard_preferences')
-      .select('profile_id,visible_cards,card_order,collapsed_cards,flight_origin,flight_regions')
-      .eq('profile_id', profileId)
-      .maybeSingle();
-    if (!error && data) {
-      dashboardPreferences = { ...dashboardPreferences, ...data };
-    }
-  }
   const localPrefs = loadLocalPreferences();
   if (localPrefs) {
     dashboardPreferences = { ...dashboardPreferences, ...localPrefs };
@@ -725,7 +752,7 @@ async function loadPreferences() {
   dashboardPreferences.visible_cards = normalizePreferenceList(dashboardPreferences.visible_cards);
   dashboardPreferences.card_order = normalizePreferenceList(dashboardPreferences.card_order);
   const collapsed = Array.isArray(dashboardPreferences.collapsed_cards) ? dashboardPreferences.collapsed_cards : defaultCollapsedCards;
-  dashboardPreferences.collapsed_cards = collapsed.filter((id, index, arr) => defaultVisibleCards.includes(id) && arr.indexOf(id) === index);
+  dashboardPreferences.collapsed_cards = collapsed.filter((id, index, arr) => allCardIds.includes(id) && arr.indexOf(id) === index);
   applyCardVisibility();
   applyCollapsedCards();
   renderLayoutOptions();
@@ -733,21 +760,6 @@ async function loadPreferences() {
 
 async function savePreferences() {
   saveLocalPreferences();
-  if (!supabase) return;
-  const payload = {
-    profile_id: profileId,
-    visible_cards: dashboardPreferences.visible_cards,
-    card_order: dashboardPreferences.card_order,
-    collapsed_cards: dashboardPreferences.collapsed_cards,
-    flight_origin: dashboardPreferences.flight_origin,
-    flight_regions: dashboardPreferences.flight_regions,
-  };
-  const { error } = await supabase
-    .from('dashboard_preferences')
-    .upsert(payload, { onConflict: 'profile_id' });
-  if (error) {
-    console.warn('Failed to sync dashboard preferences to Supabase:', error.message);
-  }
 }
 
 function renderFlightDeals(flightDeals) {
@@ -763,19 +775,19 @@ function renderFlightDeals(flightDeals) {
       ? `${prefs.origin} 出發 · ${Array.isArray(prefs.regions) ? prefs.regions.join(' / ') : ''}`
       : '台北出發 watchlist';
     meta.textContent = flightDeals?.error
-      ? `${prefText} · ${statusMeta.badge} · ${statusMeta.text} · ${flightDeals.error}`
+      ? `${prefText} · ${statusMeta.badge} · ${statusMeta.text}`
       : `${prefText} · ${statusMeta.badge} · ${statusMeta.text}`;
   }
   const state = cardStateFromData({ items: flightDeals?.items, error: flightDeals?.error, asOf: flightDeals?.asOf, status: flightDeals?.status });
   if (state) {
-    renderStateCard(list, meta, state, '特價機票雷達暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   flightDeals.items.forEach((item) => {
     const li = document.createElement('li');
     const badgeCls = item.badge === 'HOT' ? 'danger' : item.badge === 'LOOK' ? 'warn' : 'ok';
     const url = buildFlightSearchUrl(item.origin, item.destination);
-    li.innerHTML = `<span>${item.origin} → ${item.destination}<br><small>${item.region} · ${item.window} · ${item.airline}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${item.discountPct}%<br>${item.reason}<br>${item.note}<br><a href="${url}" target="_blank" rel="noreferrer">去查票 ↗</a></small></span><b class="${badgeCls}">${item.badge}</b>`;
+    li.innerHTML = `<span>${escHtml(item.origin || '')} → ${escHtml(item.destination || '')}<br><small>${escHtml(item.region || '')} · ${escHtml(item.window || '')} · ${escHtml(item.airline || '')}<br>約 NT$${Number(item.price).toLocaleString('zh-TW')} 起 · 比常態甜 ${Number(item.discountPct)}%<br>${escHtml(item.reason || '')}<br>${escHtml(item.note || '')}<br><a href="${escHtml(url)}" target="_blank" rel="noreferrer">去查票 ↗</a></small></span><b class="${badgeCls}">${escHtml(item.badge || '')}</b>`;
     list.appendChild(li);
   });
   pulseChildren('#flight-list > li');
@@ -790,14 +802,14 @@ function renderHeadlines(feed) {
   const statusMeta = liveStatusMeta(feed);
   if (meta) {
     meta.textContent = feed?.error
-      ? `RSS：${src || '—'} · ${statusMeta.badge} · ${statusMeta.text} · ${feed.error}`
+      ? `新聞來源 · ${statusMeta.badge} · ${statusMeta.text}`
       : src
         ? `來源：${src} · ${statusMeta.badge} · ${statusMeta.text}`
         : `RSS 未設定 · ${statusMeta.badge}`;
   }
   const state = cardStateFromData({ items: feed?.items, error: feed?.error, asOf: feed?.asOf, status: feed?.status });
   if (state) {
-    renderStateCard(list, meta, state, src || '新聞雷達暫時沒有完整資料');
+    renderStateCard(list, meta, state);
     return;
   }
   feed.items.forEach((item) => {
@@ -900,16 +912,18 @@ function buildBroadcastItems(data) {
       bubble: `狗狗快報：以你固定 TPE 出發來看，${item.destination} 現在約 NT$${Number(item.price).toLocaleString('zh-TW')} 起，${item.note || '值得繼續盯著。'}`,
     });
   }
-  for (const item of data?.trumpTruth?.items || []) {
-    const text = item.excerptZhTw || item.excerpt || '川普快訊';
-    items.push({
-      focus: '川普發言快訊',
-      mode: item.important ? 'ALERT MODE' : 'SCAN MODE',
-      state: item.important ? 'worried' : 'ok',
-      title: item.important ? '川普重點快訊' : '川普摘要',
-      detail: (item.dogSummary || text).slice(0, 36) + ((item.dogSummary || text).length > 36 ? '…' : ''),
-      bubble: `狗狗快報：${(item.dogSummary || text).replace(/^狗狗重點：/, '').slice(0, 56)}${(item.dogSummary || text).length > 56 ? '…' : ''}`,
-    });
+  if (dashboardPreferences.visible_cards?.includes('trump')) {
+    for (const item of data?.trumpTruth?.items || []) {
+      const text = item.excerptZhTw || item.excerpt || '川普快訊';
+      items.push({
+        focus: '川普發言快訊',
+        mode: item.important ? 'ALERT MODE' : 'SCAN MODE',
+        state: item.important ? 'worried' : 'ok',
+        title: item.important ? '川普重點快訊' : '川普摘要',
+        detail: (item.dogSummary || text).slice(0, 36) + ((item.dogSummary || text).length > 36 ? '…' : ''),
+        bubble: `狗狗快報：${(item.dogSummary || text).replace(/^狗狗重點：/, '').slice(0, 56)}${(item.dogSummary || text).length > 56 ? '…' : ''}`,
+      });
+    }
   }
   if (!items.length) {
     items.push({
@@ -976,6 +990,7 @@ const dogController = createDogController({
   },
   getCurrentData: () => currentData,
   getCurrentState: () => currentDogState,
+  isCardVisible: (cardId) => dashboardPreferences.visible_cards?.includes(cardId),
 });
 
 function renderTasks(jobs) {
@@ -1088,6 +1103,7 @@ function renderSummary(data) {
   const focus = topFocus.label;
   const hotTrump = topImportantTrump(data);
   const prov = data.provenance || '—';
+  const provText = provenanceLabel(prov, data.generatedAt);
   const buildTrigger = buildTriggerLabel(data.buildTrigger);
 
   const statusEl = document.getElementById('current-status');
@@ -1098,7 +1114,7 @@ function renderSummary(data) {
 
   const battleFocusSubtitle = document.getElementById('battle-focus-subtitle');
   const liveFocus = currentFocus === 'doggo' ? focus : currentFocus;
-  if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, prov);
+  if (battleFocusSubtitle) battleFocusSubtitle.textContent = battleRhythmLabel(session, provText);
   syncBattleStageMode(data);
 
   const stuck = jobs.length - ready;
@@ -1112,7 +1128,7 @@ function renderSummary(data) {
   document.getElementById('gateway-pill').textContent = pillGateway(!!data.gatewayOnline);
   document.getElementById('line-link').textContent = pillLineStatus(data.lineStatus);
 
-  const provCls = provenanceClass(prov);
+  const provCls = provenanceClass(provText);
   const genAt = data.generatedAt
     ? `${formatShortDateTime(data.generatedAt)}（台北時間）`
     : '—';
@@ -1126,21 +1142,21 @@ function renderSummary(data) {
 
   document.getElementById('hero-session').textContent = session;
   document.getElementById('hero-dog-state').textContent = topFocus.detail || hotTrump?.dogSummary || heroDogText;
-  document.getElementById('hero-provenance').textContent = prov;
+  document.getElementById('hero-provenance').textContent = provText;
   document.getElementById('hero-focus').textContent = focus;
 
   const quoteBadge = document.getElementById('quote-badge');
   const feedBadge = document.getElementById('feed-badge');
   const flightBadge = document.getElementById('flight-badge');
   const trumpBadge = document.getElementById('trump-badge');
-  if (quoteBadge) quoteBadge.textContent = data.quotes?.items?.length ? 'LIVE' : 'WAIT';
+  if (quoteBadge) quoteBadge.textContent = data.quotes?.items?.length ? (liveQuotesMode ? '即時' : '快照') : '等待';
   const usQuoteBadge = document.getElementById('us-quote-badge');
-  if (usQuoteBadge) usQuoteBadge.textContent = data.usQuotes?.items?.length ? 'US' : 'WAIT';
-  if (feedBadge) feedBadge.textContent = data.feed?.items?.length ? 'SCAN' : 'WAIT';
-  if (flightBadge) flightBadge.textContent = data.flightDeals?.items?.length ? 'AIR' : 'WAIT';
-  if (trumpBadge) trumpBadge.textContent = data.trumpTruth?.items?.some((item) => item.important) ? 'HOT' : 'WATCH';
+  if (usQuoteBadge) usQuoteBadge.textContent = liveStatusMeta(data.usQuotes).badge;
+  if (feedBadge) feedBadge.textContent = liveStatusMeta(data.feed).badge;
+  if (flightBadge) flightBadge.textContent = liveStatusMeta(data.flightDeals).badge;
+  if (trumpBadge) trumpBadge.textContent = liveStatusMeta(data.trumpTruth).badge;
   const weatherBadge = document.getElementById('weather-badge');
-  if (weatherBadge) weatherBadge.textContent = data.weather?.items?.length ? 'SKY' : 'WAIT';
+  if (weatherBadge) weatherBadge.textContent = liveStatusMeta(data.weather).badge;
 
   renderHeroFocusTheme(data);
   renderMarketSessionStrip(data);
@@ -1149,14 +1165,14 @@ function renderSummary(data) {
   const liveStatus = liveQuoteStatusLabel();
   summary.innerHTML = `
     <li><span>頁面類型</span><b class="ok">靜態儀表板</b></li>
-    <li><span>資料來源</span><b class="${provCls}">${escHtml(prov)}</b></li>
+    <li><span>資料狀態</span><b class="${provCls}">${escHtml(provText)}</b></li>
     <li><span>更新來源</span><b class="ok">${escHtml(buildTrigger)}</b></li>
     <li><span>台股即時來源</span><b class="${liveStatus.cls}">${escHtml(liveQuoteSource || '靜態 data.json')}</b></li>
     <li><span>台股更新狀態</span><b class="${liveStatus.cls}">${escHtml(liveStatus.text)}</b></li>
     <li><span>台股最後更新</span><b class="${liveStatus.cls}">${escHtml(liveQuotesLastSuccessAt ? secondsAgoLabel(liveQuotesLastSuccessAt) : '無紀錄')}</b></li>
     <li><span>台股報價時間</span><b class="${data.quotes?.items?.length ? 'ok' : 'warn'}">${escHtml(liveQuotesLastAsOf ? formatShortDateTime(liveQuotesLastAsOf) + '（台北時間）' : quoteAsOf)}</b></li>
     <li><span>RSS 狀態</span><b class="${feedRow.cls}">${escHtml(feedRow.text)}</b></li>
-    <li><span>川普摘要</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>
+    ${dashboardPreferences.visible_cards?.includes('trump') ? `<li><span>川普觀察</span><b class="${trumpRow.cls}">${escHtml(trumpRow.text)}</b></li>` : ''}
     <li><span>最後建置</span><b class="ok">${escHtml(genAt)}</b></li>
     <li><span>資料新鮮度</span><b class="${freshness.cls}">${escHtml(freshness.text)}</b></li>
   `;
@@ -1218,8 +1234,11 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
       changed = true;
       return { ...item, ...live, name: item.name || live.name || item.symbol, dogSummary: summarizeLiveQuote({ ...item, ...live }) };
     });
+    if (!changed) throw new Error('no matching quote data');
     if (changed) {
       currentData.quotes.asOf = payload.asOf;
+      currentData.quotes.status = 'fresh';
+      currentData.quotes.error = null;
       renderQuotes(currentData.quotes);
     }
     const hint = document.getElementById('action-hint');
@@ -1232,19 +1251,27 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
   } catch (err) {
     liveQuotesMode = false;
     console.warn('live tw quotes failed', err);
+    currentData.quotes = {
+      ...currentData.quotes,
+      status: 'stale',
+      error: friendlyFailure(),
+    };
+    renderQuotes(currentData.quotes);
+    const meta = document.getElementById('quote-meta');
+    if (meta) meta.textContent = `報價快照：${formatShortDateTime(currentData.quotes.asOf)} · 即時來源暫時無法取得`;
     renderSummary(currentData);
   }
 }
 
-const POLL_MS = 30_000;
-const DATA_REFRESH_MS = 5 * 60_000;
-const LIVE_TW_POLL_MS = 5_000;
-const LIVE_DATA_POLL_MS = 60_000;
-const LIVE_US_MARKET_POLL_MS = 5_000;
+const SNAPSHOT_POLL_MS = 5 * 60_000;
+const LIVE_TW_POLL_MS = 15_000;
+const LIVE_DATA_POLL_MS = 2 * 60_000;
+const LIVE_US_MARKET_POLL_MS = 60_000;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
 let liveQuotesLastSuccessAt = 0;
 let liveQuotesLastAsOf = '';
+let liveDataLastSuccessAt = 0;
 
 function secondsAgoLabel(ts) {
   if (!ts) return '無紀錄';
@@ -1253,10 +1280,10 @@ function secondsAgoLabel(ts) {
 }
 
 function liveQuoteStatusLabel() {
-  if (!liveQuotesMode || !liveQuotesLastSuccessAt) return { text: 'fallback', cls: 'warn' };
+  if (!liveQuotesMode || !liveQuotesLastSuccessAt) return { text: '使用快照', cls: 'warn' };
   const ageSec = Math.max(0, Math.floor((Date.now() - liveQuotesLastSuccessAt) / 1000));
-  if (ageSec <= 15) return { text: 'live', cls: 'ok' };
-  return { text: 'stale', cls: 'warn' };
+  if (ageSec <= 30) return { text: '即時更新', cls: 'ok' };
+  return { text: '更新稍慢', cls: 'warn' };
 }
 
 const STAGGER_LIST_SELECTORS = ['#quote-list', '#us-quote-list', '#headline-list', '#flight-list', '#trump-list', '#task-list', '#summary-list'];
@@ -1339,6 +1366,30 @@ function mergeLiveDataIntoCurrent(payload = {}) {
   };
 }
 
+function markLiveSectionsUnavailable() {
+  if (!currentData) return;
+  const ageSeconds = liveDataLastSuccessAt
+    ? Math.max(0, Math.floor((Date.now() - liveDataLastSuccessAt) / 1000))
+    : null;
+  for (const key of ['feed', 'usQuotes', 'weather', 'flightDeals', 'trumpTruth']) {
+    const section = currentData[key];
+    if (!section) continue;
+    const hasItems = Array.isArray(section.items) && section.items.length > 0;
+    currentData[key] = {
+      ...section,
+      status: hasItems ? 'stale' : 'failed',
+      fallbackAgeSeconds: ageSeconds,
+      error: friendlyFailure(),
+    };
+  }
+  renderUsQuotes(currentData.usQuotes);
+  renderHeadlines(currentData.feed);
+  renderFlightDeals(currentData.flightDeals);
+  renderTrumpTruth(currentData.trumpTruth);
+  renderWeather(currentData.weather);
+  renderSummary(currentData);
+}
+
 function isUsMarketHotSession(session) {
   return ['premarket', 'market', 'afterhours'].includes(String(session || '').toLowerCase());
 }
@@ -1360,7 +1411,7 @@ async function refreshUsQuotes({ silent = false } = {}) {
     if (hint && !silent) hint.textContent = '已更新美股即時資料';
   } catch (err) {
     console.warn('live us quotes refresh failed', err);
-    if (hint && !silent) hint.textContent = `美股即時資料更新失敗：${err.message}`;
+    if (hint && !silent) hint.textContent = friendlyFailure();
   }
 }
 
@@ -1449,6 +1500,7 @@ async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const payload = await res.json();
     mergeLiveDataIntoCurrent(payload);
+    liveDataLastSuccessAt = Date.now();
     renderUsQuotes(currentData.usQuotes);
     renderHeadlines(currentData.feed);
     renderFlightDeals(currentData.flightDeals);
@@ -1460,7 +1512,8 @@ async function refreshLiveData({ silent = false, scope = 'all' } = {}) {
     if (hint && !silent) hint.textContent = '已更新即時資料，新聞 / 美股 / 天氣 / 川普快訊同步完成';
   } catch (err) {
     console.warn('live data refresh failed', err);
-    if (hint && !silent) hint.textContent = `即時資料更新失敗：${err.message}`;
+    markLiveSectionsUnavailable();
+    if (hint && !silent) hint.textContent = friendlyFailure();
   }
 }
 
@@ -1485,27 +1538,37 @@ async function loadData(opts = {}) {
     renderSummary(data);
     startBroadcastRotation(data);
     staggerFeedLists(silent);
-    await refreshLiveTwQuotes({ silent });
-    await refreshLiveData({ silent: true });
-    await refreshUsQuotes({ silent: true });
-    await refreshFeed({ silent: true });
-    await refreshWeather({ silent: true });
-    await refreshTrumpTruth({ silent: true });
-    await refreshFlightDeals({ silent: true });
+    await Promise.allSettled([
+      refreshLiveTwQuotes({ silent }),
+      refreshLiveData({ silent: true }),
+    ]);
     if (hint && !silent) {
       const localT = new Date().toLocaleTimeString('zh-TW', { hour12: false, hour: '2-digit', minute: '2-digit' });
-      const fresh = freshnessLabel(data.generatedAt).text;
-      const buildTrigger = buildTriggerLabel(data.buildTrigger);
       const liveStatusText = liveQuoteStatusLabel().text;
       const liveAgeText = liveQuotesLastSuccessAt ? secondsAgoLabel(liveQuotesLastSuccessAt) : '無紀錄';
-      hint.textContent = `已載入資料 · 本地 ${localT} · 建置 ${buildTrigger} · 最後建置 ${fresh} · 台股 ${liveStatusText} / ${liveAgeText}`;
+      hint.textContent = `更新 ${localT} · ${provenanceLabel(data.provenance, data.generatedAt)} · 台股${liveStatusText} · 最後連線 ${liveAgeText}`;
     }
   } catch (err) {
-    if (hint) hint.textContent = `資料讀取失敗：${err.message}`;
+    console.warn('dashboard data failed', err);
+    if (hint) hint.textContent = friendlyFailure();
+    const currentStatus = document.getElementById('current-status');
+    if (currentStatus) currentStatus.textContent = '主要資料暫時無法載入';
+    const heroDesc = document.querySelector('.hero-desc');
+    if (heroDesc) heroDesc.textContent = '資料來源正在重試；你可以按下「重新整理資料」再試一次。';
+    for (const listId of ['quote-list', 'us-quote-list', 'weather-list', 'headline-list', 'flight-list', 'trump-list']) {
+      const list = document.getElementById(listId);
+      if (!list) continue;
+      renderStateCard(list, null, {
+        tone: 'danger',
+        badge: '暫停',
+        title: '資料暫時無法取得',
+        detail: friendlyFailure(),
+      });
+    }
   }
 }
 
-function applyTheme(theme) {
+function applyTheme(theme, { persist = true } = {}) {
   document.body.dataset.theme = theme;
   const label = document.getElementById('theme-label');
   const toggle = document.getElementById('theme-toggle');
@@ -1514,8 +1577,10 @@ function applyTheme(theme) {
   document.body.classList.remove('theme-scene-flash');
   void document.body.offsetWidth;
   document.body.classList.add('theme-scene-flash');
-  try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
-  saveLocalPreferences();
+  if (persist) {
+    try { localStorage.setItem('doggo-dream-theme', theme); } catch {}
+    saveLocalPreferences();
+  }
   if (currentData) {
     dogController.syncDog(currentData);
     dogController.setDogBubble(theme === 'night' ? dogController.pickDogLine('sleepy') : taskBubbleText(currentData, 0, 0));
@@ -1538,32 +1603,16 @@ function syncCommentsTheme(theme) {
 function initTheme() {
   let theme = 'day';
   try { theme = localStorage.getItem('doggo-dream-theme') || theme; } catch {}
-  applyTheme(theme);
+  applyTheme(theme, { persist: false });
   document.getElementById('theme-toggle')?.addEventListener('click', () => {
     applyTheme(document.body.dataset.theme === 'night' ? 'day' : 'night');
   });
 }
 
-async function triggerDataRefresh({ silent = false } = {}) {
-  const hint = document.getElementById('action-hint');
-  const scriptUrl = window.DOGGO_DATA_REFRESH_URL || './api/refresh-data';
-  try {
-    const res = await fetch(scriptUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ trigger: 'dashboard-auto-refresh' }),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    if (!silent && hint) hint.textContent = '已觸發背景資料重抓，正在重新載入…';
-    await loadData({ silent });
-  } catch (err) {
-    if (!silent && hint) hint.textContent = `背景重抓失敗，改讀現有快照：${err.message}`;
-    await loadData({ silent: true });
-  }
-}
-
 function bindActions() {
   const layoutModal = document.getElementById('layout-modal');
+  const layoutTrigger = document.getElementById('layout-toggle');
+  const pageShell = document.querySelector('.dream-shell');
   const closeLayoutModal = () => {
     if (!layoutModal) return;
     layoutModal.classList.remove('is-open');
@@ -1571,16 +1620,20 @@ function bindActions() {
     window.setTimeout(() => {
       layoutModal.setAttribute('hidden', 'hidden');
       layoutModal.classList.remove('is-closing');
+      if (pageShell) pageShell.inert = false;
+      layoutTrigger?.focus();
     }, 170);
   };
   const openLayoutModal = () => {
     if (!layoutModal) return;
     layoutModal.removeAttribute('hidden');
+    if (pageShell) pageShell.inert = true;
     layoutModal.classList.remove('is-closing');
     void layoutModal.offsetWidth;
     layoutModal.classList.add('is-open');
+    window.setTimeout(() => document.getElementById('layout-close-btn')?.focus(), 0);
   };
-  document.getElementById('layout-toggle')?.addEventListener('click', openLayoutModal);
+  layoutTrigger?.addEventListener('click', openLayoutModal);
   document.getElementById('layout-close-btn')?.addEventListener('click', closeLayoutModal);
   layoutModal?.addEventListener('click', (e) => {
     if (e.target === layoutModal) closeLayoutModal();
@@ -1588,9 +1641,23 @@ function bindActions() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && layoutModal?.classList.contains('is-open')) {
       closeLayoutModal();
+      return;
+    }
+    if (e.key !== 'Tab' || !layoutModal?.classList.contains('is-open')) return;
+    const focusable = [...layoutModal.querySelectorAll('button, input, [href], [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => !el.disabled && !el.hidden);
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
-  document.getElementById('refresh-btn')?.addEventListener('click', () => triggerDataRefresh());
+  document.getElementById('refresh-btn')?.addEventListener('click', () => loadData({ silent: false }));
   document.querySelectorAll('[data-card-collapse-toggle]').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const cardId = btn.dataset.cardCollapseToggle;
@@ -1624,15 +1691,10 @@ async function initApp() {
   bindActions();
   dogController.bindDogPet();
   await loadPreferences();
-  await triggerDataRefresh({ silent: true });
-  setInterval(() => loadData({ silent: true }), POLL_MS);
-  setInterval(() => triggerDataRefresh({ silent: true }), DATA_REFRESH_MS);
+  await loadData({ silent: false });
+  setInterval(() => loadData({ silent: true }), SNAPSHOT_POLL_MS);
   setInterval(() => refreshLiveTwQuotes({ silent: true }), LIVE_TW_POLL_MS);
   setInterval(() => refreshLiveData({ silent: true }), LIVE_DATA_POLL_MS);
-  setInterval(() => refreshFeed({ silent: true }), LIVE_DATA_POLL_MS);
-  setInterval(() => refreshWeather({ silent: true }), LIVE_DATA_POLL_MS);
-  setInterval(() => refreshTrumpTruth({ silent: true }), LIVE_DATA_POLL_MS);
-  setInterval(() => refreshFlightDeals({ silent: true }), LIVE_DATA_POLL_MS);
   setInterval(() => {
     if (!isUsMarketHotSession(currentData?.usQuotes?.session)) return;
     refreshLiveData({ silent: true, scope: 'us-only' });

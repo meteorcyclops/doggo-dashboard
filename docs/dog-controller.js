@@ -17,6 +17,7 @@ export function createDogController(options = {}) {
     onGuideChange,
     getCurrentData,
     getCurrentState,
+    isCardVisible,
   } = options;
 
   let clickCount = 0;
@@ -66,7 +67,9 @@ export function createDogController(options = {}) {
     const jobs = (data?.jobs || []).filter((j) => j.enabled);
     const jammed = jobs.some((j) => mapStatus(j).badge === 'JAM');
     if (jammed) return 'worried';
-    if (data?.feed?.items?.length || data?.trumpTruth?.items?.some((item) => item.important)) return 'excited';
+    const hasVisibleTrumpAlert = isCardVisible?.('trump')
+      && data?.trumpTruth?.items?.some((item) => item.important);
+    if (data?.feed?.items?.length || hasVisibleTrumpAlert) return 'excited';
     if (base === 'bone') return 'bone';
     return jobs.length ? 'ok' : 'idle';
   }

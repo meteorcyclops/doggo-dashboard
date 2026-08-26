@@ -43,6 +43,12 @@ jobs:
           DOGGO_BUILD_TRIGGER: ${{ github.event_name }}
         run: python scripts/build_dashboard_data.py
 
+      - name: Validate public site
+        run: |
+          python scripts/validate_static_site.py
+          node --check docs/ui.js
+          node --check docs/guestbook.js
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:

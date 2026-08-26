@@ -16,12 +16,17 @@ function corsHeaders(req: Request) {
   }
 }
 
+function cleanText(value: unknown) {
+  return String(value || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim()
+}
+
 async function clientHash(req: Request) {
   const address = req.headers.get('cf-connecting-ip')
     || req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
     || 'unknown'
   const salt = Deno.env.get('RATE_LIMIT_SALT') || 'doggo-guestbook-v1'
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${salt}:${address}`))
+  const bytes = new TextEncoder().encode(`${salt}:${address}`)
+  const digest = await crypto.subtle.digest('SHA-256', bytes)
   return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('')
 }
 
@@ -33,9 +38,11 @@ Deno.serve(async (req) => {
   if (req.method !== 'POST') return new Response('method not allowed', { status: 405, headers })
 
   try {
-    const { noteId, password } = await req.json()
-    if (!/^[0-9a-f-]{36}$/i.test(String(noteId || '')) || typeof password !== 'string' || password.length > 128) {
-      return new Response('invalid request', { status: 400, headers })
+    const body = await req.json()
+    const nickname = cleanText(body?.nickname) || '匿名訪客'
+    const message = cleanText(body?.message)
+    if (nickname.length > 24 || message.length < 1 || message.length > 220) {
+      return new Response('invalid input', { status: 400, headers })
     }
 
     const supabase = createClient(
@@ -44,23 +51,40 @@ Deno.serve(async (req) => {
     )
     await supabase.from('guestbook_rate_limits').delete().lt('created_at', new Date(Date.now() - 3_600_000).toISOString())
     const hash = await clientHash(req)
-    const bucketMs = 10_000
+    const bucketMs = 30_000
     const windowStart = new Date(Math.floor(Date.now() / bucketMs) * bucketMs).toISOString()
     const { error: rateError } = await supabase.from('guestbook_rate_limits').insert({
       client_hash: hash,
-      action: 'delete',
+      action: 'submit',
       window_start: windowStart,
     })
     if (rateError) return new Response('please retry later', { status: 429, headers })
 
-    if (!password || password !== Deno.env.get('DELETE_PASSWORD')) {
-      return new Response('management verification failed', { status: 401, headers })
+    const { error } = await supabase.from('guestbook_notes').insert({ nickname, message })
+    if (error) return new Response('unable to save note', { status: 500, headers })
+
+    const resendKey = Deno.env.get('RESEND_API_KEY')
+    const notifyTo = Deno.env.get('NOTIFY_EMAIL_TO')
+    const notifyFrom = Deno.env.get('NOTIFY_EMAIL_FROM')
+    if (Deno.env.get('ENABLE_GUESTBOOK_EMAIL') === 'true' && resendKey && notifyTo && notifyFrom) {
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${resendKey}` },
+          body: JSON.stringify({
+            from: notifyFrom,
+            to: [notifyTo],
+            subject: `${nickname.replace(/[\r\n]/g, ' ')} 在狗狗情報小屋留言`,
+            text: message,
+          }),
+        })
+      } catch {
+        // Saving the note remains successful if the optional notification is unavailable.
+      }
     }
 
-    const { error } = await supabase.from('guestbook_notes').delete().eq('id', noteId)
-    if (error) return new Response('unable to delete note', { status: 500, headers })
-    return new Response('ok', { status: 200, headers })
+    return new Response('ok', { status: 201, headers })
   } catch {
-    return new Response('unable to process request', { status: 500, headers })
+    return new Response('unable to save note', { status: 500, headers })
   }
 })

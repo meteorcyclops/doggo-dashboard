@@ -1,4 +1,4 @@
-name: Deploy dog.koxuan.com to VPS
+name: Deploy dog.xuan.tw to VPS
 
 on:
   push:
@@ -41,6 +41,12 @@ jobs:
           DOGGO_BUILD_TRIGGER: vps-push
         run: python scripts/build_dashboard_data.py
 
+      - name: Validate public site
+        run: |
+          python scripts/validate_static_site.py
+          node --check docs/ui.js
+          node --check docs/guestbook.js
+
       - name: Sync docs to VPS
         shell: bash
         env:
@@ -63,5 +69,5 @@ jobs:
             find /srv/www/dog.koxuan.com/current -type f -exec chmod 644 {} \;
             sudo /usr/bin/caddy validate --config /etc/caddy/Caddyfile
             sudo /usr/bin/systemctl reload caddy
-            curl -I https://dog.koxuan.com
+            curl -fsSI https://dog.xuan.tw
           '

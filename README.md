@@ -1,11 +1,11 @@
 # Doggo Dashboard
 
-一個可愛、像素風、偏星之卡比戰鬥框氣質的靜態展示儀表板。  
-公開站以 **GitHub Pages** 部署；**台股與新聞在 CI 由 Python 拉取後寫入 `docs/data.json`**，瀏覽器只讀同源的 JSON（避開 CORS）。
+一個以像素狗為主角的每日情報小屋，整理天氣、台美股、新聞與旅行線索。
+公開站由 **VPS + Caddy** 提供靜態頁面與同源 API；GitHub Actions 會建置資料並同步發布。
 
 ## Live Demo
 
-- GitHub Pages: https://meteorcyclops.github.io/doggo-dashboard/
+- 正式站：https://dog.xuan.tw/
 
 ## 資料來源與免責
 
@@ -81,9 +81,9 @@ python3 -m http.server 4173 --bind 127.0.0.1
 - 另設 **UTC** 排程 `0 1,7,13,19 * * *`（每日四次）重新建置並部署，讓公開頁有機會更新報價與新聞（仍受來源與 Actions 排程影響）。
 - 也可在 Actions 分頁手動 **Run workflow**。
 
-### VPS（目前 `dog.koxuan.com` 使用方式）
+### VPS（目前 `dog.xuan.tw` 使用方式）
 
-目前 `dog.koxuan.com` 已改由 VPS 上的 Caddy 直接提供靜態檔，站點目錄為：
+目前 `dog.xuan.tw` 由 VPS 上的 Caddy 直接提供靜態檔，站點目錄沿用：
 
 ```text
 /srv/www/dog.koxuan.com/current
@@ -100,7 +100,7 @@ python3 -m http.server 4173 --bind 127.0.0.1
 - 修正遠端檔案權限
 - 驗證 Caddy 設定
 - reload Caddy
-- 驗證 `https://dog.koxuan.com`
+- 驗證 `https://dog.xuan.tw`
 
 可覆寫的環境變數：
 - `LOCAL_DOCS_DIR`

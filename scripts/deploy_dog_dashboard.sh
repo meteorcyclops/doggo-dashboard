@@ -1,16 +1,22 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-LOCAL_DOCS_DIR="${LOCAL_DOCS_DIR:-/Users/koxuan/.openclaw/workspace/docs}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
+LOCAL_DOCS_DIR="${LOCAL_DOCS_DIR:-$REPO_ROOT/docs}"
 REMOTE_HOST="${REMOTE_HOST:-root@139.59.122.96}"
 REMOTE_DIR="${REMOTE_DIR:-/srv/www/dog.koxuan.com/current}"
 REMOTE_CADDYFILE="${REMOTE_CADDYFILE:-/etc/caddy/Caddyfile}"
-SITE_DOMAIN="${SITE_DOMAIN:-dog.koxuan.com}"
+SITE_DOMAIN="${SITE_DOMAIN:-dog.xuan.tw}"
 
 if [[ ! -d "$LOCAL_DOCS_DIR" ]]; then
   echo "Local docs dir not found: $LOCAL_DOCS_DIR" >&2
   exit 1
 fi
+
+echo "==> Building fresh dashboard data"
+DOGGO_BUILD_TRIGGER=manual-vps python3 "$SCRIPT_DIR/build_dashboard_data.py"
+python3 "$SCRIPT_DIR/validate_static_site.py"
 
 echo "==> Deploying $SITE_DOMAIN"
 echo "    local:  $LOCAL_DOCS_DIR"
