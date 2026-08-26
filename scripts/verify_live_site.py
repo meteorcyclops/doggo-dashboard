@@ -6,6 +6,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 import os
+import struct
 import time
 import urllib.error
 import urllib.request
@@ -46,7 +47,7 @@ def main() -> int:
     require("狀態與同步為展示資料" in html, "demo-data disclaimer is missing")
     require("cdn.jsdelivr.net" not in html, "third-party animation script is still deployed")
     require("style.css?v=75" in html and "ui.js?v=75" in html, "versioned assets are not deployed")
-    require("https://dog.xuan.tw/og.png?v=75" in html, "versioned social preview is not deployed")
+    require("https://dog.xuan.tw/og-v75.png" in html, "versioned social preview is not deployed")
     csp = home_headers.get("content-security-policy", "")
     require("default-src 'self'" in csp and "object-src 'none'" in csp, "enforced CSP is missing")
 
@@ -55,7 +56,7 @@ def main() -> int:
         "/ui.js?v=75": "text/javascript",
         "/guestbook.js?v=75": "text/javascript",
         "/favicon.svg?v=75": "image/svg+xml",
-        "/og.png": "image/png",
+        "/og-v75.png": "image/png",
         "/robots.txt": "text/plain",
         "/sitemap.xml": "xml",
     }
@@ -65,6 +66,11 @@ def main() -> int:
         require(content_type in headers.get("content-type", ""), f"{path}: incorrect content type")
         if path.startswith("/ui.js"):
             require(b"triggerDataRefresh" not in body and b"/api/refresh-data" not in body, "old refresh POST code is still deployed")
+        if path == "/og-v75.png":
+            require(len(body) >= 24 and body[:8] == b"\x89PNG\r\n\x1a\n", "live social preview is not a PNG")
+            width, height = struct.unpack(">II", body[16:24])
+            require((width, height) == (1200, 630), f"live social preview is {width}x{height}")
+            require(len(body) <= 400_000, "live social preview exceeds 400 KB")
 
     missing_body, _ = request("/release-gate-missing-page", expected_status=404, bust=True)
     require("迷路了｜狗狗情報小屋" in missing_body.decode("utf-8"), "custom 404 page is missing")

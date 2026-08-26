@@ -74,7 +74,7 @@ def main() -> int:
     require(bool(parser.meta.get("description")), "meta description is missing", errors)
     require(parser.links.get("canonical") == "https://dog.xuan.tw/", "canonical URL is incorrect", errors)
     require(bool(parser.meta.get("og:title")), "Open Graph title is missing", errors)
-    require(parser.meta.get("og:image") == "https://dog.xuan.tw/og.png?v=75", "Open Graph image is incorrect", errors)
+    require(parser.meta.get("og:image") == "https://dog.xuan.tw/og-v75.png", "Open Graph image is incorrect", errors)
     require(bool(parser.meta.get("twitter:card")), "Twitter card metadata is missing", errors)
     require(bool(parser.json_ld), "JSON-LD is missing", errors)
     for raw in parser.json_ld:
@@ -83,7 +83,7 @@ def main() -> int:
         except json.JSONDecodeError as exc:
             errors.append(f"invalid JSON-LD: {exc}")
 
-    required_files = ["404.html", "robots.txt", "sitemap.xml", "og.png", "favicon.svg", "style.css", "ui.js", "guestbook.js"]
+    required_files = ["404.html", "robots.txt", "sitemap.xml", "og.png", "og-v75.png", "favicon.svg", "style.css", "ui.js", "guestbook.js"]
     for filename in required_files:
         require((DOCS / filename).is_file(), f"missing docs/{filename}", errors)
 
@@ -101,14 +101,14 @@ def main() -> int:
     supabase_client = (DOCS / "supabase-client.js").read_text(encoding="utf-8")
     require("@supabase/supabase-js@2.112.4" in supabase_client, "Supabase browser dependency is not pinned", errors)
 
-    og_path = DOCS / "og.png"
+    og_path = DOCS / "og-v75.png"
     with og_path.open("rb") as og_file:
         signature = og_file.read(24)
-    require(signature[:8] == b"\x89PNG\r\n\x1a\n", "og.png is not a PNG", errors)
+    require(signature[:8] == b"\x89PNG\r\n\x1a\n", "og-v75.png is not a PNG", errors)
     if len(signature) == 24 and signature[:8] == b"\x89PNG\r\n\x1a\n":
         width, height = struct.unpack(">II", signature[16:24])
         require((width, height) == (1200, 630), f"expected 1200x630 OG image, found {width}x{height}", errors)
-    require(og_path.stat().st_size <= 400_000, "og.png exceeds the 400 KB release budget", errors)
+    require(og_path.stat().st_size <= 400_000, "og-v75.png exceeds the 400 KB release budget", errors)
 
     if errors:
         for error in errors:
