@@ -1,4 +1,4 @@
-import { guestbookCfg as cfg, supabase } from './supabase-client.js';
+import { guestbookCfg as cfg, supabase } from './supabase-client.js?v=75';
 
 const statusEl = document.getElementById('guestbook-status');
 const listEl = document.getElementById('guestbook-list');

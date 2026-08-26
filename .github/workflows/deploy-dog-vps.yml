@@ -6,6 +6,7 @@ on:
     paths:
       - 'docs/**'
       - 'scripts/**'
+      - 'ops/**'
       - '.github/workflows/deploy-dog-vps.yml'
       - 'README.md'
   workflow_dispatch:
@@ -71,3 +72,6 @@ jobs:
             sudo /usr/bin/systemctl reload caddy
             curl -fsSI https://dog.xuan.tw
           '
+
+      - name: Verify live release
+        run: python scripts/verify_live_site.py

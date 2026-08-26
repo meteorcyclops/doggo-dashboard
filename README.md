@@ -22,6 +22,7 @@
 - 白天 / 黑夜主題切換
 - 台股快報、新聞雷達、任務小書與系統讀值
 - 純靜態前端 + 建置時抓資料，可安全公開展示
+- 嚴格 CSP、版本化靜態資源、真實 404 與部署後 live smoke gate
 
 ## 專案結構
 
@@ -36,7 +37,11 @@
 │  └─ .nojekyll
 ├─ scripts/
 │  ├─ build_dashboard_data.py   # 合併種子 + yfinance + RSS + trumpTruth → data.json
+│  ├─ validate_static_site.py   # 上版前靜態檔、SEO 與資產預算 gate
+│  ├─ verify_live_site.py       # 上版後 HTTPS、API、CSP、404 與資料新鮮度 smoke
 │  └─ trump_truth_tracker.py    # 川普帖文 HTML 抓取（亦供 CLI digest/alerts）
+├─ ops/
+│  └─ Caddyfile.dog.xuan.tw     # 正式站 CSP、快取與路由基準
 ├─ requirements.txt
 └─ .github/
    └─ workflows/
@@ -96,6 +101,8 @@ python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
 這個腳本會做：
+- 重新建置 `docs/data.json`
+- 執行靜態 release gate
 - 將 `docs/` rsync 到 VPS
 - 修正遠端檔案權限
 - 驗證 Caddy 設定
@@ -117,6 +124,7 @@ python3 -m http.server 4173 --bind 127.0.0.1
 - **不會讀取真實 cron／LINE／gateway 狀態**（頂多顯示種子裡的示範欄位）
 - 新聞仍以 **GitHub Actions 建置時** 產生的靜態 JSON 為主，瀏覽器不向第三方 RSS 直接請求
 - 台股即時模式由受控後端 `/api/tw-quotes` 代理提供，瀏覽器不直接向第三方行情來源請求
+- 留言寫入與刪除由 Supabase Edge Functions 做欄位驗證、節流與來源限制；匿名 REST 只保留讀取權限
 
 若需要私有／本機即時連線版，請將 `docs/` 與 `chat/` 一起部署，並確認前端可連到 `/api/tw-quotes`。後端可用 `TW_QUOTES_CACHE_SECONDS` 調整台股即時 API 快取秒數，勿把金鑰放進靜態頁面。
 

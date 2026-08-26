@@ -6,6 +6,7 @@ from __future__ import annotations
 from html.parser import HTMLParser
 from pathlib import Path
 import json
+import struct
 import sys
 
 
@@ -82,7 +83,7 @@ def main() -> int:
         except json.JSONDecodeError as exc:
             errors.append(f"invalid JSON-LD: {exc}")
 
-    required_files = ["404.html", "robots.txt", "sitemap.xml", "og.png", "style.css", "ui.js", "guestbook.js"]
+    required_files = ["404.html", "robots.txt", "sitemap.xml", "og.png", "favicon.svg", "style.css", "ui.js", "guestbook.js"]
     for filename in required_files:
         require((DOCS / filename).is_file(), f"missing docs/{filename}", errors)
 
@@ -90,6 +91,24 @@ def main() -> int:
     sitemap = (DOCS / "sitemap.xml").read_text(encoding="utf-8")
     require("Sitemap: https://dog.xuan.tw/sitemap.xml" in robots, "robots sitemap entry is missing", errors)
     require("<loc>https://dog.xuan.tw/</loc>" in sitemap, "sitemap canonical URL is missing", errors)
+
+    index_html = index_path.read_text(encoding="utf-8")
+    require("cdn.jsdelivr.net" not in index_html, "render-blocking third-party animation script is still present", errors)
+    require("style.css?v=75" in index_html, "versioned stylesheet URL is missing", errors)
+    require("ui.js?v=75" in index_html, "versioned UI module URL is missing", errors)
+    require("onerror=" not in index_html, "inline script handler prevents a strict CSP", errors)
+
+    supabase_client = (DOCS / "supabase-client.js").read_text(encoding="utf-8")
+    require("@supabase/supabase-js@2.112.4" in supabase_client, "Supabase browser dependency is not pinned", errors)
+
+    og_path = DOCS / "og.png"
+    with og_path.open("rb") as og_file:
+        signature = og_file.read(24)
+    require(signature[:8] == b"\x89PNG\r\n\x1a\n", "og.png is not a PNG", errors)
+    if len(signature) == 24 and signature[:8] == b"\x89PNG\r\n\x1a\n":
+        width, height = struct.unpack(">II", signature[16:24])
+        require((width, height) == (1200, 630), f"expected 1200x630 OG image, found {width}x{height}", errors)
+    require(og_path.stat().st_size <= 400_000, "og.png exceeds the 400 KB release budget", errors)
 
     if errors:
         for error in errors:

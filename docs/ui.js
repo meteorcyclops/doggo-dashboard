@@ -1,4 +1,4 @@
-import { createDogController } from './dog-controller.js';
+import { createDogController } from './dog-controller.js?v=75';
 const defaultVisibleCards = ['squad', 'quotes', 'us-quotes', 'weather', 'feed', 'flight', 'guestbook'];
 const optionalCards = ['trump'];
 const allCardIds = [...defaultVisibleCards, ...optionalCards];
@@ -1734,6 +1734,11 @@ function bindActions() {
 }
 
 async function initApp() {
+  window.setTimeout(() => {
+    if (window.__DOGGO_GUESTBOOK_READY__) return;
+    const guestbookStatus = document.getElementById('guestbook-status');
+    if (guestbookStatus) guestbookStatus.textContent = '留言板暫時無法連線，請稍後再試。';
+  }, 8000);
   setInterval(tickClock, 1000);
   tickClock();
   initTheme();
