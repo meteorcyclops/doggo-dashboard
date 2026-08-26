@@ -708,6 +708,11 @@ function renderLayoutOptions() {
       void row?.offsetWidth;
       row?.classList.add('layout-option-flash');
       applyCardVisibility();
+      if (currentData) {
+        dogController.syncDog(currentData);
+        renderSummary(currentData);
+        startBroadcastRotation(currentData);
+      }
       await savePreferences();
     });
   });
