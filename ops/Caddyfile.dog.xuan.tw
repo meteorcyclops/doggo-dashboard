@@ -3,7 +3,7 @@ dog.xuan.tw {
 	root * /srv/www/dog.koxuan.com/current
 
 	header {
-		Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' https://esm.sh https://static.cloudflareinsights.com; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://hugsqdzgncdrgvcusykw.supabase.co wss://hugsqdzgncdrgvcusykw.supabase.co https://cloudflareinsights.com; frame-src https://utteranc.es; manifest-src 'self'; upgrade-insecure-requests"
+		Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' https://esm.sh https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://hugsqdzgncdrgvcusykw.supabase.co wss://hugsqdzgncdrgvcusykw.supabase.co https://cloudflareinsights.com https://static.cloudflareinsights.com; frame-src https://utteranc.es; manifest-src 'self'; upgrade-insecure-requests"
 	}
 
 	@no_cache path / /index.html /404.html /robots.txt /sitemap.xml /data.json

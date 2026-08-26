@@ -46,6 +46,7 @@ def main() -> int:
     require("狀態與同步為展示資料" in html, "demo-data disclaimer is missing")
     require("cdn.jsdelivr.net" not in html, "third-party animation script is still deployed")
     require("style.css?v=75" in html and "ui.js?v=75" in html, "versioned assets are not deployed")
+    require("https://dog.xuan.tw/og.png?v=75" in html, "versioned social preview is not deployed")
     csp = home_headers.get("content-security-policy", "")
     require("default-src 'self'" in csp and "object-src 'none'" in csp, "enforced CSP is missing")
 
@@ -62,6 +63,8 @@ def main() -> int:
         body, headers = request(path, bust=True)
         require(body, f"{path}: empty response")
         require(content_type in headers.get("content-type", ""), f"{path}: incorrect content type")
+        if path.startswith("/ui.js"):
+            require(b"triggerDataRefresh" not in body and b"/api/refresh-data" not in body, "old refresh POST code is still deployed")
 
     missing_body, _ = request("/release-gate-missing-page", expected_status=404, bust=True)
     require("迷路了｜狗狗情報小屋" in missing_body.decode("utf-8"), "custom 404 page is missing")

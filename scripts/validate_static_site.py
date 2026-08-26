@@ -74,7 +74,7 @@ def main() -> int:
     require(bool(parser.meta.get("description")), "meta description is missing", errors)
     require(parser.links.get("canonical") == "https://dog.xuan.tw/", "canonical URL is incorrect", errors)
     require(bool(parser.meta.get("og:title")), "Open Graph title is missing", errors)
-    require(parser.meta.get("og:image") == "https://dog.xuan.tw/og.png", "Open Graph image is incorrect", errors)
+    require(parser.meta.get("og:image") == "https://dog.xuan.tw/og.png?v=75", "Open Graph image is incorrect", errors)
     require(bool(parser.meta.get("twitter:card")), "Twitter card metadata is missing", errors)
     require(bool(parser.json_ld), "JSON-LD is missing", errors)
     for raw in parser.json_ld:

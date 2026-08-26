@@ -1224,11 +1224,15 @@ function resolveLiveTwQuoteUrl(symbols) {
 }
 
 async function refreshLiveTwQuotes({ silent = false } = {}) {
+  if (liveTwQuotesInFlight) return;
   if (!currentData?.quotes?.items?.length) return;
   const symbols = currentData.quotes.items.map((item) => item.symbol).filter(Boolean);
   if (!symbols.length) return;
+  liveTwQuotesInFlight = true;
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), LIVE_TW_REQUEST_TIMEOUT_MS);
   try {
-    const res = await fetch(resolveLiveTwQuoteUrl(symbols), { cache: 'no-store' });
+    const res = await fetch(resolveLiveTwQuoteUrl(symbols), { cache: 'no-store', signal: controller.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const payload = await res.json();
     const map = new Map((payload.items || []).map((item) => [item.symbol, item]));
@@ -1265,13 +1269,18 @@ async function refreshLiveTwQuotes({ silent = false } = {}) {
     const meta = document.getElementById('quote-meta');
     if (meta) meta.textContent = `報價快照：${formatShortDateTime(currentData.quotes.asOf)} · 即時來源暫時無法取得`;
     renderSummary(currentData);
+  } finally {
+    window.clearTimeout(timeoutId);
+    liveTwQuotesInFlight = false;
   }
 }
 
 const SNAPSHOT_POLL_MS = 5 * 60_000;
-const LIVE_TW_POLL_MS = 15_000;
+const LIVE_TW_POLL_MS = 30_000;
+const LIVE_TW_REQUEST_TIMEOUT_MS = 25_000;
 const LIVE_DATA_POLL_MS = 2 * 60_000;
 const LIVE_US_MARKET_POLL_MS = 60_000;
+let liveTwQuotesInFlight = false;
 let liveQuotesMode = false;
 let liveQuoteSource = '';
 let liveQuotesLastSuccessAt = 0;
