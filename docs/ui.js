@@ -1551,8 +1551,38 @@ async function loadData(opts = {}) {
   } catch (err) {
     console.warn('dashboard data failed', err);
     if (hint) hint.textContent = friendlyFailure();
-    const currentStatus = document.getElementById('current-status');
-    if (currentStatus) currentStatus.textContent = '主要資料暫時無法載入';
+    const failureCopy = {
+      'line-link': '展示',
+      'gateway-pill': '展示',
+      'hero-session': '等待重試',
+      'hero-dog-state': '安靜守候中',
+      'hero-provenance': '暫無可驗證資料',
+      'hero-focus': '稍後重新整理',
+      'current-status': '主要資料暫時無法載入',
+      'battle-focus-title': '資料來源正在重試',
+      'battle-focus-subtitle': '暫停更新',
+      'battle-broadcast-detail': friendlyFailure(),
+      'automation-count': '暫無資料',
+      'quote-meta': friendlyFailure(),
+      'quote-summary': '目前無法整理盤面摘要。',
+      'us-quote-meta': friendlyFailure(),
+      'us-quote-summary': '目前無法整理美股摘要。',
+      'weather-meta': friendlyFailure(),
+      'weather-summary': '目前無法整理天氣摘要。',
+      'weather-commute': '通勤提醒暫停更新。',
+      'feed-meta': friendlyFailure(),
+      'flight-meta': friendlyFailure(),
+      'trump-meta': friendlyFailure(),
+    };
+    for (const [id, text] of Object.entries(failureCopy)) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+    document.querySelectorAll('.market-session-pill').forEach((pill, index) => {
+      pill.textContent = `${index === 0 ? '台股' : '美股'}：暫停更新`;
+    });
+    const focusPills = document.getElementById('focus-pill-list');
+    if (focusPills) focusPills.innerHTML = '<span class="focus-pill">資料稍後重試</span>';
     const heroDesc = document.querySelector('.hero-desc');
     if (heroDesc) heroDesc.textContent = '資料來源正在重試；你可以按下「重新整理資料」再試一次。';
     for (const listId of ['quote-list', 'us-quote-list', 'weather-list', 'headline-list', 'flight-list', 'trump-list']) {
@@ -1565,6 +1595,20 @@ async function loadData(opts = {}) {
         detail: friendlyFailure(),
       });
     }
+    const taskList = document.getElementById('task-list');
+    if (taskList) renderStateCard(taskList, null, {
+      tone: 'danger',
+      badge: '暫停',
+      title: '追蹤資料暫時無法取得',
+      detail: friendlyFailure(),
+    });
+    const summaryList = document.getElementById('summary-list');
+    if (summaryList) renderStateCard(summaryList, null, {
+      tone: 'danger',
+      badge: '暫停',
+      title: '更新狀態暫時無法確認',
+      detail: friendlyFailure(),
+    });
   }
 }
 
